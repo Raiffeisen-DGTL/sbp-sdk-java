@@ -1,1 +1,1 @@
-# SBP-SDK-Java
+# sbp-sdk-java
