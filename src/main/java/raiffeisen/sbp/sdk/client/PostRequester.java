@@ -23,9 +23,18 @@ public class PostRequester {
         poster.setEntity(new StringEntity(body));
 
         String result = null;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(poster)) {
+        try {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpResponse response = httpClient.execute(poster);
             return response;
+        } finally {
+            //
         }
     }
 }
+
+
+/*try (CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = httpClient.execute(poster)) {
+        return response;
+        }*/
