@@ -1,8 +1,8 @@
-package com.raiffeisen.sbp.sdk.model.out;
+package raiffeisen.sbp.sdk.model.out;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.raiffeisen.sbp.sdk.model.QRType;
+import raiffeisen.sbp.sdk.model.QRType;
 
 import java.math.BigDecimal;
 

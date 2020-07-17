@@ -1,9 +1,9 @@
-package com.raiffeisen.sbp.sdk.client;
+package raiffeisen.sbp.sdk.client;
 
-import com.raiffeisen.sbp.sdk.client.PostRequester;
-import com.raiffeisen.sbp.sdk.json.JsonBuilder;
-import com.raiffeisen.sbp.sdk.model.Response;
-import com.raiffeisen.sbp.sdk.model.out.CreateQr;
+import raiffeisen.sbp.sdk.client.PostRequester;
+import raiffeisen.sbp.sdk.json.JsonBuilder;
+import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.out.CreateQr;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.io.IOException;

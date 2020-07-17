@@ -1,4 +1,4 @@
-package com.raiffeisen.sbp.sdk.model;
+package raiffeisen.sbp.sdk.model;
 
 public enum QRType {
     QRStatic("QRStatic"),

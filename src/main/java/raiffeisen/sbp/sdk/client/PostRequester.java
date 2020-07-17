@@ -1,4 +1,4 @@
-package com.raiffeisen.sbp.sdk.client;
+package raiffeisen.sbp.sdk.client;
 
 
 import org.apache.http.HttpHeaders;
