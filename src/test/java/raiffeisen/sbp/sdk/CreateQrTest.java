@@ -3,7 +3,6 @@ package raiffeisen.sbp.sdk;
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.QRType;
-import raiffeisen.sbp.sdk.model.QRInfoCreator;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CreateQrTest {
     @Test
     public void createQrInfoTest() throws IOException {
-        QRInfo QR = QRInfoCreator.creator().
+        QRInfo QR = QRInfo.creator().
                 createDate("2019-08-22T09:14:38.107227+03:00").
                 order("FirstOrderofSDK").
                 qrType(QRType.QRDynamic).

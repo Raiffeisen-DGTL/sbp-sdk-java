@@ -2,14 +2,16 @@ package raiffeisen.sbp.sdk.model.out;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import lombok.Builder;
 import lombok.Value;
+import lombok.Getter;
 import raiffeisen.sbp.sdk.model.QRType;
 
 import java.math.BigDecimal;
 
 @Getter
 @Value
+@Builder (buildMethodName = "create", builderMethodName = "creator")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QRInfo {
 
