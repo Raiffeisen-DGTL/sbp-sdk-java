@@ -23,7 +23,7 @@ public class CreateQrTest {
                 sbpMerchantId("MA0000000552").
                 create();
 
-        Response response = SbpClient.registerQR(QR);
+        Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
         response.getCode();
         System.out.println(response.getCode());
         System.out.println(response.getBody());

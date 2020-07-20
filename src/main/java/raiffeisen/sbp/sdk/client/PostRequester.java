@@ -23,12 +23,12 @@ public class PostRequester {
         poster.setEntity(new StringEntity(body));
 
         String result = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
             CloseableHttpResponse response = httpClient.execute(poster);
             return response;
         } finally {
-            //
+            httpClient.close();
         }
     }
 }
