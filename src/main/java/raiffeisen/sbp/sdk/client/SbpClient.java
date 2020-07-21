@@ -1,11 +1,8 @@
 package raiffeisen.sbp.sdk.client;
 
-import org.apache.http.util.EntityUtils;
-import raiffeisen.sbp.sdk.client.PostRequester;
 import raiffeisen.sbp.sdk.json.JsonBuilder;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
-import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.io.IOException;
 
@@ -22,11 +19,7 @@ public class SbpClient {
     public static final String URL_REFUND = "https://e-commerce.raiffeisen.ru/api/sbp/v1/refund";
     public static final String URL_REFUND_INFO = "https://e-commerce.raiffeisen.ru/api/sbp/v1/refund/?";
     public static Response registerQR(final String url, QRInfo qr) throws IOException {
-        CloseableHttpResponse response = PostRequester.request(url, JsonBuilder.fromObject(qr), null);
-        return Response.creator().
-                code(response.getStatusLine().getStatusCode()).
-                body(EntityUtils.toString(response.getEntity())).
-                create();
+        return PostRequester.request(url, JsonBuilder.fromObject(qr), null);
     }
 
 }

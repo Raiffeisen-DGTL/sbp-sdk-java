@@ -7,11 +7,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import raiffeisen.sbp.sdk.model.Response;
 
 import java.io.IOException;
 
 public class PostRequester {
-    public static CloseableHttpResponse request(String url, String body, final String secretKey) throws IOException {
+    public static Response request(String url, String body, final String secretKey) throws IOException {
 
         HttpPost poster = new HttpPost(url);
         poster.addHeader("content-type", "application/json");
@@ -22,19 +24,10 @@ public class PostRequester {
 
         poster.setEntity(new StringEntity(body));
 
-        String result = null;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        try {
-            CloseableHttpResponse response = httpClient.execute(poster);
-            return response;
-        } finally {
-            httpClient.close();
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(poster)) {
+
+            return new Response(response.getStatusLine().getStatusCode(), EntityUtils.toString(response.getEntity()));
         }
     }
 }
-
-
-/*try (CloseableHttpClient httpClient = HttpClients.createDefault();
-        CloseableHttpResponse response = httpClient.execute(poster)) {
-        return response;
-        }*/
