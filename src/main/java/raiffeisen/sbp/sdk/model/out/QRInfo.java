@@ -35,6 +35,6 @@ public class QRInfo {
     @JsonProperty
     private final String paymentDetails;
     @JsonProperty
-    private final String ExpirationDate;
+    private final String qrExpirationDate;
 
 }
