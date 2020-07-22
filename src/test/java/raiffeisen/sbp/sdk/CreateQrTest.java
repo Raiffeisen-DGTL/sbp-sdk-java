@@ -8,20 +8,35 @@ import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.UUID;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CreateQrTest {
+
+    private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
+
+    private String getOrderInfo() {
+        return UUID.randomUUID().toString();
+    }
+
+    private String getCreateDate() {
+        String timestamp = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toString();
+        return timestamp.substring(0,timestamp.indexOf("["));
+    }
+
     @Test
     public void createQRInfoDynamicTest() throws IOException {
         QRInfo QR = QRInfo.creator().
-                createDate("2019-08-22T09:14:38.107227+03:00").
-                order("TestOrderOfSDKDynamic").
+                createDate(getCreateDate()).
+                order(getOrderInfo()).
                 qrType(QRType.QRDynamic).
                 amount(new BigDecimal(314)).
                 currency("RUB").
-                sbpMerchantId("MA0000000552").
+                sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
         Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
@@ -36,10 +51,10 @@ public class CreateQrTest {
     @Test
     public void createQRInfoStaticTest() throws IOException {
         QRInfo QR = QRInfo.creator().
-                createDate("2020-07-20T10:14:38.107227+03:00").
-                order("TestOrderOfSDKStatic").
+                createDate(getCreateDate()).
+                order(getOrderInfo()).
                 qrType(QRType.QRStatic).
-                sbpMerchantId("MA0000000552").
+                sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
         Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
@@ -57,13 +72,13 @@ public class CreateQrTest {
         QRInfo QR = QRInfo.creator().
                 additionalInfo("Доп информация").
                 amount(new BigDecimal(1110)).
-                createDate("2020-07-20T13:14:38.107227+03:00").
+                createDate(getCreateDate()).
                 currency("RUB").
-                order("TestOrderOfSDKMaxInfo").
+                order(getOrderInfo()).
                 paymentDetails("Назначение платежа").
                 qrType(QRType.QRStatic).
                 qrExpirationDate("2023-07-22T09:14:38.107227+03:00").
-                sbpMerchantId("MA0000000552").
+                sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
         Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
