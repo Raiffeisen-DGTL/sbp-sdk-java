@@ -48,7 +48,7 @@ Response prodResponse = SbpClient.registerQR(SbpClient.PRODUCTION_DOMAIN, exampl
 - сумма возврата в рублях `amount(BigDecimal)`
 - идентификатор заказа платежа в Райффайзенбанке `order(String)`
 - уникальный идентификатор запроса на возврат `refundId(String)`
-- (*для `QRStatic`*) идентификатор операции платежа в Райффайзенбанке `transactionId(long)`
+- идентификатор операции платежа в Райффайзенбанке `transactionId(long)`
 
 ~~~ java
 RefundInfo refundInfoStatic = RefundInfo.creator().

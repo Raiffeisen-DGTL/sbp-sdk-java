@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk;
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class RefundPaymentTest {
                 amount(new BigDecimal(100)).
                 order(getOrderInfo()).
                 refundId(getRefundId()).
+                transactionId(getTransactionId()).
                 create();
 
         Response response = SbpClient.refundPayment(SbpClient.TEST_DOMAIN, refundInfo, SECRET_KEY);
