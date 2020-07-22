@@ -51,16 +51,25 @@ Response prodResponse = SbpClient.registerQR(SbpClient.PRODUCTION_DOMAIN, exampl
 - (*для `QRStatic`*) идентификатор операции платежа в Райффайзенбанке `transactionId(long)`
 
 ~~~ java
-        RefundInfo refundInfoStatic = RefundInfo.creator().
-                amount(new BigDecimal(100)).
-                order("test_order_007").
-                refundId("test_refundId_007").
-                transactionId(41).
-                create();
+RefundInfo refundInfoStatic = RefundInfo.creator().
+        amount(new BigDecimal(100)).
+        order("test_order_007").
+        refundId("test_refundId_007").
+        transactionId(41).
+        create();
 
-        RefundInfo refundInfoDynamic = RefundInfo.creator().
-                amount(new BigDecimal(100)).
-                order("test_order_007").
-                refundId("test_refundId_007").
-                create();
+RefundInfo refundInfoDynamic = RefundInfo.creator().
+        amount(new BigDecimal(100)).
+        order("test_order_007").
+        refundId("test_refundId_007").
+        create();
+~~~
+
+Для использования необходимо вызвать соответствующий метод класса `SbpClient` (первый параметр - URL; второй - объект класса `RefundInfo`; третий - ключ для авторизации `String secretKey`):
+~~~ java
+//test
+Response testResponse = SbpClient.refundPayment(SbpClient.TEST_DOMAIN, refundInfo, secretKey);
+
+//prod
+Response prodResponse = SbpClient.refundPayment(SbpClient.PRODUCTION_DOMAIN, refundInfo, secretKey);
 ~~~
