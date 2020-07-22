@@ -39,7 +39,7 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
+        Response response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
@@ -57,7 +57,7 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
+        Response response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
@@ -81,7 +81,7 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = SbpClient.registerQR(SbpClient.URL_REGISTER_TEST, QR);
+        Response response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
