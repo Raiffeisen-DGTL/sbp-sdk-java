@@ -24,4 +24,8 @@ public class SbpClient {
     public static Response getQRInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
         return GetRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
     }
+
+    public static Response getPaymentInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
+        return GetRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
+    }
 }
