@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk.client;
 import raiffeisen.sbp.sdk.json.JsonBuilder;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
 
@@ -18,6 +19,10 @@ public class SbpClient {
 
     public static Response registerQR(final String domain, QRInfo qr) throws IOException {
         return PostRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(qr), null);
+    }
+
+    public static Response refundPayment(final String domain, RefundInfo refund, final String secretKey) throws IOException {
+        return PostRequester.request(domain + REFUND_PATH, JsonBuilder.fromObject(refund), secretKey);
     }
 
 }

@@ -41,3 +41,26 @@ Response testResponse = SbpClient.registerQR(SbpClient.TEST_DOMAIN, exampleQR);
 //prod
 Response prodResponse = SbpClient.registerQR(SbpClient.PRODUCTION_DOMAIN, exampleQR);
 ~~~
+#### Оформление возврата по платежу
+Для оформления запроса на возврат необходимо создать объект класса `RefundInfo` и заполнить необходимые поля в зависимости от типа QR-кода. Полную информацию о возможных параметрах можно посмотреть в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/postRefund_SBP "Документация к API").
+
+Обязательные параметры:
+- сумма возврата в рублях `amount(BigDecimal)`
+- идентификатор заказа платежа в Райффайзенбанке `order(String)`
+- уникальный идентификатор запроса на возврат `refundId(String)`
+- (*для `QRStatic`*) идентификатор операции платежа в Райффайзенбанке `transactionId(long)`
+
+~~~ java
+        RefundInfo refundInfoStatic = RefundInfo.creator().
+                amount(new BigDecimal(100)).
+                order("test_order_007").
+                refundId("test_refundId_007").
+                transactionId(41).
+                create();
+
+        RefundInfo refundInfoDynamic = RefundInfo.creator().
+                amount(new BigDecimal(100)).
+                order("test_order_007").
+                refundId("test_refundId_007").
+                create();
+~~~
