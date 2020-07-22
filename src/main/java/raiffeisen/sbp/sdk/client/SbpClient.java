@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.client;
 
 import raiffeisen.sbp.sdk.json.JsonBuilder;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import java.io.IOException;
@@ -20,4 +21,7 @@ public class SbpClient {
         return PostRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(qr), null);
     }
 
+    public static Response getQRInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
+        return GetRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
+    }
 }
