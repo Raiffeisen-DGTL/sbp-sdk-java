@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.client;
 
 import raiffeisen.sbp.sdk.json.JsonBuilder;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
@@ -21,8 +22,18 @@ public class SbpClient {
         return PostRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(qr), null);
     }
 
+<<<<<<< HEAD
     public static Response refundPayment(final String domain, RefundInfo refund, final String secretKey) throws IOException {
         return PostRequester.request(domain + REFUND_PATH, JsonBuilder.fromObject(refund), secretKey);
     }
 
+=======
+    public static Response getQRInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
+        return GetRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
+    }
+
+    public static Response getPaymentInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
+        return GetRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
+    }
+>>>>>>> getRequests
 }
