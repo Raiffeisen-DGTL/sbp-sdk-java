@@ -34,4 +34,8 @@ public class SbpClient {
         return GetRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
     }
 
+    public static Response getRefundInfo(final String domain, final String refundId, final String secretKey) throws IOException {
+        return GetRequester.request(domain + REFUND_INFO_PATH, refundId, secretKey);
+    }
+
 }
