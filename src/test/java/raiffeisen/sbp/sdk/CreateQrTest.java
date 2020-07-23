@@ -47,7 +47,6 @@ public class CreateQrTest {
         assertEquals(200, response.getCode());
         assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
 
-
     }
 
     @Test

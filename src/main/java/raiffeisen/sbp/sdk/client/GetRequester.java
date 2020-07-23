@@ -13,19 +13,7 @@ import java.io.IOException;
 
 public class GetRequester {
     public static Response request(String url, QRId qrId, final String secretKey) throws IOException {
-
-        url = url.replace("?", qrId.getQrId());
-        HttpGet getter = new HttpGet(url);
-
-        getter.addHeader("content-type", "application/json");
-        getter.addHeader("charset", "UTF-8");
-
-        getter.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + secretKey);
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(getter)) {
-            return new Response(response.getStatusLine().getStatusCode(), EntityUtils.toString(response.getEntity()));
-        }
+        return request(url, qrId.getQrId(), secretKey);
     }
 
     public static Response request(String url, final String pathParameter, final String secretKey) throws IOException {
