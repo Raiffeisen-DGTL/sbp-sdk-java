@@ -1,8 +1,7 @@
 package raiffeisen.sbp.sdk;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.Response;
@@ -43,8 +42,8 @@ public class GetQrInfoTest {
         TEST_QR_ID = body;
     }
 
-    @BeforeEach
-    void initTest() {
+    @Before
+    public void initTest() {
         QRInfo QR = QRInfo.creator().
                 createDate(getCreateDate()).
                 order(getOrderInfo()).
@@ -71,17 +70,21 @@ public class GetQrInfoTest {
 
     @Test
     public void getQrInfoTest() throws IOException {
-        initTest();
 
-        QRId id = QRId.creator().qrId(TEST_QR_ID).create();
+        if (TEST_QR_ID == null) {
+            System.out.println("InitTest failed");
+        } else {
 
-        Response response = SbpClient.getQRInfo(SbpClient.TEST_DOMAIN, id, TEST_SECRET_KEY);
+            QRId id = QRId.creator().qrId(TEST_QR_ID).create();
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
+            Response response = SbpClient.getQRInfo(SbpClient.TEST_DOMAIN, id, TEST_SECRET_KEY);
 
-        assertEquals(200, response.getCode());
-        assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
+            System.out.println(response.getCode());
+            System.out.println(response.getBody());
+
+            assertEquals(200, response.getCode());
+            assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
+        }
     }
 
 
