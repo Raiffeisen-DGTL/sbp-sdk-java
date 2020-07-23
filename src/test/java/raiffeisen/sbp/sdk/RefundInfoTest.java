@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk;
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -21,15 +22,10 @@ public class RefundInfoTest {
     @Test
     public void refundInfoTest() throws IOException {
 
-        Response response = client.getRefundInfo(getRefundId());
+        RefundStatus response = client.getRefundInfo(getRefundId());
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertTrue(response.getBody().contains("SUCCESS"));
-        assertTrue(response.getBody().contains("IN_PROGRESS")
-                || response.getBody().contains("COMPLETED"));
+        assertEquals("SUCCESS", response.getCode());
+        // more checks
 
     }
 

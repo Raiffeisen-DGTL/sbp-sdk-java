@@ -4,6 +4,7 @@ import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.time.ZonedDateTime;
 import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CreateQrTest {
 
@@ -41,13 +41,9 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = client.registerQR(QR);
+        QRUrl response = client.registerQR(QR);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
+        assertEquals("SUCCESS", response.getCode());
 
     }
 
@@ -60,13 +56,10 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = client.registerQR(QR);
+        QRUrl response = client.registerQR(QR);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
+        assertEquals("SUCCESS", response.getCode());
 
-        assertEquals(200, response.getCode());
-        assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
     }
 
     @Test
@@ -84,13 +77,9 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = client.registerQR(QR);
+        QRUrl response = client.registerQR(QR);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
+        assertEquals("SUCCESS", response.getCode());
 
     }
 

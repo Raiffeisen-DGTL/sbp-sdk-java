@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk;
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
@@ -30,15 +31,10 @@ public class RefundPaymentTest {
                 transactionId(getTransactionId()).
                 create();
 
-        Response response = client.refundPayment(refundInfo);
+        RefundStatus response = client.refundPayment(refundInfo);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertTrue(response.getBody().contains("SUCCESS"));
-        assertTrue(response.getBody().contains("IN_PROGRESS")
-                || response.getBody().contains("COMPLETED"));
+        assertNotEquals("SUCCESS", response.getCode());
+        //more checks
 
     }
 
@@ -51,15 +47,10 @@ public class RefundPaymentTest {
                 transactionId(getTransactionId()).
                 create();
 
-        Response response = client.refundPayment(refundInfo);
+        RefundStatus response = client.refundPayment(refundInfo);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertTrue(response.getBody().contains("SUCCESS"));
-        assertTrue(response.getBody().contains("IN_PROGRESS")
-                || response.getBody().contains("COMPLETED"));
+        assertNotEquals("SUCCESS", response.getCode());
+        //more checks
     }
 
     private String getOrderInfo() {

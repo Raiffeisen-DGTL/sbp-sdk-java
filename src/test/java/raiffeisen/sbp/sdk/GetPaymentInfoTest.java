@@ -5,6 +5,8 @@ import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.PaymentInfo;
+import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
@@ -40,18 +42,15 @@ public class GetPaymentInfoTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = null;
+        QRUrl response = null;
         try {
             response = client.registerQR(QR);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        if ((response.getCode() == 200) && (response.getBody().indexOf("SUCCESS") != -1)) {
-            initQrId(response.getBody());
+        if (response.getCode() == "SUCCESS") {
+            initQrId(response.getQrId());
         }
     }
 
@@ -63,13 +62,9 @@ public class GetPaymentInfoTest {
 
             QRId id = QRId.creator().qrId(TEST_QR_ID).create();
 
-            Response response = client.getPaymentInfo(id);
+            PaymentInfo response = client.getPaymentInfo(id);
 
-            System.out.println(response.getCode());
-            System.out.println(response.getBody());
-
-            assertEquals(200, response.getCode());
-            assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
+            assertEquals("SUCCESS", response.getCode());
         }
     }
 
@@ -83,8 +78,6 @@ public class GetPaymentInfoTest {
     }
 
     private void initQrId(String body) {
-        body = body.substring(body.indexOf("qrId") + 7, body.indexOf("payload")-3);
-        System.out.println(body);
         TEST_QR_ID = body;
     }
 
