@@ -2,13 +2,11 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
-import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RefundInfoTest {
 
@@ -23,15 +21,10 @@ public class RefundInfoTest {
     @Test
     public void refundInfoTest() throws IOException {
 
-        Response response = client.getRefundInfo(REFUND_ID);
+        RefundStatus response = client.getRefundInfo(REFUND_ID);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertTrue(response.getBody().contains("SUCCESS"));
-        assertTrue(response.getBody().contains("IN_PROGRESS")
-                || response.getBody().contains("COMPLETED"));
+        assertEquals("SUCCESS", response.getCode());
+        // more checks
 
     }
 }

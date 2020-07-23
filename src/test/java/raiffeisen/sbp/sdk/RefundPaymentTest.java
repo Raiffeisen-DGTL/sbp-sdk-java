@@ -2,14 +2,11 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
-import raiffeisen.sbp.sdk.model.Response;
-import raiffeisen.sbp.sdk.model.out.QRId;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +25,21 @@ public class RefundPaymentTest {
     private static long TRANSACTION_ID = 123;
 
     @Test
+    public void refundPaymentStaticTest() throws IOException {
+        RefundInfo refundInfo = RefundInfo.creator().
+                amount(new BigDecimal(100)).
+                order(ORDER_INFO).
+                refundId(REFUND_ID).
+                transactionId(TRANSACTION_ID).
+                create();
+
+        RefundStatus response = client.refundPayment(refundInfo);
+
+        assertNotEquals("SUCCESS", response.getCode());
+        //more checks
+    }
+
+    @Test
     public void refundPaymentDynamicTest() throws IOException {
         RefundInfo refundInfo = RefundInfo.creator().
                 amount(new BigDecimal(100)).
@@ -36,14 +48,9 @@ public class RefundPaymentTest {
                 transactionId(TRANSACTION_ID).
                 create();
 
-        Response response = client.refundPayment(refundInfo);
+        RefundStatus response = client.refundPayment(refundInfo);
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertTrue(response.getBody().contains("SUCCESS"));
-        assertTrue(response.getBody().contains("IN_PROGRESS")
-                || response.getBody().contains("COMPLETED"));
+        assertNotEquals("SUCCESS", response.getCode());
+        //more checks
     }
 }
