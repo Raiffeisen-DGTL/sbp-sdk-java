@@ -1,5 +1,23 @@
-## Примеры
+## SBP API Java SDK
+
+#### Документация
+
+**API**: [https://e-commerce.raiffeisen.ru/api/doc/sbp.html](Документация)
+
+#### Использование
+
+Для использования SDK необходимо создать объект класса `SbpClient`, указав в конструкторе домен, на который будут отправляться запросы (`SbpClient.PRODUCTION_DOMAIN` или `SbpClient.TEST_DOMAIN`), и секретный ключ для авторизации:
+
+ ~~~ java
+String secretKey = "...";
+
+SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
+ ~~~
+
+Все запросы осуществляются классаом `SbpClient` и возвращают объект класса `Response`, в котором содержится вся информация об ответе сервера.
+
 #### Регистрация QR-кода
+
 Для регистрации кода необходимо создать экземпляр класса `QRInfo` и заполнить поля. Для разных типов QR-кодов обязательные параметры отличаются. Полную информацию о возможных параметрах можно посмотреть в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
 Обязательные параметры:
@@ -28,48 +46,63 @@ QRInfo dynamicQR = QRInfo.creator().
                 create();
 ~~~
 
-Чтобы получить ответ от сервера, требуется вызвать метод `SbpClient.registerQR(String, QRInfo)`.
-Первый параметр - URL :
-- для реального использования `SbpClient.PRODUCTION_DOMAIN`
-- для тестирования `SbpClient.TEST_DOMAIN`
+Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `QRInfo`:
 
-Второй параметр - информация о QR-коде.
 ~~~ java
-//test
-Response testResponse = SbpClient.registerQR(SbpClient.TEST_DOMAIN, exampleQR);
-
-//prod
-Response prodResponse = SbpClient.registerQR(SbpClient.PRODUCTION_DOMAIN, exampleQR);
+Response response = client.registerQR(exampleQR);
 ~~~
+
+#### Получение данных по зарегистрированному ранее QR-коду
+
+Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getQRInfo`:
+
+~~~ java
+String qrIdString = "...";
+
+QRId id = QRId.creator().qrId(qrIdString).create();
+
+Response response = client.getQRInfo(id);
+~~~
+
+#### Получение информации по платежу
+
+Данный запрос аналогичен предыдущему, нужно лишь вызвать метод `getPaymentInfo`:
+
+~~~ java
+String qrIdString = "...";
+
+QRId id = QRId.creator().qrId(qrIdString).create();
+
+Response response = client.getPaymentInfo(id);
+~~~
+
 #### Оформление возврата по платежу
-Для оформления запроса на возврат необходимо создать объект класса `RefundInfo` и заполнить необходимые поля в зависимости от типа QR-кода. Полную информацию о возможных параметрах можно посмотреть в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/postRefund_SBP "Документация к API").
 
-Обязательные параметры:
-- сумма возврата в рублях `amount(BigDecimal)`
-- идентификатор заказа платежа в Райффайзенбанке `order(String)`
-- уникальный идентификатор запроса на возврат `refundId(String)`
-- идентификатор операции платежа в Райффайзенбанке `transactionId(long)`
+Для возврата средств необходимо создать объект класса `RefundInfo`, заполнив необходимые поля. Подробности об обязательных полях в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
 ~~~ java
-RefundInfo refundInfoStatic = RefundInfo.creator().
-        amount(new BigDecimal(100)).
-        order("test_order_007").
-        refundId("test_refundId_007").
-        transactionId(41).
-        create();
+BigDecimal moneyAmount = new BigDecimal(...)
+String orderInfo = "...";
+String refundId = "...";
+long transactionId = ...;
 
-RefundInfo refundInfoDynamic = RefundInfo.creator().
-        amount(new BigDecimal(100)).
-        order("test_order_007").
-        refundId("test_refundId_007").
-        create();
+RefundInfo refundInfo = RefundInfo.creator().
+          			  amount(moneyAmount).
+          			  order(orderInfo).
+          			  refundId(refundInfo).
+          			  transactionId(transactionId).
+          			  create();
+
+Response response = client.refundPayment(refundInfo);
 ~~~
 
-Для использования необходимо вызвать соответствующий метод класса `SbpClient` (первый параметр - URL; второй - объект класса `RefundInfo`; третий - ключ для авторизации `String secretKey`):
+#### Получение информации по возврату
+
+Для выполнения данного запроса необходимо указать уникальный идентификатор запроса на возврат `refundId` при вызове метода `getRefundInfo`:
+
 ~~~ java
-//test
-Response testResponse = SbpClient.refundPayment(SbpClient.TEST_DOMAIN, refundInfo, secretKey);
+String refundId = "...";
 
-//prod
-Response prodResponse = SbpClient.refundPayment(SbpClient.PRODUCTION_DOMAIN, refundInfo, secretKey);
+Response response = client.getRefundInfo(refundId);
 ~~~
+

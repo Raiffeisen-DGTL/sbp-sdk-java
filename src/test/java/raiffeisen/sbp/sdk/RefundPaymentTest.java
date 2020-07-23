@@ -21,34 +21,19 @@ public class RefundPaymentTest {
 
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, SECRET_KEY);
 
-    @Test
-    public void refundPaymentStaticTest() throws IOException {
-        RefundInfo refundInfo = RefundInfo.creator().
-                amount(new BigDecimal(100)).
-                order(getOrderInfo()).
-                refundId(getRefundId()).
-                transactionId(getTransactionId()).
-                create();
+    private static String REFUND_ID = "TestRefundId";
 
-        Response response = client.refundPayment(refundInfo);
+    private static String ORDER_INFO = "TestOrderInfo";
 
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
-        assertEquals(200, response.getCode());
-        assertTrue(response.getBody().contains("SUCCESS"));
-        assertTrue(response.getBody().contains("IN_PROGRESS")
-                || response.getBody().contains("COMPLETED"));
-
-    }
+    private static long TRANSACTION_ID = 123;
 
     @Test
     public void refundPaymentDynamicTest() throws IOException {
         RefundInfo refundInfo = RefundInfo.creator().
                 amount(new BigDecimal(100)).
-                order(getOrderInfo()).
-                refundId(getRefundId()).
-                transactionId(getTransactionId()).
+                order(ORDER_INFO).
+                refundId(REFUND_ID).
+                transactionId(TRANSACTION_ID).
                 create();
 
         Response response = client.refundPayment(refundInfo);
@@ -60,17 +45,5 @@ public class RefundPaymentTest {
         assertTrue(response.getBody().contains("SUCCESS"));
         assertTrue(response.getBody().contains("IN_PROGRESS")
                 || response.getBody().contains("COMPLETED"));
-    }
-
-    private String getOrderInfo() {
-        return UUID.randomUUID().toString();
-    }
-
-    private String getRefundId() {
-        return UUID.randomUUID().toString();
-    }
-
-    private long getTransactionId() {
-        return new Random().nextLong();
     }
 }

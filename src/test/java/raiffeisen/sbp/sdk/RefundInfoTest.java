@@ -18,10 +18,12 @@ public class RefundInfoTest {
 
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, SECRET_KEY);
 
+    private static String REFUND_ID = "TestRefundId";
+
     @Test
     public void refundInfoTest() throws IOException {
 
-        Response response = client.getRefundInfo(getRefundId());
+        Response response = client.getRefundInfo(REFUND_ID);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
@@ -31,9 +33,5 @@ public class RefundInfoTest {
         assertTrue(response.getBody().contains("IN_PROGRESS")
                 || response.getBody().contains("COMPLETED"));
 
-    }
-
-    private static String getRefundId() {
-        return UUID.randomUUID().toString();
     }
 }
