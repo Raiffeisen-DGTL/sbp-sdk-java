@@ -28,6 +28,8 @@ public class CreateQrTest {
         return timestamp.substring(0,timestamp.indexOf("["));
     }
 
+    private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"");
+
     @Test
     public void createQRInfoDynamicTest() throws IOException {
         QRInfo QR = QRInfo.creator().
@@ -39,7 +41,7 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
+        Response response = client.registerQR(QR);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
@@ -58,7 +60,7 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
+        Response response = client.registerQR(QR);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
@@ -82,7 +84,7 @@ public class CreateQrTest {
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 
-        Response response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
+        Response response = client.registerQR(QR);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());

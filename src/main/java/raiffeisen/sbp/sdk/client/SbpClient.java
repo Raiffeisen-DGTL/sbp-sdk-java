@@ -18,23 +18,32 @@ public class SbpClient {
     private static final String REFUND_PATH = "/api/sbp/v1/refund";
     private static final String REFUND_INFO_PATH = "/api/sbp/v1/refund/?";
 
-    public static Response registerQR(final String domain, QRInfo qr) throws IOException {
+    private final String domain;
+
+    private final String secretKey;
+
+    public SbpClient(String domain, String secretKey) {
+        this.domain = domain;
+        this.secretKey = secretKey;
+    }
+
+    public Response registerQR(final QRInfo qr) throws IOException {
         return PostRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(qr), null);
     }
 
-    public static Response refundPayment(final String domain, RefundInfo refund, final String secretKey) throws IOException {
+    public Response refundPayment(final RefundInfo refund) throws IOException {
         return PostRequester.request(domain + REFUND_PATH, JsonBuilder.fromObject(refund), secretKey);
     }
 
-    public static Response getQRInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
+    public Response getQRInfo(final QRId qrId) throws IOException {
         return GetRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
     }
 
-    public static Response getPaymentInfo(final String domain, QRId qrId, final String secretKey) throws IOException {
+    public Response getPaymentInfo(final QRId qrId) throws IOException {
         return GetRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
     }
 
-    public static Response getRefundInfo(final String domain, final String refundId, final String secretKey) throws IOException {
+    public Response getRefundInfo(final String refundId) throws IOException {
         return GetRequester.request(domain + REFUND_INFO_PATH, refundId, secretKey);
     }
 

@@ -19,6 +19,8 @@ public class RefundPaymentTest {
             "eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi" +
             "1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGpsu4AX1QoY26FqBiuNuyT-s";
 
+    private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, SECRET_KEY);
+
     @Test
     public void refundPaymentStaticTest() throws IOException {
         RefundInfo refundInfo = RefundInfo.creator().
@@ -28,7 +30,7 @@ public class RefundPaymentTest {
                 transactionId(getTransactionId()).
                 create();
 
-        Response response = SbpClient.refundPayment(SbpClient.TEST_DOMAIN, refundInfo, SECRET_KEY);
+        Response response = client.refundPayment(refundInfo);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());
@@ -49,7 +51,7 @@ public class RefundPaymentTest {
                 transactionId(getTransactionId()).
                 create();
 
-        Response response = SbpClient.refundPayment(SbpClient.TEST_DOMAIN, refundInfo, SECRET_KEY);
+        Response response = client.refundPayment(refundInfo);
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());

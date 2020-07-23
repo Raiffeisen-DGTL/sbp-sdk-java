@@ -16,10 +16,12 @@ public class RefundInfoTest {
             "eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi" +
             "1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGpsu4AX1QoY26FqBiuNuyT-s";
 
+    private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, SECRET_KEY);
+
     @Test
     public void refundInfoTest() throws IOException {
 
-        Response response = SbpClient.getRefundInfo(SbpClient.TEST_DOMAIN, getRefundId(), SECRET_KEY);
+        Response response = client.getRefundInfo(getRefundId());
 
         System.out.println(response.getCode());
         System.out.println(response.getBody());

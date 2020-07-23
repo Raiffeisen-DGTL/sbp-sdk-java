@@ -21,26 +21,13 @@ public class GetPaymentInfoTest {
 
     private String TEST_QR_ID = null;
 
-    private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
-
-    private final String TEST_SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMD" +
+    private final static String TEST_SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMD" +
             "A1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGps" +
             "u4AX1QoY26FqBiuNuyT-s";
 
-    private String getOrderInfo() {
-        return UUID.randomUUID().toString();
-    }
+    private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY);
 
-    private String getCreateDate() {
-        String timestamp = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toString();
-        return timestamp.substring(0,timestamp.indexOf("["));
-    }
-
-    private void initQrId(String body) {
-        body = body.substring(body.indexOf("qrId") + 7, body.indexOf("payload")-3);
-        System.out.println(body);
-        TEST_QR_ID = body;
-    }
+    private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
 
     @Before
     public void initTest() {
@@ -55,7 +42,7 @@ public class GetPaymentInfoTest {
 
         Response response = null;
         try {
-            response = SbpClient.registerQR(SbpClient.TEST_DOMAIN, QR);
+            response = client.registerQR(QR);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -76,7 +63,7 @@ public class GetPaymentInfoTest {
 
             QRId id = QRId.creator().qrId(TEST_QR_ID).create();
 
-            Response response = SbpClient.getPaymentInfo(SbpClient.TEST_DOMAIN, id, TEST_SECRET_KEY);
+            Response response = client.getPaymentInfo(id);
 
             System.out.println(response.getCode());
             System.out.println(response.getBody());
@@ -84,6 +71,21 @@ public class GetPaymentInfoTest {
             assertEquals(200, response.getCode());
             assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
         }
+    }
+
+    private String getOrderInfo() {
+        return UUID.randomUUID().toString();
+    }
+
+    private String getCreateDate() {
+        String timestamp = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toString();
+        return timestamp.substring(0,timestamp.indexOf("["));
+    }
+
+    private void initQrId(String body) {
+        body = body.substring(body.indexOf("qrId") + 7, body.indexOf("payload")-3);
+        System.out.println(body);
+        TEST_QR_ID = body;
     }
 
 }
