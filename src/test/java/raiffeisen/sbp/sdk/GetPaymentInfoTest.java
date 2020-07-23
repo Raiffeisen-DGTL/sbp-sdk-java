@@ -17,7 +17,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class GetQrInfoTest {
+public class GetPaymentInfoTest {
 
     private String TEST_QR_ID = null;
 
@@ -69,15 +69,14 @@ public class GetQrInfoTest {
     }
 
     @Test
-    public void getQrInfoTest() throws IOException {
-
+    public void getPaymentInfo() throws IOException {
         if (TEST_QR_ID == null) {
             System.out.println("InitTest failed");
         } else {
 
             QRId id = QRId.creator().qrId(TEST_QR_ID).create();
 
-            Response response = SbpClient.getQRInfo(SbpClient.TEST_DOMAIN, id, TEST_SECRET_KEY);
+            Response response = SbpClient.getPaymentInfo(SbpClient.TEST_DOMAIN, id, TEST_SECRET_KEY);
 
             System.out.println(response.getCode());
             System.out.println(response.getBody());
@@ -86,4 +85,5 @@ public class GetQrInfoTest {
             assertNotEquals(-1, response.getBody().indexOf("SUCCESS"));
         }
     }
+
 }
