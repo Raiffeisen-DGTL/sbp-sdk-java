@@ -3,20 +3,18 @@ package raiffeisen.sbp.sdk;
 import org.junit.Before;
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
-import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class GetQrInfoTest {
 
@@ -42,7 +40,7 @@ public class GetQrInfoTest {
         QRUrl response = null;
         try {
             response = client.registerQR(QR);
-        } catch (IOException e) {
+        } catch (SbpException e) {
             System.out.println(e.getMessage());
         }
 
@@ -52,7 +50,7 @@ public class GetQrInfoTest {
     }
 
     @Test
-    public void getQrInfoTest() throws IOException {
+    public void getQrInfoTest() throws SbpException {
 
         if (TEST_QR_ID == null) {
             System.out.println("InitTest failed");

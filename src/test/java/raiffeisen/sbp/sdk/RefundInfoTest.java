@@ -2,9 +2,8 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +18,7 @@ public class RefundInfoTest {
     private static String REFUND_ID = "TestRefundId";
 
     @Test
-    public void refundInfoTest() throws IOException {
+    public void refundInfoTest() throws SbpException {
 
         RefundStatus response = client.getRefundInfo(REFUND_ID);
 

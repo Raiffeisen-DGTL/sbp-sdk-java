@@ -2,10 +2,10 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ public class RefundPaymentTest {
     private static long TRANSACTION_ID = 123;
 
     @Test
-    public void refundPaymentStaticTest() throws IOException {
+    public void refundPaymentStaticTest() throws SbpException {
         RefundInfo refundInfo = RefundInfo.creator().
                 amount(new BigDecimal(100)).
                 order(ORDER_INFO).
@@ -40,7 +40,7 @@ public class RefundPaymentTest {
     }
 
     @Test
-    public void refundPaymentDynamicTest() throws IOException {
+    public void refundPaymentDynamicTest() throws SbpException {
         RefundInfo refundInfo = RefundInfo.creator().
                 amount(new BigDecimal(100)).
                 order(ORDER_INFO).

@@ -2,12 +2,11 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
-import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.time.ZonedDateTime;
@@ -31,7 +30,7 @@ public class CreateQrTest {
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"");
 
     @Test
-    public void createQRInfoDynamicTest() throws IOException {
+    public void createQRInfoDynamicTest() throws SbpException {
         QRInfo QR = QRInfo.creator().
                 createDate(getCreateDate()).
                 order(getOrderInfo()).
@@ -48,7 +47,7 @@ public class CreateQrTest {
     }
 
     @Test
-    public void createQRInfoStaticTest() throws IOException {
+    public void createQRInfoStaticTest() throws SbpException {
         QRInfo QR = QRInfo.creator().
                 createDate(getCreateDate()).
                 order(getOrderInfo()).
@@ -63,7 +62,7 @@ public class CreateQrTest {
     }
 
     @Test
-    public void createQRInfoMaxTest() throws IOException {
+    public void createQRInfoMaxTest() throws SbpException {
         // Test without "account" parameter
         QRInfo QR = QRInfo.creator().
                 additionalInfo("Доп информация").
@@ -82,5 +81,4 @@ public class CreateQrTest {
         assertEquals("SUCCESS", response.getCode());
 
     }
-
 }
