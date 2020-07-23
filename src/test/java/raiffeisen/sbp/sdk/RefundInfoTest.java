@@ -18,7 +18,7 @@ public class RefundInfoTest {
     private static String REFUND_ID = "TestRefundId";
 
     @Test
-    public void refundInfoTest() throws SbpException {
+    public void refundInfoTest() throws Exception {
 
         RefundStatus response = client.getRefundInfo(REFUND_ID);
 

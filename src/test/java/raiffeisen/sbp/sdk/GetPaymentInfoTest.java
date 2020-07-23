@@ -15,7 +15,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class GetPaymentInfoTest {
 
@@ -28,6 +30,8 @@ public class GetPaymentInfoTest {
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY);
 
     private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
+
+    private final String BAD_QR_ID = "BadQR";
 
     @Before
     public void initTest() {
@@ -43,7 +47,7 @@ public class GetPaymentInfoTest {
         QRUrl response = null;
         try {
             response = client.registerQR(QR);
-        } catch (SbpException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -53,7 +57,7 @@ public class GetPaymentInfoTest {
     }
 
     @Test
-    public void getPaymentInfo() throws SbpException {
+    public void getPaymentInfo() throws Exception {
         if (TEST_QR_ID == null) {
             System.out.println("InitTest failed");
         } else {
@@ -64,6 +68,23 @@ public class GetPaymentInfoTest {
 
             assertEquals("SUCCESS", response.getCode());
         }
+    }
+
+    @Test
+    public void getPaymentInfoExceptionTest() {
+        QRId badId = QRId.creator().qrId(BAD_QR_ID).create();
+
+        boolean thrown = false;
+        try {
+            PaymentInfo response = client.getPaymentInfo(badId);
+            assertNotEquals("SUCCESS", response.getCode());
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertTrue(e instanceof SbpException);
+            thrown = true;
+        }
+        assertTrue(thrown);
     }
 
     private String getOrderInfo() {

@@ -25,7 +25,7 @@ public class RefundPaymentTest {
     private static long TRANSACTION_ID = 123;
 
     @Test
-    public void refundPaymentStaticTest() throws SbpException {
+    public void refundPaymentStaticTest() throws Exception {
         RefundInfo refundInfo = RefundInfo.creator().
                 amount(new BigDecimal(100)).
                 order(ORDER_INFO).
@@ -40,7 +40,7 @@ public class RefundPaymentTest {
     }
 
     @Test
-    public void refundPaymentDynamicTest() throws SbpException {
+    public void refundPaymentDynamicTest() throws Exception {
         RefundInfo refundInfo = RefundInfo.creator().
                 amount(new BigDecimal(100)).
                 order(ORDER_INFO).

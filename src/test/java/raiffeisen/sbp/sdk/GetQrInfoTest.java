@@ -5,6 +5,7 @@ import org.junit.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
+import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
@@ -14,7 +15,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class GetQrInfoTest {
 
@@ -25,6 +28,8 @@ public class GetQrInfoTest {
             "u4AX1QoY26FqBiuNuyT-s";
 
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY);
+
+    private final String BAD_QR_ID = "BadQR";
 
     @Before
     public void initTest() {
@@ -40,9 +45,11 @@ public class GetQrInfoTest {
         QRUrl response = null;
         try {
             response = client.registerQR(QR);
-        } catch (SbpException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        assert response != null;
 
         if (response.getCode() == "SUCCESS") {
             initQrId(response.getQrId());
@@ -50,7 +57,7 @@ public class GetQrInfoTest {
     }
 
     @Test
-    public void getQrInfoTest() throws SbpException {
+    public void getQrInfoTest() throws Exception {
 
         if (TEST_QR_ID == null) {
             System.out.println("InitTest failed");
@@ -62,6 +69,23 @@ public class GetQrInfoTest {
 
             assertEquals("SUCCESS", response.getCode());
         }
+    }
+
+    @Test
+    public void getQrInfoExceptionTest() {
+        QRId badId = QRId.creator().qrId(BAD_QR_ID).create();
+
+        boolean thrown = false;
+        try {
+            QRUrl response = client.getQRInfo(badId);
+            assertNotEquals("SUCCESS", response.getCode());
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertTrue(e instanceof SbpException);
+            thrown = true;
+        }
+        assertTrue(thrown);
     }
 
     private final String TEST_SBP_MERCHANT_ID = "MA0000000552";

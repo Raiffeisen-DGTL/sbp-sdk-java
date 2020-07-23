@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.client;
 
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.json.JsonBuilder;
+import raiffeisen.sbp.sdk.json.JsonParser;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -22,6 +23,8 @@ public class SbpClient {
     private static final String REFUND_PATH = "/api/sbp/v1/refund";
     private static final String REFUND_INFO_PATH = "/api/sbp/v1/refund/?";
 
+    private static final String SUCCESS_CODE = "SUCCESS";
+
     private final String domain;
 
     private final String secretKey;
@@ -31,54 +34,49 @@ public class SbpClient {
         this.secretKey = secretKey;
     }
 
-    public QRUrl registerQR(final QRInfo qr) throws SbpException {
-        try {
-            Response tempResponse = PostRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(qr), null);
-            return new QRUrl(tempResponse.getBody());
+    public QRUrl registerQR(final QRInfo qr) throws SbpException, IOException {
+        Response tempResponse = PostRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(qr), null);
+        QRUrl qrUrl = new QRUrl(tempResponse.getBody());
+        if(!qrUrl.getCode().equals(SUCCESS_CODE)) {
+            throw new SbpException(qrUrl.getCode() + ", " + JsonParser.getMessageFromJson(tempResponse.getBody()));
         }
-        catch (IOException e) {
-            throw new SbpException(e.getMessage());
-        }
+        return qrUrl;
     }
 
-    public RefundStatus refundPayment(final RefundInfo refund) throws SbpException {
-        try {
-            Response tempResponse = PostRequester.request(domain + REFUND_PATH, JsonBuilder.fromObject(refund), secretKey);
-            return new RefundStatus(tempResponse.getBody());
+    public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {
+        Response tempResponse = PostRequester.request(domain + REFUND_PATH, JsonBuilder.fromObject(refund), secretKey);
+        RefundStatus refundStatus = new RefundStatus(tempResponse.getBody());
+        if(!refundStatus.getCode().equals(SUCCESS_CODE)) {
+            throw new SbpException(refundStatus.getCode() + ", " + JsonParser.getMessageFromJson(tempResponse.getBody()));
         }
-        catch (IOException e) {
-            throw new SbpException(e.getMessage());
-        }
+        return refundStatus;
     }
 
-    public QRUrl getQRInfo(final QRId qrId) throws SbpException {
-        try {
-            Response tempResponse = GetRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
-            return new QRUrl(tempResponse.getBody());
+    public QRUrl getQRInfo(final QRId qrId) throws SbpException, IOException {
+        Response tempResponse = GetRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
+        QRUrl qrUrl = new QRUrl(tempResponse.getBody());
+        if(!qrUrl.getCode().equals(SUCCESS_CODE)) {
+            throw new SbpException(qrUrl.getCode() + ", " + JsonParser.getMessageFromJson(tempResponse.getBody()));
         }
-        catch (IOException e) {
-            throw new SbpException(e.getMessage());
-        }
+        return qrUrl;
     }
 
-    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException {
-        try {
-            Response tempResponse = GetRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
-            return new PaymentInfo(tempResponse.getBody());
+    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, IOException {
+        Response tempResponse = GetRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
+        PaymentInfo paymentInfo = new PaymentInfo(tempResponse.getBody());
+        if(!paymentInfo.getCode().equals(SUCCESS_CODE)) {
+            throw new SbpException(paymentInfo.getCode() + ", " + JsonParser.getMessageFromJson(tempResponse.getBody()));
         }
-        catch (IOException e) {
-            throw new SbpException(e.getMessage());
-        }
+        return paymentInfo;
     }
 
-    public RefundStatus getRefundInfo(final String refundId) throws SbpException {
-        try {
-            Response tempResponse = GetRequester.request(domain + REFUND_INFO_PATH, refundId, secretKey);
-            return new RefundStatus(tempResponse.getBody());
+    public RefundStatus getRefundInfo(final String refundId) throws SbpException, IOException {
+        Response tempResponse = GetRequester.request(domain + REFUND_INFO_PATH, refundId, secretKey);
+        RefundStatus refundStatus = new RefundStatus(tempResponse.getBody());
+        if(!refundStatus.getCode().equals(SUCCESS_CODE)) {
+            throw new SbpException(refundStatus.getCode() + ", " + JsonParser.getMessageFromJson(tempResponse.getBody()));
         }
-        catch (IOException e) {
-            throw new SbpException(e.getMessage());
-        }
+        return refundStatus;
     }
 
 }

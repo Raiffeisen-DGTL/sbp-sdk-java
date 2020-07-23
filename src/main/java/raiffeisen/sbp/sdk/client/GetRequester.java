@@ -30,12 +30,8 @@ public class GetRequester {
              CloseableHttpResponse response = httpClient.execute(getter)) {
 
             int code = response.getStatusLine().getStatusCode();
-            if(code != 200) {
-                throw new SbpException("Bad HTTP code: " + code);
-            }
-            else {
-                return new Response(code, EntityUtils.toString(response.getEntity()));
-            }
+
+            return new Response(code, EntityUtils.toString(response.getEntity()));
         }
     }
 }
