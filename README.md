@@ -119,7 +119,7 @@ PaymentInfo response = client.getPaymentInfo(id);
 
 #### Оформление возврата по платежу
 
-Для возврата средств необходимо создать объект класса `RefundInfo`, заполнив необходимые поля. Подробности об обязательных полях в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
+Для возврата средств необходимо создать объект класса `RefundInfo`, заполнив необходимые поля, и вызвать метод `refundPayment(RefundInfo)`. Подробности об обязательных полях в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
 ~~~ java
 BigDecimal moneyAmount = new BigDecimal(...)
@@ -149,7 +149,7 @@ RefundStatus response = client.refundPayment(refundInfo);
 
 #### Получение информации по возврату
 
-Для выполнения данного запроса необходимо указать уникальный идентификатор запроса на возврат `refundId` при вызове метода `getRefundInfo`:
+Для выполнения данного запроса необходимо указать уникальный идентификатор запроса на возврат `refundId` при вызове метода `getRefundInfo(refundId)`:
 
 ~~~ java
 String refundId = "...";
