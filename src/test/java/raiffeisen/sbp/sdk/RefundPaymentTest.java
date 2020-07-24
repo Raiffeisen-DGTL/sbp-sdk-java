@@ -157,7 +157,7 @@ public class RefundPaymentTest {
     }
 
     @Test
-    public void refundPaymentDynamicTest() throws Exception {
+    public void refundPaymentDynamicTest() {
         DYNAMIC_REFUND_ID = getRefundId();
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo = RefundInfo.creator().
