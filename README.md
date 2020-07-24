@@ -14,7 +14,12 @@ String secretKey = "...";
 SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
  ~~~
 
-Все запросы осуществляются классаом `SbpClient` и возвращают объект класса `Response`, в котором содержится вся информация об ответе сервера.
+Все запросы осуществляются классаом `SbpClient` и возвращают объекты следующих классов:
+- `QRURl` для информации, связанной с QR-кодом
+- `RefundStatus` -- для возвратов
+- `PaymentInfo` -- для платежей
+
+Эти классы содержат в себе те же поля, что и ответ сервера.
 
 #### Регистрация QR-кода
 
@@ -22,58 +27,94 @@ SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
 
 Обязательные параметры:
 - (*для `QRDynamic`*) cумма в рублях `amount(BigDecimal)`
-- время формирования заявки `createDate(String <YYYY-MM-DD ТHH24:MM:SS±HH:MM>)`
 - (*для `QRDynamic`*) валюта платежа `currency("RUB")`
 - уникальный идентификатор заказа в системе партнёра `order(String)`
 - тип QR-кода `qrType(QRType.QRDynamic)`
 - идентификатор зарегистрированного партнёра в СБП `sbpMerchantId(String)`
-
-~~~ java
-QRInfo staticQR = QRInfo.creator().
-                createDate("2019-07-22T09:14:38.107227+03:00").
-                order("1-22-333").
-                qrType(QRType.QRStatic).
-                sbpMerchantId("MA0000000552").
-                create();
-
-QRInfo dynamicQR = QRInfo.creator().
-                createDate("2019-07-22T09:14:38.107227+03:00").
-                order("1-22-333").
-                qrType(QRType.QRDynamic).
-                amount(new BigDecimal(1110)).
-                currency("RUB").
-                sbpMerchantId("MA0000000552").
-                create();
-~~~
+- *время формирования заявки `createDate(String <YYYY-MM-DD ТHH24:MM:SS±HH:MM>)`* (опционально при использовании SDK)
 
 Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `QRInfo`:
 
 ~~~ java
-Response response = client.registerQR(exampleQR);
+QRInfo exampleQR = QRInfo.creator().
+                account("40700000000000000000").
+                additionalInfo("Доп информация").
+                amount(new BigDecimal(1110)).
+                createDate("2019-07-22T09:14:38.107227+03:00").
+                currency("RUB").
+                order("1-22-333").
+                paymentDetails("Назначение платежа").
+                qrType(QRType.QRStatic).
+                qrExpirationDate("2023-07-22T09:14:38.107227+03:00").
+                sbpMerchantId("MA0000000552").
+                create();
+
+QRUrl response = client.registerQR(exampleQR);
+~~~
+
+Ответ:
+
+~~~
+{
+  "code": "SUCCESS",
+  "qrId": "AD100004BAL7227F9BNP6KNE007J9B3K",
+  "payload": "https://qr.nspk.ru/AD100004BAL7227F9BNP6KNE007J9B3K?type=02&bank=100000000007&sum=1&cur=RUB&crc=AB75",
+  "qrUrl": "https://e-commerce.raiffeisen.ru/api/sbp/v1/qr/AD100004BAL7227F9BNP6KNE007J9B3K/image"
+}
 ~~~
 
 #### Получение данных по зарегистрированному ранее QR-коду
 
-Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getQRInfo`:
+Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getQRInfo(QRId)`:
 
 ~~~ java
 String qrIdString = "...";
 
 QRId id = QRId.creator().qrId(qrIdString).create();
 
-Response response = client.getQRInfo(id);
+QRUrl response = client.getQRInfo(id);
+~~~
+
+Ответ
+
+~~~
+{
+  "code": "SUCCESS",
+  "qrId": "AD100004BAL7227F9BNP6KNE007J9B3K",
+  "payload": "https://qr.nspk.ru/AD100004BAL7227F9BNP6KNE007J9B3K?type=02&bank=100000000007&sum=1&cur=RUB&crc=AB75",
+  "qrUrl": "https://e-commerce.raiffeisen.ru/api/sbp/v1/qr/AD100004BAL7227F9BNP6KNE007J9B3K/image"
+}
 ~~~
 
 #### Получение информации по платежу
 
-Данный запрос аналогичен предыдущему, нужно лишь вызвать метод `getPaymentInfo`:
+Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getPaymentInfo(QRId)`:
 
 ~~~ java
 String qrIdString = "...";
 
 QRId id = QRId.creator().qrId(qrIdString).create();
 
-Response response = client.getPaymentInfo(id);
+PaymentInfo response = client.getPaymentInfo(id);
+~~~
+
+Ответ:
+
+~~~
+{
+  "additionalInfo": "Доп информация",
+  "amount": 12399,
+  "code": "SUCCESS",
+  "createDate": "2020-01-31T09:14:38.107227+03:00",
+  "currency": "RUB",
+  "merchantId": 123,
+  "order": "282a60f8-dd75-4286-bde0-af321dd081b3",
+  "paymentStatus": "NO_INFO",
+  "qrId": "AD100051KNSNR64I98CRUJUASC9M72QT",
+  "sbpMerchantId": "MA0000000553",
+  "transactionDate": "2019-07-11T17:45:13.109227+03:00",
+  "transactionId": 23
+}
 ~~~
 
 #### Оформление возврата по платежу
@@ -93,7 +134,17 @@ RefundInfo refundInfo = RefundInfo.creator().
           			  transactionId(transactionId).
           			  create();
 
-Response response = client.refundPayment(refundInfo);
+RefundStatus response = client.refundPayment(refundInfo);
+~~~
+
+Ответ:
+
+~~~
+{
+  "code": "SUCCESS",
+  "amount": 150,
+  "refundStatus": "IN_PROGRESS"
+}
 ~~~
 
 #### Получение информации по возврату
@@ -103,6 +154,16 @@ Response response = client.refundPayment(refundInfo);
 ~~~ java
 String refundId = "...";
 
-Response response = client.getRefundInfo(refundId);
+RefundStatus response = client.getRefundInfo(refundId);
+~~~
+
+Ответ:
+
+~~~
+{
+  "code": "SUCCESS",
+  "amount": 150,
+  "refundStatus": "IN_PROGRESS"
+}
 ~~~
 
