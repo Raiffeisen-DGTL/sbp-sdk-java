@@ -71,7 +71,7 @@ public class PaymentNotification {
 
     }
 
-    private static String joinFields(String body) {
+    public static String joinFields(String body) {
         try {
             JsonNode json = new ObjectMapper().readTree(body);
             String fields = "";
