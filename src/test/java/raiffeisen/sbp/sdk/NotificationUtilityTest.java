@@ -10,9 +10,7 @@ public class NotificationUtilityTest {
 
     private final String BODY = "{\"transactionId\":17998,\"qrId\":\"AS1000408BSPMRDI8IHBGO4DFQAISU9O\",\"sbpMerchantId\":\"MA0000000552\",\"merchantId\":123,\"amount\":101.01,\"currency\":\"RUB\",\"transactionDate\":\"2020-07-24T17:20:00.999232+03:00\",\"paymentStatus\":\"SUCCESS\",\"additionalInfo\":null,\"order\":\"dfe0ff08-4796-46bb-a9fb-93fcd99ce748\",\"createDate\":\"2020-07-24T17:19:58+03:00\"}";
 
-    private static final String SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-            "eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi" +
-            "1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGpsu4AX1QoY26FqBiuNuyT-s";
+    private static final String SECRET_KEY = "";
 
     @Test
     public void PaymentNotificationTest() {
@@ -25,6 +23,6 @@ public class NotificationUtilityTest {
 
         System.out.println(check);
 
-        //assertTrue(PaymentNotification.checkNotificationSignature(BODY, API_SIGNATURE, TEST_SECRET_KEY));
+        // assertTrue(PaymentNotification.checkNotificationSignature(BODY, API_SIGNATURE, SECRET_KEY));
     }
 }

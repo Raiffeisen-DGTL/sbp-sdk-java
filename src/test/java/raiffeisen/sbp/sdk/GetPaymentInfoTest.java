@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;

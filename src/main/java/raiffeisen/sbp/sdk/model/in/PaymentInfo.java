@@ -37,12 +37,12 @@ public class PaymentInfo {
         }
         createDate = json.path("createDate").asText();
         currency = json.path("currency").asText();
-        merchantId = Long.parseLong(json.path("merchantId").asText());
+        merchantId = json.path("merchantId").asLong();
         order = json.path("order").asText();
         paymentStatus = json.path("paymentStatus").asText();
         qrId = json.path("qrId").asText();
         sbpMerchantId = json.path("sbpMerchantId").asText();
         transactionDate = json.path("transactionDate").asText();
-        transactionId = Long.parseLong(json.path("transactionId").asText());
+        transactionId = json.path("transactionId").asLong();
     }
 }
