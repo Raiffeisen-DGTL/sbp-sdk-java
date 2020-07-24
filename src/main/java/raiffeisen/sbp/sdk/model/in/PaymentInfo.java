@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 public class PaymentInfo {
 
     private final String additionalInfo;
-    private final String amount;
+    private final BigDecimal amount;
     private final String code;
     private final String createDate;
     private final String currency;
@@ -26,7 +28,13 @@ public class PaymentInfo {
         JsonNode json = new ObjectMapper().readTree(body);
         code = json.path("code").asText();
         additionalInfo = json.path("additionalInfo").asText();
-        amount = json.path("amount").asText();
+        String amountStr = json.path("amount").asText();
+        if(amountStr.length() == 0) {
+            amount = null;
+        }
+        else {
+            amount = new BigDecimal(amountStr);
+        }
         createDate = json.path("createDate").asText();
         currency = json.path("currency").asText();
         merchantId = Long.parseLong(json.path("merchantId").asText());
