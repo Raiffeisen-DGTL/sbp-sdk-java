@@ -30,7 +30,7 @@ public class PaymentNotification {
     private static final String SHA_256_ALGORITHM = "HmacSHA256";
     private static final Charset ENCODING = StandardCharsets.UTF_8;
 
-    public PaymentNotification(String body, String headerSignature, String secretKey) throws JsonProcessingException {
+    public PaymentNotification(String body, String headerSignature, String secretKey) throws EncryptionException, JsonProcessingException {
         if (checkNotificationSignature(body, headerSignature, secretKey) == false) {
             throw new EncryptionException("Signatures are not equal.");
         }
@@ -48,12 +48,12 @@ public class PaymentNotification {
         createDate = json.path("createDate").asText();
     }
 
-    public static boolean checkNotificationSignature(String body, String headerSignature, String secretKey) {
+    public static boolean checkNotificationSignature(String body, String headerSignature, String secretKey) throws EncryptionException {
         String hash = encrypt(joinFields(body),secretKey);
         return hash.equals(headerSignature);
     }
 
-    public static String encrypt(String fields, String secretKey) {
+    public static String encrypt(String fields, String secretKey) throws EncryptionException {
         if (fields.isEmpty()) {
             return "";
         }

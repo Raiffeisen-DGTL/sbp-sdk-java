@@ -169,3 +169,14 @@ RefundStatus response = client.getRefundInfo(refundId);
 }
 ~~~
 
+#### Обработка уведомлений
+
+Для обработки уведомлений существует класс `PaymentNotification` со следующим функционалом:
+
+- `PaymentNotification.joinFields(String body)` - принимает JSON уведомления в строке; возвращает строку, которую следует использовать для проверки подписи
+- `PaymentNotification.encrypt(String fields, String secretKey)` - принимает строку из метода выше и секретный ключ; возвращает hash-строку
+- `PaymentNotification.checkNotificationSignature(String body, String headerSignature, String secretKey)` - принимает строку-JSON уведомления, присланный заголовок и секретный ключ; возвращает `true`, если подпись совпадает. Иначе - `false`
+- `PaymentNotification(String body, String headerSignature, String secretKey)` - принимает строку-JSON уведомления, присланный заголовок и секретный ключ; проверяет подпись и в случае успехза возвращает объект класса `PaymentNotification` с get-методами для всех полей.
+ 
+Если в результате формирования hash-строки произойдёт ошибка, то будет возвращено исключение `EncryptionException` с пояснительным сообщением.
+
