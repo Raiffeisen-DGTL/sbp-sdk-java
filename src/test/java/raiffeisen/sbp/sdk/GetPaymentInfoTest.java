@@ -48,12 +48,12 @@ public class GetPaymentInfoTest {
         QRUrl response = null;
         try {
             response = client.registerQR(QR);
+
+            if (response.getCode().equals("SUCCESS")) {
+                initQrId(response.getQrId());
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
-
-        if (response.getCode() == "SUCCESS") {
-            initQrId(response.getQrId());
         }
     }
 
