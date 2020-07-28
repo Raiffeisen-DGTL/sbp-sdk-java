@@ -81,7 +81,6 @@ public class GetPaymentInfoTest {
             assertNotEquals("SUCCESS", response.getCode());
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             assertTrue(e instanceof SbpException);
             thrown = true;
         }

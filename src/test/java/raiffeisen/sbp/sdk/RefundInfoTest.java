@@ -123,7 +123,6 @@ public class RefundInfoTest {
             RefundStatus response = client.getRefundInfo(STATIC_REFUND_ID);
             assertEquals("SUCCESS", response.getCode());
             assertEquals(moneyAmount, response.getAmount());
-            System.out.println(response.getRefundStatus());
             assertTrue(response.getRefundStatus().equals("IN_PROGRESS") || response.getRefundStatus().equals("COMPLETED"));
         }
         catch (Exception e) {
@@ -140,7 +139,6 @@ public class RefundInfoTest {
             assert false;
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             assert (e instanceof SbpException);
         }
     }

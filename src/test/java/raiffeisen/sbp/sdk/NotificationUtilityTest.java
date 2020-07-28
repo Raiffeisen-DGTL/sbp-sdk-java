@@ -15,13 +15,13 @@ public class NotificationUtilityTest {
     @Test
     public void PaymentNotificationTest() {
 
-        String fields = PaymentNotification.joinFields(BODY);
-
-        System.out.println(fields);
-
-        String check = PaymentNotification.encrypt(fields, SECRET_KEY);
-
-        System.out.println(check);
+//        String fields = PaymentNotification.joinFields(BODY);
+//
+//        System.out.println(fields);
+//
+//        String check = PaymentNotification.encrypt(fields, SECRET_KEY);
+//
+//        System.out.println(check);
 
         // assertTrue(PaymentNotification.checkNotificationSignature(BODY, API_SIGNATURE, SECRET_KEY));
     }
