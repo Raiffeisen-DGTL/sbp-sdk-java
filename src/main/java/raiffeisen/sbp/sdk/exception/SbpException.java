@@ -1,13 +1,17 @@
 package raiffeisen.sbp.sdk.exception;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class SbpException extends Exception {
 
-    private final String message;
+    private String code;
+    private String message;
 
-    public SbpException(String errorMessage) {
-        message = errorMessage;
+    @Override
+    public String getMessage() {
+        return code + ", " + message;
     }
 }

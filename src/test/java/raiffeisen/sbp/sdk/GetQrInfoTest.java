@@ -50,7 +50,7 @@ public class GetQrInfoTest {
 
         assert response != null;
 
-        if (response.getCode() == "SUCCESS") {
+        if (response.getCode().equals("SUCCESS")) {
             initQrId(response.getQrId());
         }
     }
