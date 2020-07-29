@@ -171,12 +171,66 @@ RefundStatus response = client.getRefundInfo(refundId);
 
 #### Обработка уведомлений
 
-Для обработки уведомлений существует класс `PaymentNotification` со следующим функционалом:
+Для обработки уведомлений существует класс `PaymentNotification`. Инициализация происходит с помощью статического метода `PaymentNotification.fromJson(String)`:
 
-- `PaymentNotification.joinFields(String body)` - принимает JSON уведомления в строке; возвращает строку, которую следует использовать для проверки подписи
-- `PaymentNotification.encrypt(String fields, String secretKey)` - принимает строку из метода выше и секретный ключ; возвращает hash-строку
-- `PaymentNotification.checkNotificationSignature(String body, String headerSignature, String secretKey)` - принимает строку-JSON уведомления, присланный заголовок и секретный ключ; возвращает `true`, если подпись совпадает. Иначе - `false`
-- `PaymentNotification(String body, String headerSignature, String secretKey)` - принимает строку-JSON уведомления, присланный заголовок и секретный ключ; проверяет подпись и в случае успехза возвращает объект класса `PaymentNotification` с get-методами для всех полей.
- 
-Если в результате формирования hash-строки произойдёт ошибка, то будет возвращено исключение `EncryptionException` с пояснительным сообщением.
+~~~ java
+String jsonString = "...";
+PaymentNotification notification = PaymentNotification.fromJson(jsonString);
+~~~
+
+#### Проверка подписи
+
+Для проверки подлинности уведомления существует класс `SbpUtils`. Проверка подписи осуществляется при помощи перегруженного статического метода `checkNotificationSignature`. Примеры использования:
+
+~~~ java
+String jsonString = "...";
+String apiSignature = "...";
+String secretKey = "...";
+
+boolean success = SbpUtils.checkNotificationSignature(jsonString, apiSignature, secretKey);
+~~~
+
+~~~ java
+PaymentNotification notification = ...;
+String apiSignature = "...";
+String secretKey = "...";
+
+boolean success = SbpUtils.checkNotificationSignature(notification, apiSignature, secretKey);
+~~~
+
+~~~ java
+BigDecimal amount = ...;
+String sbpMerchantId = "...";
+String order = "...";
+String paymentStatus = "...";
+String transactionDate = "...";
+
+String secretKeyString apiSignature = "...";
+String secretKey = "...";
+
+boolean success = SbpUtils.checkNotificationSignature(amount, 
+                 	sbpMerchantId, 
+                 	order,
+                 	paymentStatus,
+                 	transactionDate,
+                 	apiSignature,
+                 	secretKey);
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
