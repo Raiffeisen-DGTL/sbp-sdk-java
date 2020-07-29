@@ -1,6 +1,5 @@
 package raiffeisen.sbp.sdk.client;
 
-import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.web.WebClient;
@@ -24,11 +23,11 @@ public class GetRequester {
         return webClient;
     }
 
-    public Response request(String url, QRId qrId, final String secretKey) throws IOException, SbpException {
+    public Response request(String url, QRId qrId, final String secretKey) throws IOException {
         return request(url, qrId.getQrId(), secretKey);
     }
 
-    public Response request(String url, final String pathParameter, final String secretKey) throws IOException, SbpException {
+    public Response request(String url, final String pathParameter, final String secretKey) throws IOException {
         url = url.replace("?", pathParameter);
 
         HashMap<String, String> headers = new HashMap<>();

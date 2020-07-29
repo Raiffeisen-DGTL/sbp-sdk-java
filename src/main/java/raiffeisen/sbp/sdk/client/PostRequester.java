@@ -1,7 +1,6 @@
 package raiffeisen.sbp.sdk.client;
 
 
-import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.web.WebClient;
 
@@ -24,7 +23,7 @@ public class PostRequester {
         return webClient;
     }
 
-    public Response request(String url, String body, final String secretKey) throws IOException, SbpException {
+    public Response request(String url, String body, final String secretKey) throws IOException {
 
         HashMap<String, String> headers = new HashMap<>();
         headers.put("content-type", "application/json");
