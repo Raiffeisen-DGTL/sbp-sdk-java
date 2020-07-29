@@ -1,15 +1,13 @@
 package raiffeisen.sbp.sdk;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import raiffeisen.sbp.sdk.model.PaymentNotification;
 import raiffeisen.sbp.sdk.utils.SbpUtils;
 
-import javax.print.attribute.standard.OrientationRequested;
 import java.math.BigDecimal;
 
 public class NotificationUtilityTest {
@@ -32,7 +30,7 @@ public class NotificationUtilityTest {
 
     private static PaymentNotification notification;
 
-    @Before
+    @BeforeEach
     public void PaymentNotificationTest() {
         try {
             notification = PaymentNotification.fromJson(BODY);

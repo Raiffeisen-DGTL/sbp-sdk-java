@@ -1,7 +1,8 @@
 package raiffeisen.sbp.sdk;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
@@ -16,13 +17,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GetPaymentInfoTest {
 
-    private String TEST_QR_ID = null;
+    private static String TEST_QR_ID = null;
 
     private final static String TEST_SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMD" +
             "A1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGps" +
@@ -30,12 +29,12 @@ public class GetPaymentInfoTest {
 
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY);
 
-    private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
+    private static final String TEST_SBP_MERCHANT_ID = "MA0000000552";
 
-    private final String BAD_QR_ID = "BadQR";
+    private static final String BAD_QR_ID = "BadQR";
 
-    @Before
-    public void initTest() {
+    @BeforeAll
+    public static void initTest() {
         QRInfo QR = QRInfo.creator().
                 createDate(getCreateDate()).
                 order(getOrderInfo()).
@@ -87,16 +86,16 @@ public class GetPaymentInfoTest {
         assertTrue(thrown);
     }
 
-    private String getOrderInfo() {
+    private static String getOrderInfo() {
         return UUID.randomUUID().toString();
     }
 
-    private String getCreateDate() {
+    private static String getCreateDate() {
         String timestamp = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toString();
         return timestamp.substring(0,timestamp.indexOf("["));
     }
 
-    private void initQrId(String body) {
+    private static void initQrId(String body) {
         TEST_QR_ID = body;
     }
 

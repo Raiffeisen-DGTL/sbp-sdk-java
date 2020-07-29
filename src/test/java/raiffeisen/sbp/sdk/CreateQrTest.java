@@ -1,6 +1,6 @@
 package raiffeisen.sbp.sdk;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateQrTest {
