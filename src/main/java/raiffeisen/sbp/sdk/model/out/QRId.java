@@ -11,5 +11,5 @@ import lombok.Getter;
 @Builder (buildMethodName = "create", builderMethodName = "creator")
 public class QRId {
     @JsonProperty
-    private final String qrId;
+    String qrId;
 }

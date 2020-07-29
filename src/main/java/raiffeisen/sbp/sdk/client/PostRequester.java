@@ -1,36 +1,38 @@
 package raiffeisen.sbp.sdk.client;
 
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.web.WebClient;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class PostRequester {
-    public static Response request(String url, String body, final String secretKey) throws IOException, SbpException {
 
-        HttpPost poster = new HttpPost(url);
-        poster.addHeader("content-type", "application/json");
-        poster.addHeader("charset", "UTF-8");
+    private WebClient webClient;
+
+    public PostRequester(WebClient client) {
+        webClient = client;
+    }
+
+    public void setWebClient(WebClient client) {
+        webClient = client;
+    }
+
+    public WebClient getWebClient() {
+        return webClient;
+    }
+
+    public Response request(String url, String body, final String secretKey) throws IOException, SbpException {
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/json");
+        headers.put("charset", "UTF-8");
         if(secretKey != null) {
-            poster.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + secretKey);
+            headers.put("Authorization", "Bearer " + secretKey);
         }
 
-        poster.setEntity(new StringEntity(body));
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(poster)) {
-
-            int code = response.getStatusLine().getStatusCode();
-
-            return new Response(code, EntityUtils.toString(response.getEntity()));
-        }
+        return webClient.request("POST", url, headers, body);
     }
 }
