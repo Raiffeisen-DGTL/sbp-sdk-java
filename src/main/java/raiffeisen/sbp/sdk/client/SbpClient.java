@@ -13,9 +13,10 @@ import raiffeisen.sbp.sdk.model.out.RefundInfo;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 import raiffeisen.sbp.sdk.web.WebClient;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public class SbpClient {
+public class SbpClient implements Closeable {
     public static final String TEST_DOMAIN = "https://test.ecom.raiffeisen.ru";
     public static final String PRODUCTION_DOMAIN = "https://e-commerce.raiffeisen.ru";
 
@@ -85,4 +86,8 @@ public class SbpClient {
         return JsonParser.getObjectOrThrow(tempResponse.getBody(), RefundStatus.class, SbpException.class);
     }
 
+    @Override
+    public void close() throws IOException {
+        webClient.close();
+    }
 }
