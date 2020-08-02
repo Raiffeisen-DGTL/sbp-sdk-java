@@ -124,7 +124,7 @@ PaymentInfo response = client.getPaymentInfo(id);
 Для возврата средств необходимо создать объект класса `RefundInfo`, заполнив необходимые поля, и вызвать метод `refundPayment(RefundInfo)`. Подробности об обязательных полях в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
 ~~~ java
-BigDecimal moneyAmount = new BigDecimal(...)
+BigDecimal moneyAmount = new BigDecimal(150)
 String orderInfo = "...";
 String refundId = "...";
 long transactionId = ...;
@@ -222,7 +222,7 @@ boolean success = SbpUtils.checkNotificationSignature(amount,
 По умолчанию для HTTP-запросов используется Apache (класс `ApacheClient`), но можно воспользоваться любым другим, реализовав интерфейс `WebClient`:
 
 ~~~ java
-public interface WebClient {
+public interface WebClient extends Closeable {
     Response request(String method, 
 			String url, 
 			Map<String, String> headers, 

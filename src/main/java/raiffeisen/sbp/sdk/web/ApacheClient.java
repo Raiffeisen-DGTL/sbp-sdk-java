@@ -9,7 +9,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import raiffeisen.sbp.sdk.model.Response;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
 
