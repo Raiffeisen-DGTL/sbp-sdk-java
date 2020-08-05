@@ -26,7 +26,9 @@ public class GetPaymentInfoTest {
             "A1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGps" +
             "u4AX1QoY26FqBiuNuyT-s";
 
-    private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY);
+    private static final SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY);
+
+    private static final SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_DOMAIN, TEST_SECRET_KEY + "-");
 
     private static final String TEST_SBP_MERCHANT_ID = "MA0000000552";
 
@@ -56,16 +58,34 @@ public class GetPaymentInfoTest {
     }
 
     @Test
-    public void getPaymentInfo() throws Exception {
+    public void unauthorizedTest() {
+        QRId id = QRId.creator().qrId(TEST_QR_ID).create();
+
+        try {
+            clientUnauthorized.getPaymentInfo(id);
+            fail();
+        } catch (Exception e) {
+            assertTrue(e instanceof SbpException);
+            assertTrue(e.getMessage().contains("Unauthorized"));
+        }
+    }
+
+    @Test
+    public void getPaymentInfo() {
         if (TEST_QR_ID == null) {
             System.out.println("InitTest failed");
         } else {
 
             QRId id = QRId.creator().qrId(TEST_QR_ID).create();
 
-            PaymentInfo response = client.getPaymentInfo(id);
-
-            assertEquals("SUCCESS", response.getCode());
+            try {
+                PaymentInfo response = client.getPaymentInfo(id);
+                assertEquals("SUCCESS", response.getCode());
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+                fail();
+            }
         }
     }
 

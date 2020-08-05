@@ -1,37 +1,24 @@
 package raiffeisen.sbp.sdk.client;
 
 
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.web.WebClient;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-public class PostRequester {
-
-    private WebClient webClient;
+public class PostRequester extends Requester {
 
     public PostRequester(WebClient client) {
-        webClient = client;
+        super(client);
     }
 
-    public void setWebClient(WebClient client) {
-        webClient = client;
-    }
+    public Response request(String url, String body, final String secretKey) throws SbpException, IOException {
 
-    public WebClient getWebClient() {
-        return webClient;
-    }
+        HashMap<String, String> headers = prepareHeaders(secretKey);
 
-    public Response request(String url, String body, final String secretKey) throws IOException {
-
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("content-type", "application/json");
-        headers.put("charset", "UTF-8");
-        if(secretKey != null) {
-            headers.put("Authorization", "Bearer " + secretKey);
-        }
-
-        return webClient.request("POST", url, headers, body);
+        Response response = webClient.request("POST", url, headers, body);
+        return responseOrThrow(response);
     }
 }

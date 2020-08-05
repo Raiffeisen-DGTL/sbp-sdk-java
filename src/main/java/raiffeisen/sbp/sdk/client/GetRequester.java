@@ -1,5 +1,6 @@
 package raiffeisen.sbp.sdk.client;
 
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.web.WebClient;
@@ -7,34 +8,22 @@ import raiffeisen.sbp.sdk.web.WebClient;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class GetRequester {
-
-    private WebClient webClient;
+public class GetRequester extends Requester {
 
     public GetRequester(WebClient client) {
-        webClient = client;
+        super(client);
     }
 
-    public void setWebClient(WebClient client) {
-        webClient = client;
-    }
-
-    public WebClient getWebClient() {
-        return webClient;
-    }
-
-    public Response request(String url, QRId qrId, final String secretKey) throws IOException {
+    public Response request(String url, QRId qrId, final String secretKey) throws SbpException, IOException {
         return request(url, qrId.getQrId(), secretKey);
     }
 
-    public Response request(String url, final String pathParameter, final String secretKey) throws IOException {
+    public Response request(String url, final String pathParameter, final String secretKey) throws SbpException, IOException {
         url = url.replace("?", pathParameter);
 
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("content-type", "application/json");
-        headers.put("charset", "UTF-8");
-        headers.put("Authorization", "Bearer " + secretKey);
+        HashMap<String, String> headers = prepareHeaders(secretKey);
 
-        return webClient.request("GET", url, headers, null);
+        Response response = webClient.request("GET", url, headers, null);
+        return responseOrThrow(response);
     }
 }
