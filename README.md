@@ -205,7 +205,7 @@ String order = "...";
 String paymentStatus = "...";
 String transactionDate = "...";
 
-String secretKeyString apiSignature = "...";
+String apiSignature = "...";
 String secretKey = "...";
 
 boolean success = SbpUtils.checkNotificationSignature(amount, 
