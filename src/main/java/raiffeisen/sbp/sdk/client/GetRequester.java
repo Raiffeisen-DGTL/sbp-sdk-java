@@ -6,7 +6,7 @@ import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.web.WebClient;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 public class GetRequester extends Requester {
 
@@ -21,7 +21,7 @@ public class GetRequester extends Requester {
     public Response request(String url, final String pathParameter, final String secretKey) throws SbpException, IOException {
         url = url.replace("?", pathParameter);
 
-        HashMap<String, String> headers = prepareHeaders(secretKey);
+        Map<String, String> headers = prepareHeaders(secretKey);
 
         Response response = webClient.request(WebClient.GET_METHOD, url, headers, null);
         return responseOrThrow(response);

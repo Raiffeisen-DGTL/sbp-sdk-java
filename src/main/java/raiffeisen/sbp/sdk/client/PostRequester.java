@@ -6,7 +6,7 @@ import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.web.WebClient;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 public class PostRequester extends Requester {
 
@@ -16,7 +16,7 @@ public class PostRequester extends Requester {
 
     public Response request(String url, String body, final String secretKey) throws SbpException, IOException {
 
-        HashMap<String, String> headers = prepareHeaders(secretKey);
+        Map<String, String> headers = prepareHeaders(secretKey);
 
         Response response = webClient.request(WebClient.POST_METHOD, url, headers, body);
         return responseOrThrow(response);

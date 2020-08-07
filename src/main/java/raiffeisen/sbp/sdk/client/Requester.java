@@ -5,6 +5,7 @@ import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.web.WebClient;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Requester {
 
@@ -22,8 +23,8 @@ public class Requester {
         return webClient;
     }
 
-    protected HashMap<String, String> prepareHeaders(String secretKey) {
-        HashMap<String, String> headers = new HashMap<>();
+    protected Map<String, String> prepareHeaders(String secretKey) {
+        Map<String, String> headers = new HashMap<>();
         headers.put("content-type", "application/json");
         headers.put("charset", "UTF-8");
         if(secretKey != null) {
