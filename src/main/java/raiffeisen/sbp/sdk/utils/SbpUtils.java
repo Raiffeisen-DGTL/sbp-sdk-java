@@ -68,7 +68,7 @@ public class SbpUtils {
 
     }
 
-    public static String joinFields(String jsonString) {
+    private static String joinFields(String jsonString) {
         try {
             JsonNode json = new ObjectMapper().readTree(jsonString);
             return joinFields(json.path("amount").asText(),
@@ -82,7 +82,7 @@ public class SbpUtils {
         }
     }
 
-    public static String joinFields(String amount, String sbpMerchantId, String order, String paymentStatus, String transactionDate) {
+    private static String joinFields(String amount, String sbpMerchantId, String order, String paymentStatus, String transactionDate) {
         return amount +
                 SEPARATOR +
                 sbpMerchantId +

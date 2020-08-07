@@ -36,7 +36,7 @@ public class ApacheClient implements WebClient {
         httpClient.close();
     }
 
-    private static Response getRequest(String url, Map<String, String> headers) throws IOException {
+    private Response getRequest(String url, Map<String, String> headers) throws IOException {
         HttpGet getter = new HttpGet(url);
         headers.forEach(getter::addHeader);
 
@@ -48,7 +48,7 @@ public class ApacheClient implements WebClient {
         }
     }
 
-    private static Response postRequest(String url, Map<String, String> headers, String entity) throws IOException {
+    private Response postRequest(String url, Map<String, String> headers, String entity) throws IOException {
         HttpPost poster = new HttpPost(url);
         headers.forEach(poster::addHeader);
 

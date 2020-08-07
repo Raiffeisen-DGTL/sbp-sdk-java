@@ -22,7 +22,7 @@ public class Requester {
         return webClient;
     }
 
-    public static HashMap<String, String> prepareHeaders(String secretKey) {
+    protected HashMap<String, String> prepareHeaders(String secretKey) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("content-type", "application/json");
         headers.put("charset", "UTF-8");
@@ -32,7 +32,7 @@ public class Requester {
         return headers;
     }
 
-    public static Response responseOrThrow(Response response) throws SbpException {
+    protected Response responseOrThrow(Response response) throws SbpException {
         if(response.getBody() == null || response.getBody().length() == 0 || response.getBody().charAt(0) != '{') {
             SbpException e = new SbpException();
             e.setCode("HttpCode = " + response.getCode());
