@@ -18,7 +18,7 @@ public class PostRequester extends Requester {
 
         HashMap<String, String> headers = prepareHeaders(secretKey);
 
-        Response response = webClient.request("POST", url, headers, body);
+        Response response = webClient.request(WebClient.POST_METHOD, url, headers, body);
         return responseOrThrow(response);
     }
 }

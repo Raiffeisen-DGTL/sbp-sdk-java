@@ -23,7 +23,7 @@ public class GetRequester extends Requester {
 
         HashMap<String, String> headers = prepareHeaders(secretKey);
 
-        Response response = webClient.request("GET", url, headers, null);
+        Response response = webClient.request(WebClient.GET_METHOD, url, headers, null);
         return responseOrThrow(response);
     }
 }

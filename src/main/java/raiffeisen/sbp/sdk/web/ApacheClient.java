@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public class ApacheClient implements WebClient {
-    private static final String GET_METHOD = "GET";
-    private static final String POST_METHOD = "POST";
 
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
 
