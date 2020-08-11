@@ -46,11 +46,7 @@ public class SbpClient implements Closeable {
     }
 
     public SbpClient(String domain, String secretKey) {
-        this.domain = domain;
-        this.secretKey = secretKey;
-        this.webClient = new ApacheClient();
-        this.postRequester = new PostRequester(this.webClient);
-        this.getRequester = new GetRequester(this.webClient);
+        this(domain, secretKey, new ApacheClient());
     }
 
     public SbpClient(String domain, String secretKey, WebClient customWebClient) {

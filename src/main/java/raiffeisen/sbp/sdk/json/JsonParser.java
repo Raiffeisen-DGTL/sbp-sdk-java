@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonParser {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     public static <T> T objectFromJson(String body, Class<T> tClass) throws JsonProcessingException {
-        return new ObjectMapper().readValue(body, tClass);
+        return mapper.readValue(body, tClass);
     }
 
     public static <E extends Throwable, T> T getObjectOrThrow(String body, Class<T> resultClass, Class<E> throwClass) throws E, JsonProcessingException {

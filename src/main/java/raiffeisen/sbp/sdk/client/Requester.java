@@ -1,5 +1,6 @@
 package raiffeisen.sbp.sdk.client;
 
+import org.codehaus.plexus.util.StringUtils;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.web.WebClient;
@@ -34,11 +35,10 @@ public class Requester {
     }
 
     protected Response responseOrThrow(Response response) throws SbpException {
-        if(response.getBody() == null || response.getBody().length() == 0 || response.getBody().charAt(0) != '{') {
-            SbpException e = new SbpException();
-            e.setCode("HttpCode = " + response.getCode());
-            e.setMessage("Ответ сервера: " + response.getBody());
-            throw e;
+        String body = response.getBody();
+        if(StringUtils.isEmpty(body) || body.charAt(0) != '{') {
+            throw new SbpException("HttpCode = " + response.getCode(),
+                    "Ответ сервера: " + response.getBody());
         }
         return response;
     }

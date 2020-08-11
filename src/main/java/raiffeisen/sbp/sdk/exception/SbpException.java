@@ -1,10 +1,12 @@
 package raiffeisen.sbp.sdk.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class SbpException extends Exception {
 
     private String code;

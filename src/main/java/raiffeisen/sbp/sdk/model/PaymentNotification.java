@@ -1,14 +1,14 @@
 package raiffeisen.sbp.sdk.model;
 
-import lombok.Getter;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.Setter;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import raiffeisen.sbp.sdk.json.JsonParser;
 
 import java.math.BigDecimal;
 
 @Getter
-@Setter
+@RequiredArgsConstructor
 public class PaymentNotification {
     private long transactionId;
     private String qrId;

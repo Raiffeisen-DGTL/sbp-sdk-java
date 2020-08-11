@@ -1,10 +1,10 @@
 package raiffeisen.sbp.sdk.model.in;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
+@RequiredArgsConstructor
 public class QRUrl {
 
     private String code;

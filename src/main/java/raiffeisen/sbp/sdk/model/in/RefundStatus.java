@@ -1,12 +1,12 @@
 package raiffeisen.sbp.sdk.model.in;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Getter
-@Setter
+@RequiredArgsConstructor
 public class RefundStatus {
 
     private String code;
