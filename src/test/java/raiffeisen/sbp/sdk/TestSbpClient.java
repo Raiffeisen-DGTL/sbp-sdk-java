@@ -3,19 +3,24 @@ package raiffeisen.sbp.sdk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundInfo;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,7 +66,7 @@ public class TestSbpClient {
         // assert
         assertEquals("SUCCESS", response.getCode(),"Code is not SUCCESS");
         assertEquals(headersCaptor.getValue(), TestData.HEADERS, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.QR_INFO_BODY);
+        assertEquals(bodyCaptor.getValue(), TestData.QR_INFO_BODY, "Bodies of request are not equal");
     }
 
     @Test
@@ -83,7 +88,7 @@ public class TestSbpClient {
         // assert
         assertEquals("SUCCESS", response.getCode(), "Code is not SUCCESS");
         assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.QR_ID_BODY);
+        assertEquals(bodyCaptor.getValue(), TestData.NULL_BODY, "Bodies of request are not equal");
     }
 
     @Test
@@ -105,6 +110,52 @@ public class TestSbpClient {
         // assert
         assertEquals("SUCCESS", response.getCode(), "Response code is not correct");
         assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.QR_ID_BODY);
+        assertEquals(bodyCaptor.getValue(), TestData.NULL_BODY, "Bodies of request are not equal");
+    }
+
+    @Test
+    public void success_refundPayment() throws Exception {
+        // arrange
+        Mockito.when(webclient.request(eq("POST"),
+                eq(TestData.DOMAIN + TestData.REFUND_PATH),
+                headersCaptor.capture(),
+                bodyCaptor.capture())).
+                thenReturn(TestData.REFUND_STATUS);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+
+        RefundInfo refundInfo = RefundInfo.creator().
+                refundId("12345").
+                amount(BigDecimal.TEN).
+                order("123-123").
+                transactionId(111).
+                create();
+
+        // act
+        RefundStatus refundStatus = client.refundPayment(refundInfo);
+
+        // assert
+        assertEquals("SUCCESS", refundStatus.getCode(), "Response code is not correct");
+        assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
+        assertEquals(bodyCaptor.getValue(), TestData.REFUND_PAYMENT, "Bodies of request are not equal");
+    }
+
+    @Test
+    public void success_getRefundInfo() throws Exception {
+        // arrange
+        Mockito.when(webclient.request(eq("GET"),
+                eq(TestData.DOMAIN + TestData.REFUND_INFO_PATH),
+                headersCaptor.capture(),
+                bodyCaptor.capture())).
+                thenReturn(TestData.REFUND_STATUS);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+
+        // act
+        RefundStatus refundStatus = client.getRefundInfo("123");
+
+        assertEquals("SUCCESS", refundStatus.getCode(), "Response code is not correct");
+        assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
+        assertEquals(bodyCaptor.getValue(), TestData.NULL_BODY, "Bodies of request are not equal");
     }
 }
