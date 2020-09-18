@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raiffeisen.sbp.sdk.client.PostRequester;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.Response;
@@ -29,7 +30,8 @@ import static org.mockito.ArgumentMatchers.eq;
 @ExtendWith(MockitoExtension.class)
 public class TestSbpClient {
 
-    @Mock private ApacheClient webclient;
+    @Mock
+    private ApacheClient webclient;
 
     private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
 
@@ -41,9 +43,23 @@ public class TestSbpClient {
     private static final String REFUND_PATH = "/api/sbp/v1/refund";
     private static final String REFUND_INFO_PATH = "/api/sbp/v1/refund/?";
 
-    @BeforeEach
-    public void init() {
-        webclient = Mockito.mock(ApacheClient.class);
+
+    @Test
+    public void callPost() throws Exception{
+
+        Mockito.when(webclient.request(eq("GET"),
+                any(),
+                any(),
+                any())).
+                thenReturn(TestData.successRegisterQR);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"", webclient);
+
+        final String exampleQrId = "qrId";
+        final QRId qrId = QRId.creator().qrId(exampleQrId).create();
+        final QRUrl qrInfo = client.getQRInfo(qrId);
+
+        assertEquals(exampleQrId, qrInfo.getQrId());
     }
 
     @Test
