@@ -1,23 +1,17 @@
 package raiffeisen.sbp.sdk;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import raiffeisen.sbp.sdk.client.SbpClient;
-import raiffeisen.sbp.sdk.model.QRType;
-import raiffeisen.sbp.sdk.model.in.PaymentInfo;
-import raiffeisen.sbp.sdk.model.in.QRUrl;
-import raiffeisen.sbp.sdk.model.in.RefundStatus;
-import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.model.out.QRInfo;
-import raiffeisen.sbp.sdk.model.out.RefundInfo;
+import raiffeisen.sbp.sdk.model.*;
+import raiffeisen.sbp.sdk.model.in.*;
+import raiffeisen.sbp.sdk.model.out.*;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 
 import java.math.BigDecimal;
@@ -27,26 +21,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-public class TestSbpClient {
+class TestSbpClient {
 
     @Mock private ApacheClient webclient;
 
-    @Captor
-    ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
-
-    @Captor
-    ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
-
-    @BeforeEach
-    public void init() {
-        webclient = Mockito.mock(ApacheClient.class);
-    }
-
     @Test
-    public void success_registerQR() throws Exception {
+    void success_registerQR() throws Exception {
         // arrange
+        ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("POST"),
-                eq( TestData.DOMAIN + TestData.REGISTER_PATH),
+                eq( TestData.SANDBOX + TestData.REGISTER_PATH),
                 headersCaptor.capture(),
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
@@ -65,15 +50,17 @@ public class TestSbpClient {
 
         // assert
         assertEquals("SUCCESS", response.getCode(),"Code is not SUCCESS");
-        assertEquals(headersCaptor.getValue(), TestData.HEADERS, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.QR_INFO_BODY, "Bodies of request are not equal");
+        assertEquals(TestData.HEADERS, headersCaptor.getValue(), "Headers are not equal");
+        assertEquals(TestData.QR_INFO_BODY, bodyCaptor.getValue(), "Bodies of request are not equal");
     }
 
     @Test
-    public void success_getQRInfo() throws Exception {
+    void success_getQRInfo() throws Exception {
         // arrange
+        ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("GET"),
-                eq(TestData.DOMAIN + TestData.QR_INFO_PATH),
+                eq(TestData.SANDBOX + TestData.QR_INFO_PATH),
                 headersCaptor.capture(),
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
@@ -87,15 +74,17 @@ public class TestSbpClient {
 
         // assert
         assertEquals("SUCCESS", response.getCode(), "Code is not SUCCESS");
-        assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.NULL_BODY, "Bodies of request are not equal");
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(), "Headers are not equal");
+        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue(),"Bodies of request are not equal");
     }
 
     @Test
-    public void success_getPaymentInfo() throws Exception {
+    void success_getPaymentInfo() throws Exception {
         // arrange
+        ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("GET"),
-                eq(TestData.DOMAIN + TestData.PAYMENT_INFO_PATH),
+                eq(TestData.SANDBOX + TestData.PAYMENT_INFO_PATH),
                 headersCaptor.capture(),
                 bodyCaptor.capture())).
                 thenReturn(TestData.PAYMENT_INFO);
@@ -109,15 +98,17 @@ public class TestSbpClient {
 
         // assert
         assertEquals("SUCCESS", response.getCode(), "Response code is not correct");
-        assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.NULL_BODY, "Bodies of request are not equal");
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(), "Headers are not equal");
+        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue(), "Bodies of request are not equal");
     }
 
     @Test
-    public void success_refundPayment() throws Exception {
+    void success_refundPayment() throws Exception {
         // arrange
+        ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("POST"),
-                eq(TestData.DOMAIN + TestData.REFUND_PATH),
+                eq(TestData.SANDBOX + TestData.REFUND_PATH),
                 headersCaptor.capture(),
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
@@ -136,15 +127,17 @@ public class TestSbpClient {
 
         // assert
         assertEquals("SUCCESS", refundStatus.getCode(), "Response code is not correct");
-        assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.REFUND_PAYMENT, "Bodies of request are not equal");
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(),  "Headers are not equal");
+        assertEquals(TestData.REFUND_PAYMENT, bodyCaptor.getValue(), "Bodies of request are not equal");
     }
 
     @Test
-    public void success_getRefundInfo() throws Exception {
+    void success_getRefundInfo() throws Exception {
         // arrange
+        ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("GET"),
-                eq(TestData.DOMAIN + TestData.REFUND_INFO_PATH),
+                eq(TestData.SANDBOX + TestData.REFUND_INFO_PATH),
                 headersCaptor.capture(),
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
@@ -155,7 +148,7 @@ public class TestSbpClient {
         RefundStatus refundStatus = client.getRefundInfo("123");
 
         assertEquals("SUCCESS", refundStatus.getCode(), "Response code is not correct");
-        assertEquals(headersCaptor.getValue(), TestData.HEADERS_AUTH, "Headers are not equal");
-        assertEquals(bodyCaptor.getValue(), TestData.NULL_BODY, "Bodies of request are not equal");
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(), "Headers are not equal");
+        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue(), "Bodies of request are not equal");
     }
 }

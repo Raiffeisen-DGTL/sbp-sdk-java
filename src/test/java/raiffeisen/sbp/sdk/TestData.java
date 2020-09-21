@@ -1,14 +1,11 @@
 package raiffeisen.sbp.sdk;
 
-import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.Response;
-import raiffeisen.sbp.sdk.model.out.QRInfo;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TestData {
-    public static final String DOMAIN = "https://test.ecom.raiffeisen.ru";
+    public static final String SANDBOX = "https://test.ecom.raiffeisen.ru";
 
     public static final String REGISTER_PATH = "/api/sbp/v1/qr/register";
     public static final String QR_INFO_PATH = "/api/sbp/v1/qr/123/info";
@@ -18,9 +15,14 @@ public class TestData {
 
     public static final String SBP_MERCHANT_ID = "MA0000000552";
 
-    public static final Map<String, String> HEADERS_AUTH = new HashMap<String, String>();
+    public static final Map<String, String> HEADERS_AUTH =
+            Map.of("content-type", "application/json",
+                    "charset", "UTF-8",
+                    "Authorization", "Bearer secretKey");
 
-    public static final Map<String, String> HEADERS = new HashMap<String, String>();
+    public static final Map<String, String> HEADERS =
+            Map.of("content-type", "application/json",
+            "charset", "UTF-8");
 
     public static final Response QR_URL = new Response(200,
             "{\"code\": \"SUCCESS\"," +
@@ -58,14 +60,4 @@ public class TestData {
             "\"order\":\"123-123\"," +
             "\"refundId\":\"12345\"," +
             "\"transactionId\":111}";
-
-    static {
-        HEADERS_AUTH.put("content-type", "application/json");
-        HEADERS_AUTH.put("charset", "UTF-8");
-        HEADERS_AUTH.put("Authorization", "Bearer secretKey");
-
-        HEADERS.put("content-type", "application/json");
-        HEADERS.put("charset", "UTF-8");
-    }
-
 }
