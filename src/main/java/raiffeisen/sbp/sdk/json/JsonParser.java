@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonParser {
-
+    private JsonParser() {
+        throw new IllegalStateException("Utility class");
+    }
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static <T> T objectFromJson(String body, Class<T> tClass) throws JsonProcessingException {

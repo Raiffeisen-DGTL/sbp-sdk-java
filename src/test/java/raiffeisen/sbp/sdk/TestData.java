@@ -2,9 +2,10 @@ package raiffeisen.sbp.sdk;
 
 import raiffeisen.sbp.sdk.model.Response;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
-public class TestData {
+public abstract class TestData {
     public static final String SANDBOX = "https://test.ecom.raiffeisen.ru";
 
     public static final String REGISTER_PATH = "/api/sbp/v1/qr/register";
@@ -60,4 +61,31 @@ public class TestData {
             "\"order\":\"123-123\"," +
             "\"refundId\":\"12345\"," +
             "\"transactionId\":111}";
+
+    public static final String NOTIFICATION = "{\"transactionId\":17998," +
+            "\"qrId\":\"AS1000408BSPMRDI8IHBGO4DFQAISU9O\"," +
+            "\"sbpMerchantId\":\"MA0000000552\"," +
+            "\"merchantId\":123," +
+            "\"amount\":101.01," +
+            "\"currency\":\"RUB\"," +
+            "\"transactionDate\":\"2020-07-24T17:20:00.999232+03:00\"," +
+            "\"paymentStatus\":\"SUCCESS\"," +
+            "\"additionalInfo\":null," +
+            "\"order\":\"dfe0ff08-4796-46bb-a9fb-93fcd99ce748\"," +
+            "\"createDate\":\"2020-07-24T17:19:58+03:00\"}";
+
+    public static final String API_SIGNATURE =
+            "1eca6a084ff8a5b4f5740e0eeab2a72d8ff981bce5b5dea75a53bf44944a8c8d";
+
+    public static final BigDecimal NOTIFICATION_AMOUNT = BigDecimal.valueOf(101.01);
+
+    public static final String NOTIFICATION_SBP_MERCHANT_ID = "MA0000000552";
+
+    public static final String NOTIFICATION_ORDER = "dfe0ff08-4796-46bb-a9fb-93fcd99ce748";
+
+    public static final String NOTIFICATION_PAYMENT_STATUS = "SUCCESS";
+
+    public static final String NOTIFICATION_TRANSACTION_DATE = "2020-07-24T17:20:00.999232+03:00";
+
+    public static final String NOTIFICATION_TEST_SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiIwZTRhODI2ZC0zMTk3LTQ5YWUtYjRlYS0zZDllOGRkODIyOGEifQ.Q-AVaDBzvfkz6I8ZCVgvGIWpWTUgotRDmTcs4ysR0Qc";
 }
