@@ -61,7 +61,7 @@ public class QrMaker {
             qrExpirationDate = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSXXX"));
         }
         else {
-            qrExpirationDate = null;
+            qrExpirationDate = qrInfo.getQrExpirationDate();
         }
 
         return QRInfo.creator().
