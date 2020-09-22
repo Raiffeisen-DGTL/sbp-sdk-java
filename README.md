@@ -1,10 +1,21 @@
 ## SBP API Java SDK
+### Содержание
+[Документация](#docs)
+[Использование](#usage)
+[Регистрация QR-кода](#registerQr)
+[Получение данных по зарегистрированному ранее QR-коду](#getQrInfo)
+[Получение информации по платежу](#getPaymentInfo)
+[Оформление возврата по платежу](#refundPayment)
+[Получение информации по возврату](#getRefundInfo)
+[Обработка уведомлений](#notification)
+[Проверка подписи](#signature)
+[Использование альтернативного HTTP-клиента](#altHTTPClient)
 
-#### Документация
+<a name="docs"><h2>Документация</h2></a>
 
 **API**: [https://e-commerce.raiffeisen.ru/api/doc/sbp.html](Документация)
 
-#### Использование
+<a name="usage"><h2>Использование</h2></a>
 
 Для использования SDK необходимо создать объект класса `SbpClient`, указав в конструкторе домен, на который будут отправляться запросы (`SbpClient.PRODUCTION_DOMAIN` или `SbpClient.TEST_DOMAIN`), и секретный ключ для авторизации:
 
@@ -14,16 +25,16 @@ String secretKey = "...";
 SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
  ~~~
 
-Все запросы осуществляются классаом `SbpClient` и возвращают объекты следующих классов:
+Все запросы осуществляются классом `SbpClient` и возвращают объекты следующих классов:
 - `QRURl` для информации, связанной с QR-кодом
-- `RefundStatus` -- для возвратов
-- `PaymentInfo` -- для платежей
+- `RefundStatus` - для возвратов
+- `PaymentInfo` - для платежей
 
 Эти классы содержат в себе те же поля, что и ответ сервера.
 
 В случае логической ошибки клиент вернёт исключение `SbpException` с сообщением об ошибке.
 
-#### Регистрация QR-кода
+<a name="registerQr"><h2>Регистрация QR-кода</h2></a>
 
 Для регистрации кода необходимо создать экземпляр класса `QRInfo` и заполнить поля. Для разных типов QR-кодов обязательные параметры отличаются. Полную информацию о возможных параметрах можно посмотреть в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
@@ -65,7 +76,7 @@ QRUrl response = client.registerQR(exampleQR);
 }
 ~~~
 
-#### Получение данных по зарегистрированному ранее QR-коду
+<a name="getQrInfo"><h2>Получение данных по зарегистрированному ранее QR-коду</h2></a>
 
 Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getQRInfo(QRId)`:
 
@@ -88,7 +99,8 @@ QRUrl response = client.getQRInfo(id);
 }
 ~~~
 
-#### Получение информации по платежу
+<a name="getPaymentInfo"><h2>Получение информации по платежу</h2></a>
+
 
 Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getPaymentInfo(QRId)`:
 
@@ -119,7 +131,7 @@ PaymentInfo response = client.getPaymentInfo(id);
 }
 ~~~
 
-#### Оформление возврата по платежу
+<a name="refundPayment"><h2>Оформление возврата по платежу</h2></a>
 
 Для возврата средств необходимо создать объект класса `RefundInfo`, заполнив необходимые поля, и вызвать метод `refundPayment(RefundInfo)`. Подробности об обязательных полях в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
@@ -149,7 +161,7 @@ RefundStatus response = client.refundPayment(refundInfo);
 }
 ~~~
 
-#### Получение информации по возврату
+<a name="getRefundInfo"><h2>Получение информации по возврату</h2></a>
 
 Для выполнения данного запроса необходимо указать уникальный идентификатор запроса на возврат `refundId` при вызове метода `getRefundInfo(refundId)`:
 
@@ -169,7 +181,7 @@ RefundStatus response = client.getRefundInfo(refundId);
 }
 ~~~
 
-#### Обработка уведомлений
+<a name="notification"><h2>Обработка уведомлений</h2></a>
 
 Для обработки уведомлений существует класс `PaymentNotification`. Инициализация происходит с помощью статического метода `PaymentNotification.fromJson(String)`:
 
@@ -178,7 +190,7 @@ String jsonString = "...";
 PaymentNotification notification = PaymentNotification.fromJson(jsonString);
 ~~~
 
-#### Проверка подписи
+<a name="signature"><h2>Проверка подписи</h2></a>
 
 Для проверки подлинности уведомления существует класс `SbpUtils`. Проверка подписи осуществляется при помощи перегруженного статического метода `checkNotificationSignature`. Примеры использования:
 
@@ -217,7 +229,7 @@ boolean success = SbpUtils.checkNotificationSignature(amount,
                  	secretKey);
 ~~~
 
-#### Использование альтернативного HTTP-клиента
+<a name="altHTTPClient"><h2>Использование альтернативного HTTP-клиента</h2></a>
 
 По умолчанию для HTTP-запросов используется Apache (класс `ApacheClient`), но можно воспользоваться любым другим, реализовав интерфейс `WebClient`:
 
@@ -245,19 +257,3 @@ SbpClient client = ...;
 CustomWebClient customClient = ...;
 client.setWebClient(customClient);
 ~~~
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
