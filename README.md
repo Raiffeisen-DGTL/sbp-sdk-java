@@ -19,12 +19,6 @@
 
 Для использования SDK необходимо создать объект класса `SbpClient`, указав в конструкторе домен, на который будут отправляться запросы (`SbpClient.PRODUCTION_DOMAIN` или `SbpClient.TEST_DOMAIN`), и секретный ключ для авторизации:
 
- ~~~ java
-String secretKey = "...";
-
-SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
- ~~~
-
 Все запросы осуществляются классом `SbpClient` и возвращают объекты следующих классов:
 - `QRURl` для информации, связанной с QR-кодом
 - `RefundStatus` - для возвратов
@@ -32,7 +26,29 @@ SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
 
 Эти классы содержат в себе те же поля, что и ответ сервера.
 
-В случае логической ошибки клиент вернёт исключение `SbpException` с сообщением об ошибке.
+Клиент может вернуть следующие типы исключений:
+- `IOException` - ошибка сетевого взаимодействия
+- `SbpException` - логическая ошибка
+
+ ~~~ java
+String secretKey = "...";
+
+SbpClient client = new SbpClient(SbpClient.PRODUCTION_DOMAIN, secretKey);
+
+QRUrl response;
+
+try {
+    response = client.registerQR(QR);
+}
+catch (IOException exc) {
+    exc.getMessage();
+}
+catch (SbpExeption ex) {
+    ex.getCode(); // http code
+    ex.getMessage();
+}
+
+ ~~~
 
 <a name="registerQr"><h2>Регистрация QR-кода</h2></a>
 
