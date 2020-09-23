@@ -4,6 +4,7 @@ import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,10 @@ public final class QrInfoUtils {
     private static String createDate;
     private static String qrExpirationDate;
     private static ZonedDateTime time;
+
+    public static String createUUID() {
+        return UUID.randomUUID().toString();
+    }
 
     public static QRInfo calculateDate(QRInfo qrInfo) {
         checkCreateDate(qrInfo);

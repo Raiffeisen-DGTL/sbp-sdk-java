@@ -115,6 +115,11 @@ class TestQrInfoUtils {
     }
 
     @Test
+    void success_GetUUID() {
+        assertFalse(QrInfoUtils.createUUID().isEmpty());
+    }
+
+    @Test
     void fail_EmptyShift() {
         // arrange
         QRInfo qrInfo = QRInfo.creator().
