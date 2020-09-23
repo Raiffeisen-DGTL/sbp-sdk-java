@@ -39,8 +39,9 @@ class TestSbpClient {
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
 
         QRInfo qrInfo = QRInfo.creator().
-                createDate("timestamp").
                 order("123-123-123").
+                createDate(TestData.DATE_CREATE_DATE).
+                qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE).
                 qrType(QRType.QRStatic).
                 sbpMerchantId(TestData.SBP_MERCHANT_ID).
                 create();
@@ -49,9 +50,9 @@ class TestSbpClient {
         QRUrl response = client.registerQR(qrInfo);
 
         // assert
-        assertEquals("SUCCESS", response.getCode(),"Code is not SUCCESS");
-        assertEquals(TestData.HEADERS, headersCaptor.getValue(), "Headers are not equal");
-        assertEquals(TestData.QR_INFO_BODY, bodyCaptor.getValue(), "Bodies of request are not equal");
+        assertEquals("SUCCESS", response.getCode());
+        assertEquals(TestData.HEADERS, headersCaptor.getValue());
+        assertEquals(TestData.QR_INFO_BODY, bodyCaptor.getValue());
     }
 
     @Test
@@ -73,9 +74,9 @@ class TestSbpClient {
         QRUrl response = client.getQRInfo(qrId);
 
         // assert
-        assertEquals("SUCCESS", response.getCode(), "Code is not SUCCESS");
-        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(), "Headers are not equal");
-        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue(),"Bodies of request are not equal");
+        assertEquals("SUCCESS", response.getCode());
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue());
+        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
     }
 
     @Test
@@ -97,9 +98,9 @@ class TestSbpClient {
         PaymentInfo response = client.getPaymentInfo(id);
 
         // assert
-        assertEquals("SUCCESS", response.getCode(), "Response code is not correct");
-        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(), "Headers are not equal");
-        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue(), "Bodies of request are not equal");
+        assertEquals("SUCCESS", response.getCode());
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue());
+        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
     }
 
     @Test
@@ -126,9 +127,9 @@ class TestSbpClient {
         RefundStatus refundStatus = client.refundPayment(refundInfo);
 
         // assert
-        assertEquals("SUCCESS", refundStatus.getCode(), "Response code is not correct");
-        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(),  "Headers are not equal");
-        assertEquals(TestData.REFUND_PAYMENT, bodyCaptor.getValue(), "Bodies of request are not equal");
+        assertEquals("SUCCESS", refundStatus.getCode());
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue());
+        assertEquals(TestData.REFUND_PAYMENT, bodyCaptor.getValue());
     }
 
     @Test
@@ -147,8 +148,8 @@ class TestSbpClient {
         // act
         RefundStatus refundStatus = client.getRefundInfo("123");
 
-        assertEquals("SUCCESS", refundStatus.getCode(), "Response code is not correct");
-        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue(), "Headers are not equal");
-        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue(), "Bodies of request are not equal");
+        assertEquals("SUCCESS", refundStatus.getCode());
+        assertEquals(TestData.HEADERS_AUTH, headersCaptor.getValue());
+        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
     }
 }

@@ -50,10 +50,12 @@ public abstract class TestData {
             "\"amount\": 150," +
             "\"refundStatus\": \"IN_PROGRESS\"}");
 
-    public static final String QR_INFO_BODY = "{\"createDate\":\"timestamp\"," +
+    public static final String QR_INFO_BODY = "{\"createDate\":\"" + TestData.DATE_CREATE_DATE + "\","+
             "\"order\":\"123-123-123\"," +
             "\"qrType\":\"QRStatic\"," +
-            "\"sbpMerchantId\":\"MA0000000552\"}";
+            "\"sbpMerchantId\":\"MA0000000552\"," +
+            "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"" +
+            "}";
 
     public static final String NULL_BODY = null;
 
@@ -88,4 +90,12 @@ public abstract class TestData {
     public static final String NOTIFICATION_TRANSACTION_DATE = "2020-07-24T17:20:00.999232+03:00";
 
     public static final String NOTIFICATION_TEST_SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiIwZTRhODI2ZC0zMTk3LTQ5YWUtYjRlYS0zZDllOGRkODIyOGEifQ.Q-AVaDBzvfkz6I8ZCVgvGIWpWTUgotRDmTcs4ysR0Qc";
+
+    public static final String DATE_CREATE_DATE = "2019-07-22T09:14:38.107227+03:00";
+
+    public static final String DATE_CREATE_DATE_PLUS_DAY = "2019-07-23T09:14:38.107227+03:00";
+
+    public static final String DATE_CREATE_DATE_PLUS_MONTH = "2019-08-22T09:14:38.107227+03:00";
+
+    public static final String DATE_QR_EXPIRATION_DATE = "2020-07-22T09:14:38.107227+03:00";
 }
