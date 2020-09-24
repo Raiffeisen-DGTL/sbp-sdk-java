@@ -13,7 +13,7 @@ public final class QrInfoUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final String TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX";
+    private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
     public static String generateOrderNum() {
         return UUID.randomUUID().toString();
@@ -46,7 +46,7 @@ public final class QrInfoUtils {
 
     private static String checkCreateDate(QRInfo qrInfo) {
         if (qrInfo.getCreateDate() == null) {
-            return ZonedDateTime.now().format(DateTimeFormatter.ofPattern(TIME_PATTERN));
+            return ZonedDateTime.now().format(TIME_PATTERN);
         }
         else {
             return qrInfo.getCreateDate();
@@ -90,6 +90,6 @@ public final class QrInfoUtils {
         if (!matcher.replaceAll("").equals("")) {
             throw new IllegalArgumentException("Bad input in QRInfo.qrExpirationDate");
         }
-        return time.format(DateTimeFormatter.ofPattern(TIME_PATTERN));
+        return time.format(TIME_PATTERN);
     }
 }
