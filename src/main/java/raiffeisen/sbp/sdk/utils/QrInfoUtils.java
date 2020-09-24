@@ -31,11 +31,9 @@ public final class QrInfoUtils {
             qrExpirationDate = qrInfo.getQrExpirationDate();
         }
 
-        String orderNum = checkOrder(qrInfo);
-
         return QRInfo.creator().
                 createDate(createDate).
-                order(orderNum).
+                order(qrInfo.getOrder() == null ? generateOrderNum() : qrInfo.getOrder()).
                 qrType(qrInfo.getQrType()).
                 sbpMerchantId(qrInfo.getSbpMerchantId()).
                 account(qrInfo.getAccount()).
@@ -93,14 +91,5 @@ public final class QrInfoUtils {
             throw new IllegalArgumentException("Bad input in QRInfo.qrExpirationDate");
         }
         return time.format(DateTimeFormatter.ofPattern(TIME_PATTERN));
-    }
-
-    private static String checkOrder(QRInfo qrInfo) {
-        if (qrInfo.getOrder() == null) {
-            return generateOrderNum();
-        }
-        else {
-            return qrInfo.getOrder();
-        }
     }
 }
