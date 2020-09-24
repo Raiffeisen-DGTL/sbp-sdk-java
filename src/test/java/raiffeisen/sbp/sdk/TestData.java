@@ -98,4 +98,6 @@ public abstract class TestData {
     public static final String DATE_CREATE_DATE_PLUS_MONTH = "2019-08-22T09:14:38.107227+03:00";
 
     public static final String DATE_QR_EXPIRATION_DATE = "2020-07-22T09:14:38.107227+03:00";
+
+    public static final String ORDER_NUMBER = "1-22-333";
 }

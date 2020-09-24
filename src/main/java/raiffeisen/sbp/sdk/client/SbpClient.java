@@ -59,7 +59,7 @@ public class SbpClient implements Closeable {
     }
 
     public QRUrl registerQR(final QRInfo qr) throws SbpException, IOException {
-        QRInfo verifiedQr = QrInfoUtils.calculateDate(qr);
+        QRInfo verifiedQr = QrInfoUtils.verify(qr);
         Response tempResponse = postRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(verifiedQr), null);
         return JsonParser.getObjectOrThrow(tempResponse.getBody(), QRUrl.class, SbpException.class);
     }

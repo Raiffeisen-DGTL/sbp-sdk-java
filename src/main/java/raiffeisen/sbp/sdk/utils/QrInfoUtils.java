@@ -13,27 +13,29 @@ public final class QrInfoUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    private static String createDate;
-    private static String qrExpirationDate;
-    private static ZonedDateTime time;
+    private static final String TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX";
 
-    public static String createUUID() {
+    public static String generateOrderNum() {
         return UUID.randomUUID().toString();
     }
 
-    public static QRInfo calculateDate(QRInfo qrInfo) {
-        checkCreateDate(qrInfo);
+    public static QRInfo verify(QRInfo qrInfo) {
+        String createDate = checkCreateDate(qrInfo);
+
+        String qrExpirationDate;
 
         if (qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")) {
-            calculateQrExpirationDate(qrInfo);
+            qrExpirationDate = calculateQrExpirationDate(qrInfo, createDate);
         }
         else {
             qrExpirationDate = qrInfo.getQrExpirationDate();
         }
 
+        String orderNum = checkOrder(qrInfo);
+
         return QRInfo.creator().
                 createDate(createDate).
-                order(qrInfo.getOrder()).
+                order(orderNum).
                 qrType(qrInfo.getQrType()).
                 sbpMerchantId(qrInfo.getSbpMerchantId()).
                 account(qrInfo.getAccount()).
@@ -44,18 +46,16 @@ public final class QrInfoUtils {
                 qrExpirationDate(qrExpirationDate).create();
     }
 
-    private static void checkCreateDate(QRInfo qrInfo) {
+    private static String checkCreateDate(QRInfo qrInfo) {
         if (qrInfo.getCreateDate() == null) {
-            time = ZonedDateTime.now();
-            createDate = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX"));
+            return ZonedDateTime.now().format(DateTimeFormatter.ofPattern(TIME_PATTERN));
         }
         else {
-            createDate = qrInfo.getCreateDate();
-            time = ZonedDateTime.parse(createDate);
+            return qrInfo.getCreateDate();
         }
     }
 
-    private static void calculateQrExpirationDate(QRInfo qrInfo) {
+    private static String calculateQrExpirationDate(QRInfo qrInfo, String createDate) {
         String str = qrInfo.getQrExpirationDate().substring(1);
 
         if (Pattern.compile("[^\\dMdHms+]").matcher(str).find())
@@ -66,6 +66,7 @@ public final class QrInfoUtils {
 
         Pattern pattern = Pattern.compile("\\d+[MdHms]{1}");
         Matcher matcher = pattern.matcher(str);
+        ZonedDateTime time = ZonedDateTime.parse(createDate);
         while (matcher.find()) {
             String number = str.substring(matcher.start(), matcher.end() - 1);
             switch (str.charAt(matcher.end() - 1)) {
@@ -91,6 +92,15 @@ public final class QrInfoUtils {
         if (!matcher.replaceAll("").equals("")) {
             throw new IllegalArgumentException("Bad input in QRInfo.qrExpirationDate");
         }
-        qrExpirationDate = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX"));
+        return time.format(DateTimeFormatter.ofPattern(TIME_PATTERN));
+    }
+
+    private static String checkOrder(QRInfo qrInfo) {
+        if (qrInfo.getOrder() == null) {
+            return generateOrderNum();
+        }
+        else {
+            return qrInfo.getOrder();
+        }
     }
 }
