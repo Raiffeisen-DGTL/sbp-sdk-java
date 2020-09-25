@@ -2,16 +2,19 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import raiffeisen.sbp.sdk.client.SbpClient;
-import raiffeisen.sbp.sdk.model.*;
-import raiffeisen.sbp.sdk.model.in.*;
-import raiffeisen.sbp.sdk.model.out.*;
+import raiffeisen.sbp.sdk.model.QRType;
+import raiffeisen.sbp.sdk.model.in.PaymentInfo;
+import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.QRId;
+import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundInfo;
+import raiffeisen.sbp.sdk.utils.TestData;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 
 import java.math.BigDecimal;
@@ -21,9 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-class TestSbpClient {
+class SbpClientTest {
 
-    @Mock private ApacheClient webclient;
+    @Mock
+    private ApacheClient webclient;
 
     @Test
     void success_registerQR() throws Exception {
@@ -31,12 +35,12 @@ class TestSbpClient {
         ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("POST"),
-                eq( TestData.SANDBOX + TestData.REGISTER_PATH),
+                eq(TestData.SANDBOX + TestData.REGISTER_PATH),
                 headersCaptor.capture(),
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
         QRInfo qrInfo = QRInfo.creator().
                 order("123-123-123").
@@ -66,7 +70,7 @@ class TestSbpClient {
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
         QRId qrId = QRId.creator().qrId("123").create();
 
@@ -90,7 +94,7 @@ class TestSbpClient {
                 bodyCaptor.capture())).
                 thenReturn(TestData.PAYMENT_INFO);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
         QRId id = QRId.creator().qrId("123").create();
 
@@ -114,7 +118,7 @@ class TestSbpClient {
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
         RefundInfo refundInfo = RefundInfo.creator().
                 refundId("12345").
@@ -143,7 +147,7 @@ class TestSbpClient {
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
         // act
         RefundStatus refundStatus = client.getRefundInfo("123");

@@ -1,9 +1,7 @@
 package raiffeisen.sbp.sdk.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import raiffeisen.sbp.sdk.json.JsonParser;
 
 import java.math.BigDecimal;
 
@@ -21,8 +19,4 @@ public class PaymentNotification {
     private String additionalInfo;
     private String order;
     private String createDate;
-
-    public static PaymentNotification fromJson(String body) throws JsonProcessingException {
-        return JsonParser.objectFromJson(body, PaymentNotification.class);
-    }
 }

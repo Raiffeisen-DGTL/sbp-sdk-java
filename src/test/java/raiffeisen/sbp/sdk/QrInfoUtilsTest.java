@@ -3,10 +3,12 @@ package raiffeisen.sbp.sdk;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 import raiffeisen.sbp.sdk.utils.QrInfoUtils;
+import raiffeisen.sbp.sdk.utils.TestData;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class TestQrInfoUtils {
+class QrInfoUtilsTest {
 
     @Test
     void success_GivenDates() {
@@ -74,7 +76,7 @@ class TestQrInfoUtils {
         // arrange
         QRInfo qrInfo = QRInfo.creator().
                 createDate(TestData.DATE_CREATE_DATE).
-                qrExpirationDate("+" + 24*60 + "m").
+                qrExpirationDate("+" + 24 * 60 + "m").
                 create();
 
         // act
@@ -89,7 +91,7 @@ class TestQrInfoUtils {
         // arrange
         QRInfo qrInfo = QRInfo.creator().
                 createDate(TestData.DATE_CREATE_DATE).
-                qrExpirationDate("+" + 24*60*60 + "s").
+                qrExpirationDate("+" + 24 * 60 * 60 + "s").
                 create();
 
         // act
@@ -129,8 +131,7 @@ class TestQrInfoUtils {
         // act
         try {
             QRInfo result = QrInfoUtils.calculateDate(qrInfo);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // assert
             assertEquals("Time shift is not specified", e.getMessage());
         }
@@ -146,8 +147,7 @@ class TestQrInfoUtils {
         // act
         try {
             QRInfo result = QrInfoUtils.calculateDate(qrInfo);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // assert
             assertEquals("Invalid chars in QRInfo.qrExpirationDate", e.getMessage());
         }
@@ -163,8 +163,7 @@ class TestQrInfoUtils {
         // act
         try {
             QRInfo result = QrInfoUtils.calculateDate(qrInfo);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // assert
             assertEquals("Bad input in QRInfo.qrExpirationDate", e.getMessage());
         }
