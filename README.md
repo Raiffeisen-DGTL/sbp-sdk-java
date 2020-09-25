@@ -57,10 +57,31 @@ catch (SbpExeption ex) {
 Обязательные параметры:
 - (*для `QRDynamic`*) cумма в рублях `amount(BigDecimal)`
 - (*для `QRDynamic`*) валюта платежа `currency("RUB")`
-- уникальный идентификатор заказа в системе партнёра `order(String)`
 - тип QR-кода `qrType(QRType.QRDynamic)`
 - идентификатор зарегистрированного партнёра в СБП `sbpMerchantId(String)`
-- *время формирования заявки `createDate(String <YYYY-MM-DD ТHH24:MM:SS±HH:MM>)`* (опционально при использовании SDK)
+
+Следующие параметры являются обязательными, но при использовании SDK могут быть заполнены автоматически:
+- уникальный идентификатор заказа в системе партнёра `order(String)`
+  - будет автоматически заполнен с помощью UUID версии 4
+  - можно сгенерировать самостоятельно, использовав `QrInfoUtils.generateOrderNum()`. Полученное значение необходимо передать в `QRInfo` при создании QR-кода.
+- время формирования заявки `createDate(String <YYYY-MM-DD ТHH24:MM:SS±HH:MM>)`
+  - будет автоматически заполнено текущем временем
+  
+Также существует возможность заполнить необязательный параметр `qrExpirationDate` с помощью сдвига относительно даты создания. Для этого в поле `qrExpirationDate` следует указать строку вида `"+<число1><буква1>"`.
+
+- 'M' - месяц
+- 'd' - день
+- 'H' - час
+- 'm' - минута
+- 's' - секунда
+
+Пример:
+
+~~~ java
+QRInfo qrInfo = QRInfo.creator().
+             qrExpirationDate("+1M2d3H2m30s").
+             create();
+~~~
 
 Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `QRInfo`:
 
@@ -90,6 +111,23 @@ QRUrl response = client.registerQR(exampleQR);
   "payload": "https://qr.nspk.ru/AD100004BAL7227F9BNP6KNE007J9B3K?type=02&bank=100000000007&sum=1&cur=RUB&crc=AB75",
   "qrUrl": "https://e-commerce.raiffeisen.ru/api/sbp/v1/qr/AD100004BAL7227F9BNP6KNE007J9B3K/image"
 }
+~~~
+
+Пример с минимальными данными:
+
+~~~ java
+QRInfo minStaticQr = QRInfo.creator().
+                qrType(QRType.QRStatic).
+                sbpMerchantId("MA0000000552").
+                create();
+
+QRInfo minDynamicQr = QRInfo.creator().
+                amount(new BigDecimal(1110)).
+                currency("RUB").
+                qrType(QRType.QRDynamic).
+                sbpMerchantId("MA0000000552").
+                create();
+
 ~~~
 
 <a name="getQrInfo"><h2>Получение данных по зарегистрированному ранее QR-коду</h2></a>
