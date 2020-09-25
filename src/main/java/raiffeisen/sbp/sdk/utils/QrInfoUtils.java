@@ -1,5 +1,7 @@
 package raiffeisen.sbp.sdk.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import java.time.ZonedDateTime;
@@ -8,11 +10,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QrInfoUtils {
-    private QrInfoUtils() {
-        throw new IllegalStateException("Utility class");
-    }
-
     private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
     public static String generateOrderNum() {
