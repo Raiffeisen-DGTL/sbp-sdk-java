@@ -10,8 +10,6 @@ import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,17 +21,11 @@ public class CreateQrTest {
         return UUID.randomUUID().toString();
     }
 
-    private String getCreateDate() {
-        String timestamp = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toString();
-        return timestamp.substring(0,timestamp.indexOf("["));
-    }
-
     private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"");
 
     @Test
     public void createQRInfoDynamicTest() {
         QRInfo QR = QRInfo.creator().
-                createDate(getCreateDate()).
                 order(getOrderInfo()).
                 qrType(QRType.QRDynamic).
                 amount(new BigDecimal(314)).
@@ -58,7 +50,6 @@ public class CreateQrTest {
     @Test
     public void createQRInfoStaticTest() {
         QRInfo QR = QRInfo.creator().
-                createDate(getCreateDate()).
                 order(getOrderInfo()).
                 qrType(QRType.QRStatic).
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
@@ -83,7 +74,6 @@ public class CreateQrTest {
         QRInfo QR = QRInfo.creator().
                 additionalInfo("Доп информация").
                 amount(new BigDecimal(1110)).
-                createDate(getCreateDate()).
                 currency("RUB").
                 order(getOrderInfo()).
                 paymentDetails("Назначение платежа").
@@ -108,7 +98,6 @@ public class CreateQrTest {
     @Test
     public void createQRExceptionTest() {
         QRInfo badQR = QRInfo.creator(). // QR without type and without order
-                createDate(getCreateDate()).
                 sbpMerchantId(TEST_SBP_MERCHANT_ID).
                 create();
 

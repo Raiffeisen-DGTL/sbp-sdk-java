@@ -35,7 +35,7 @@ public class Requester {
 
     protected Response responseOrThrow(Response response) throws SbpException {
         String body = response.getBody();
-        if (body.isEmpty() || body == null || body.charAt(0) != '{') {
+        if (body == null || body.isEmpty() || body.charAt(0) != '{') {
             throw new SbpException("HttpCode = " + response.getCode(),
                     "Ответ сервера: " + response.getBody());
         }
