@@ -9,9 +9,13 @@ import org.apache.http.impl.client.HttpClients;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
+import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundInfo;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZoneId;
@@ -41,7 +45,7 @@ public class TestUtils {
         assert response.getStatusLine().getStatusCode() == 200;
     }
 
-    public static long initStaticQR() throws IOException, SbpException {
+    public static PaymentInfo initStaticQR() throws IOException, SbpException {
         String orderInfo = getRandomUUID();
         QRInfo qrStatic = QRInfo
                 .creator()
@@ -56,10 +60,10 @@ public class TestUtils {
 
         payQR(id);
 
-       return CLIENT.getPaymentInfo(id).getTransactionId();
+        return CLIENT.getPaymentInfo(id);
     }
 
-    public static long initDynamicQR() throws SbpException, IOException {
+    public static PaymentInfo initDynamicQR() throws SbpException, IOException {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
         QRInfo qrDynamic = QRInfo.creator()
@@ -76,6 +80,23 @@ public class TestUtils {
 
         payQR(id);
 
-        return CLIENT.getPaymentInfo(id).getTransactionId();
+        return CLIENT.getPaymentInfo(id);
+    }
+
+    public static String refundPayment(BigDecimal amount, long transactionId) throws IOException, SbpException {
+        String refundId = getRandomUUID();
+        String orderInfo = getRandomUUID();
+
+        RefundInfo refundInfo = RefundInfo.creator()
+                .amount(amount)
+                .order(orderInfo)
+                .refundId(refundId)
+                .transactionId(transactionId)
+                .create();
+
+        RefundStatus response = CLIENT.refundPayment(refundInfo);
+        assert response.getCode().equals(StatusCodes.SUCCESS.getMessage());
+
+        return refundId;
     }
 }

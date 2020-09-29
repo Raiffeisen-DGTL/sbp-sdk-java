@@ -2,29 +2,28 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
-import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
+import raiffeisen.sbp.sdk.utils.StatusCodes;
 import raiffeisen.sbp.sdk.utils.TestData;
 import raiffeisen.sbp.sdk.utils.TestUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class RefundPaymentTest {
+class RefundPaymentTest {
 
     public static long dynamicQrTransactionId;
     public static long staticQrTransactionId;
 
     @BeforeEach
     void setup() throws IOException, SbpException {
-        staticQrTransactionId = TestUtils.initStaticQR();
-        dynamicQrTransactionId = TestUtils.initDynamicQR();
+        staticQrTransactionId = TestUtils.initStaticQR().getTransactionId();
+        dynamicQrTransactionId = TestUtils.initDynamicQR().getTransactionId();
     }
 
     @Test
@@ -41,9 +40,9 @@ public class RefundPaymentTest {
                         .create();
 
         RefundStatus response = TestUtils.CLIENT.refundPayment(refundInfo);
-        assertEquals("SUCCESS", response.getCode());
+        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(moneyAmount, response.getAmount());
-        assertTrue(response.getRefundStatus().equals("COMPLETED") || response.getRefundStatus().equals("IN_PROGRESS"));
+        assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
     }
 
     @Test
@@ -59,41 +58,20 @@ public class RefundPaymentTest {
                 .create();
 
         RefundStatus response = TestUtils.CLIENT.refundPayment(refundInfo);
-        assertEquals("SUCCESS", response.getCode());
+        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(moneyAmount, response.getAmount());
-        assertTrue(response.getRefundStatus().equals("COMPLETED") || response.getRefundStatus().equals("IN_PROGRESS"));
+        assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
     }
 
     @Test
-    void refundPaymentWithoutOrderNegative() {
-        String refundId = TestUtils.getRandomUUID();
+    void refundPaymentWithoutRefundIdNegative() {
         RefundInfo refundInfo = RefundInfo
                 .creator()
                 .amount(new BigDecimal(1))
-                .refundId(refundId)
                 .transactionId(dynamicQrTransactionId)
                 .create();
 
-        assertThrows(SbpException.class, () -> TestUtils.CLIENT.refundPayment(refundInfo));
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.refundPayment(refundInfo));
+        assertEquals(TestData.MISSING_REFUND_ID_ERROR, ex.getMessage());
     }
-
-    @Test
-    void refundPaymentExceptionOldTest() {
-        String refundId = TestUtils.getRandomUUID();
-        RefundInfo refundInfo = RefundInfo.creator(). // without order info
-                amount(new BigDecimal(1)).
-                refundId(refundId).
-                transactionId(dynamicQrTransactionId).
-                create();
-
-
-        try {
-            TestUtils.CLIENT.refundPayment(refundInfo);
-            assert false;
-        }
-        catch (Exception e) {
-            assert (e instanceof SbpException);
-        }
-    }
-
 }
