@@ -14,26 +14,25 @@ import java.util.regex.Pattern;
 public final class QrInfoUtils {
     private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
-    private static String createDate;
-    private static String qrExpirationDate;
-    private static ZonedDateTime time;
-
-    public static String createUUID() {
+    public static String generateOrderNum() {
         return UUID.randomUUID().toString();
     }
 
     public static QRInfo calculateDate(QRInfo qrInfo) {
-        checkCreateDate(qrInfo);
+        String createDate = checkCreateDate(qrInfo);
+
+        String qrExpirationDate;
 
         if (qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")) {
-            calculateQrExpirationDate(qrInfo, createDate);
-        } else {
             qrExpirationDate = calculateQrExpirationDate(qrInfo, createDate);
+        }
+        else {
+            qrExpirationDate = qrInfo.getQrExpirationDate();
         }
 
         return QRInfo.creator().
                 createDate(createDate).
-                order(qrInfo.getOrder() == null ? createUUID() : qrInfo.getOrder()).
+                order(qrInfo.getOrder() == null ? generateOrderNum() : qrInfo.getOrder()).
                 qrType(qrInfo.getQrType()).
                 sbpMerchantId(qrInfo.getSbpMerchantId()).
                 account(qrInfo.getAccount()).
