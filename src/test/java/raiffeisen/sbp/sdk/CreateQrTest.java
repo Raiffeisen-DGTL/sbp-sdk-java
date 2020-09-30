@@ -1,116 +1,77 @@
 package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.Test;
-
-import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.utils.StatusCodes;
+import raiffeisen.sbp.sdk.utils.TestData;
+import raiffeisen.sbp.sdk.utils.TestUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CreateQrTest {
+class CreateQrTest {
 
-    private final String TEST_SBP_MERCHANT_ID = "MA0000000552";
-
-    private String getOrderInfo() {
-        return UUID.randomUUID().toString();
-    }
-
-    private static SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN,"");
+    private final String TEST_SBP_MERCHANT_ID = TestData.SBP_MERCHANT_ID;
 
     @Test
-    public void createQRInfoDynamicTest() {
-        QRInfo QR = QRInfo.creator().
-                order(getOrderInfo()).
-                qrType(QRType.QRDynamic).
-                amount(new BigDecimal(314)).
-                currency("RUB").
-                sbpMerchantId(TEST_SBP_MERCHANT_ID).
-                create();
+    void createQRInfoDynamicTest() throws IOException, SbpException {
+        QRInfo QR = QRInfo.creator()
+                .order(TestUtils.getRandomUUID())
+                .qrType(QRType.QRDynamic)
+                .amount(new BigDecimal(314))
+                .currency("RUB")
+                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
+                .create();
 
-        boolean thrown = false;
-        try {
-            QRUrl response = client.registerQR(QR);
-            assertEquals("SUCCESS", response.getCode());
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            thrown = true;
-        }
-        assertFalse(thrown);
+        QRUrl response = TestUtils.CLIENT.registerQR(QR);
+        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
 
 
     }
 
     @Test
-    public void createQRInfoStaticTest() {
-        QRInfo QR = QRInfo.creator().
-                order(getOrderInfo()).
-                qrType(QRType.QRStatic).
-                sbpMerchantId(TEST_SBP_MERCHANT_ID).
-                create();
+    void createQRInfoStaticTest() throws IOException, SbpException {
+        QRInfo QR = QRInfo.creator()
+                .order(TestUtils.getRandomUUID())
+                .qrType(QRType.QRStatic)
+                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
+                .create();
 
-        boolean thrown = false;
-        try {
-            QRUrl response = client.registerQR(QR);
-            assertEquals("SUCCESS", response.getCode());
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            thrown = true;
-        }
-        assertFalse(thrown);
-
+        QRUrl response = TestUtils.CLIENT.registerQR(QR);
+        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
     }
 
     @Test
-    public void createQRInfoMaxTest() {
+    void createQRInfoMaxTest() throws IOException, SbpException {
         // Test without "account" parameter
-        QRInfo QR = QRInfo.creator().
-                additionalInfo("Доп информация").
-                amount(new BigDecimal(1110)).
-                currency("RUB").
-                order(getOrderInfo()).
-                paymentDetails("Назначение платежа").
-                qrType(QRType.QRStatic).
-                qrExpirationDate("2023-07-22T09:14:38.107227+03:00").
-                sbpMerchantId(TEST_SBP_MERCHANT_ID).
-                create();
+        QRInfo QR = QRInfo.creator()
+                .additionalInfo("Доп информация")
+                .amount(new BigDecimal(1110))
+                .currency("RUB")
+                .order(TestUtils.getRandomUUID())
+                .paymentDetails("Назначение платежа")
+                .qrType(QRType.QRStatic)
+                .qrExpirationDate("2023-07-22T09:14:38.107227+03:00")
+                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
+                .create();
 
-        boolean thrown = false;
-        try {
-            QRUrl response = client.registerQR(QR);
-            assertEquals("SUCCESS", response.getCode());
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            thrown = true;
-        }
-        assertFalse(thrown);
-
+        QRUrl response = TestUtils.CLIENT.registerQR(QR);
+        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
     }
 
     @Test
-    public void createQRExceptionTest() {
-        QRInfo badQR = QRInfo.creator(). // QR without type and without order
-                sbpMerchantId(TEST_SBP_MERCHANT_ID).
-                create();
+    void createQRWithoutAmountNegativeTest() {
+        QRInfo badQR = QRInfo.creator() // QR without type and without order
+                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
+                .create();
 
-        boolean thrown = false;
-        try {
-            QRUrl response = client.registerQR(badQR);
-            assertNotEquals("SUCCESS", response.getCode());
-        }
-        catch (Exception e) {
-            assertTrue(e instanceof SbpException);
-            thrown = true;
-        }
-        assertTrue(thrown);
+        assertThrows(SbpException.class, () -> TestUtils.CLIENT.registerQR(badQR));
     }
 
 }
