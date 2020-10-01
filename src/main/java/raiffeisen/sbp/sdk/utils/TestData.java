@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import raiffeisen.sbp.sdk.model.Response;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,10 +14,6 @@ public abstract class TestData {
     public static final String SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
             "eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi" +
             "1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGpsu4AX1QoY26FqBiuNuyT-s";
-    public static final Map<String, String> HEADERS_AUTH =
-            Map.of("content-type", "application/json",
-                    "charset", "UTF-8",
-                    "Authorization", "Bearer secretKey");
     public static final Map<String, String> HEADERS =
             Map.of("content-type", "application/json",
                     "charset", "UTF-8");
@@ -44,6 +39,8 @@ public abstract class TestData {
             "{ \"code\": \"SUCCESS\"," +
                     "\"amount\": 150," +
                     "\"refundStatus\": \"IN_PROGRESS\"}");
+    public static final Response QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE = new Response(200,
+            "{\"code\":\"ERROR.DYNAMIC_QR_WITHOUT_AMOUNT\",\"message\":\"Не передана сумма для динамического QR-кода\"}");
     public static final String NULL_BODY = null;
     public static final String REFUND_PAYMENT = "{\"amount\":10," +
             "\"order\":\"123-123\"," +
@@ -60,12 +57,6 @@ public abstract class TestData {
             "\"additionalInfo\":null," +
             "\"order\":\"dfe0ff08-4796-46bb-a9fb-93fcd99ce748\"," +
             "\"createDate\":\"2020-07-24T17:19:58+03:00\"}";
-    public static final String API_SIGNATURE =
-            "1eca6a084ff8a5b4f5740e0eeab2a72d8ff981bce5b5dea75a53bf44944a8c8d";
-    public static final BigDecimal NOTIFICATION_AMOUNT = BigDecimal.valueOf(101.01);
-    public static final String NOTIFICATION_ORDER = "dfe0ff08-4796-46bb-a9fb-93fcd99ce748";
-    public static final String NOTIFICATION_PAYMENT_STATUS = "SUCCESS";
-    public static final String NOTIFICATION_TRANSACTION_DATE = "2020-07-24T17:20:00.999232+03:00";
     public static final String NOTIFICATION_TEST_SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiIwZTRhODI2ZC0zMTk3LTQ5YWUtYjRlYS0zZDllOGRkODIyOGEifQ.Q-AVaDBzvfkz6I8ZCVgvGIWpWTUgotRDmTcs4ysR0Qc";
     public static final String DATE_CREATE_DATE = "2019-07-22T09:14:38.107227+03:00";
     public static final String DATE_CREATE_DATE_PLUS_DAY = "2019-07-23T09:14:38.107227+03:00";

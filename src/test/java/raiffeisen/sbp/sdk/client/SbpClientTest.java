@@ -1,12 +1,14 @@
-package raiffeisen.sbp.sdk;
+package raiffeisen.sbp.sdk.client;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raiffeisen.sbp.sdk.client.SbpClient;
+
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -22,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -135,5 +138,21 @@ class SbpClientTest {
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), refundStatus.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
+    }
+
+    @Test
+    void fail_throwSbpException() throws Exception {
+        Mockito.when(webclient.request(any(),
+                any(),
+                any(),
+                any())).thenReturn(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+
+        QRInfo qrInfo = QRInfo.creator().qrType(QRType.QRDynamic).create();
+
+        SbpException thrown = assertThrows(SbpException.class,
+                () -> client.registerQR(qrInfo));
+        assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR, thrown.getMessage());
     }
 }
