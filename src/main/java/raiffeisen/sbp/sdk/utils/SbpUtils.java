@@ -3,6 +3,8 @@ package raiffeisen.sbp.sdk.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Hex;
 import raiffeisen.sbp.sdk.exception.EncryptionException;
 import raiffeisen.sbp.sdk.model.PaymentNotification;
@@ -15,18 +17,19 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class SbpUtils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class SbpUtils {
 
     private static final String SHA_256_ALGORITHM = "HmacSHA256";
     private static final Charset ENCODING = StandardCharsets.UTF_8;
     private static final String SEPARATOR = "|";
 
-    public static boolean checkNotificationSignature(String jsonBody, String headerSignature, String secretKey) throws EncryptionException {
+    public static boolean checkNotificationSignature(String jsonBody, String headerSignature, String secretKey) {
         String hash = encrypt(joinFields(jsonBody),secretKey);
         return hash.equals(headerSignature);
     }
 
-    public static boolean checkNotificationSignature(PaymentNotification notification, String headerSignature, String secretKey) throws EncryptionException {
+    public static boolean checkNotificationSignature(PaymentNotification notification, String headerSignature, String secretKey) {
         String data = joinFields(notification.getAmount().toString(),
                 notification.getSbpMerchantId(),
                 notification.getOrder(),
@@ -43,7 +46,7 @@ public class SbpUtils {
             String paymentStatus,
             String transactionDate,
             String headerSignature,
-            String secretKey) throws EncryptionException {
+            String secretKey) {
 
         String data = joinFields(amount.toString(), sbpMerchantId, order, paymentStatus, transactionDate);
         String hash = encrypt(data, secretKey);
@@ -51,7 +54,7 @@ public class SbpUtils {
     }
 
 
-    public static String encrypt(String data, String key) throws EncryptionException {
+    public static String encrypt(String data, String key) {
         if (data.isEmpty()) {
             return "";
         }

@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class SbpException extends Exception {
 
-    private String code;
-    private String message;
+    private final String code;
+    private final String message;
 
     @Override
     public String getMessage() {
