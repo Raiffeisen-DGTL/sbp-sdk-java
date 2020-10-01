@@ -8,7 +8,8 @@ import raiffeisen.sbp.sdk.model.PaymentNotification;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static raiffeisen.sbp.sdk.utils.TestData.SBP_MERCHANT_ID;
 
