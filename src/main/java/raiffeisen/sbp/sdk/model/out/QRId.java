@@ -6,9 +6,9 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.Getter;
 
-@Getter
 @Value
-@Builder (buildMethodName = "create", builderMethodName = "creator")
+@Getter
+@Builder
 public class QRId {
     @JsonProperty
     String qrId;

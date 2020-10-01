@@ -30,7 +30,7 @@ public final class QrInfoUtils {
             qrExpirationDate = qrInfo.getQrExpirationDate();
         }
 
-        return QRInfo.creator().
+        return QRInfo.builder().
                 createDate(createDate).
                 order(qrInfo.getOrder() == null ? createUUID() : qrInfo.getOrder()).
                 qrType(qrInfo.getQrType()).
@@ -40,7 +40,7 @@ public final class QrInfoUtils {
                 amount(qrInfo.getAmount()).
                 currency(qrInfo.getCurrency()).
                 paymentDetails(qrInfo.getPaymentDetails()).
-                qrExpirationDate(qrExpirationDate).create();
+                qrExpirationDate(qrExpirationDate).build();
     }
 
     private static String checkCreateDate(QRInfo qrInfo) {

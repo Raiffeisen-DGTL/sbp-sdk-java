@@ -25,7 +25,7 @@ class GetQrInfoTest {
 
     @Test
     void getQrInfoTest() throws Exception {
-        QRId id = QRId.creator().qrId(qrId).create();
+        QRId id = QRId.builder().qrId(qrId).build();
         QRUrl response = TestUtils.CLIENT.getQRInfo(id);
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -35,7 +35,7 @@ class GetQrInfoTest {
     void getQrInfoByBadQrIdNegativeTest() {
         String badQrId = TestUtils.getRandomUUID();
 
-        QRId badId = QRId.creator().qrId(badQrId).create();
+        QRId badId = QRId.builder().qrId(badQrId).build();
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getQRInfo(badId));
         assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR, ex.getMessage());

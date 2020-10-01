@@ -48,15 +48,15 @@ public class TestUtils {
     public static PaymentInfo initStaticQR() throws IOException, SbpException {
         String orderInfo = getRandomUUID();
         QRInfo qrStatic = QRInfo
-                .creator()
+                .builder()
                 .createDate(getCreateDate())
                 .order(orderInfo)
                 .qrType(QRType.QRStatic)
                 .sbpMerchantId(TestData.SBP_MERCHANT_ID)
-                .create();
+                .build();
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
-        QRId id = QRId.creator().qrId(qr.getQrId()).create();
+        QRId id = QRId.builder().qrId(qr.getQrId()).build();
 
         payQR(id);
 
@@ -66,17 +66,17 @@ public class TestUtils {
     public static PaymentInfo initDynamicQR() throws SbpException, IOException {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
-        QRInfo qrDynamic = QRInfo.creator()
+        QRInfo qrDynamic = QRInfo.builder()
                 .createDate(getCreateDate())
                 .order(orderInfo)
                 .qrType(QRType.QRDynamic)
                 .amount(moneyAmount)
                 .currency("RUB")
                 .sbpMerchantId(TestData.SBP_MERCHANT_ID)
-                .create();
+                .build();
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
-        QRId id = QRId.creator().qrId(qr.getQrId()).create();
+        QRId id = QRId.builder().qrId(qr.getQrId()).build();
 
         payQR(id);
 
@@ -87,12 +87,12 @@ public class TestUtils {
         String refundId = getRandomUUID();
         String orderInfo = getRandomUUID();
 
-        RefundInfo refundInfo = RefundInfo.creator()
+        RefundInfo refundInfo = RefundInfo.builder()
                 .amount(amount)
                 .order(orderInfo)
                 .refundId(refundId)
                 .transactionId(transactionId)
-                .create();
+                .build();
 
         RefundStatus response = CLIENT.refundPayment(refundInfo);
         assert response.getCode().equals(StatusCodes.SUCCESS.getMessage());

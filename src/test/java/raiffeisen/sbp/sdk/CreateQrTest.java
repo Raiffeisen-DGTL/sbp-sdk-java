@@ -21,13 +21,13 @@ class CreateQrTest {
 
     @Test
     void createQRInfoDynamicTest() throws IOException, SbpException {
-        QRInfo QR = QRInfo.creator()
+        QRInfo QR = QRInfo.builder()
                 .order(TestUtils.getRandomUUID())
                 .qrType(QRType.QRDynamic)
                 .amount(new BigDecimal(314))
                 .currency("RUB")
                 .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .create();
+                .build();
 
         QRUrl response = TestUtils.CLIENT.registerQR(QR);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -35,11 +35,11 @@ class CreateQrTest {
 
     @Test
     void createQRInfoStaticTest() throws IOException, SbpException {
-        QRInfo QR = QRInfo.creator()
+        QRInfo QR = QRInfo.builder()
                 .order(TestUtils.getRandomUUID())
                 .qrType(QRType.QRStatic)
                 .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .create();
+                .build();
 
         QRUrl response = TestUtils.CLIENT.registerQR(QR);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -48,7 +48,7 @@ class CreateQrTest {
     @Test
     void createQRInfoMaxTest() throws IOException, SbpException {
         // Test without "account" parameter
-        QRInfo QR = QRInfo.creator()
+        QRInfo QR = QRInfo.builder()
                 .additionalInfo("Доп информация")
                 .amount(new BigDecimal(1110))
                 .currency("RUB")
@@ -57,7 +57,7 @@ class CreateQrTest {
                 .qrType(QRType.QRStatic)
                 .qrExpirationDate("2023-07-22T09:14:38.107227+03:00")
                 .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .create();
+                .build();
 
         QRUrl response = TestUtils.CLIENT.registerQR(QR);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -65,9 +65,9 @@ class CreateQrTest {
 
     @Test
     void createQRWithoutAmountNegativeTest() {
-        QRInfo badQR = QRInfo.creator() // QR without type and without order
+        QRInfo badQR = QRInfo.builder() // QR without type and without order
                 .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .create();
+                .build();
 
         assertThrows(SbpException.class, () -> TestUtils.CLIENT.registerQR(badQR));
     }

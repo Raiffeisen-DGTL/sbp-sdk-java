@@ -46,13 +46,13 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRInfo qrInfo = QRInfo.creator().
+        QRInfo qrInfo = QRInfo.builder().
                 order("123-123-123").
                 createDate(TestData.DATE_CREATE_DATE).
                 qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE).
                 qrType(QRType.QRStatic).
                 sbpMerchantId(TestData.SBP_MERCHANT_ID).
-                create();
+                build();
 
         QRUrl response = client.registerQR(qrInfo);
 
@@ -72,7 +72,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId qrId = QRId.creator().qrId("123").create();
+        QRId qrId = QRId.builder().qrId("123").build();
 
         QRUrl response = client.getQRInfo(qrId);
 
@@ -91,7 +91,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId id = QRId.creator().qrId("123").create();
+        QRId id = QRId.builder().qrId("123").build();
 
         PaymentInfo response = client.getPaymentInfo(id);
 
@@ -110,12 +110,12 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundInfo refundInfo = RefundInfo.creator().
+        RefundInfo refundInfo = RefundInfo.builder().
                 refundId("12345").
                 amount(BigDecimal.TEN).
                 order("123-123").
                 transactionId(111).
-                create();
+                build();
 
         RefundStatus refundStatus = client.refundPayment(refundInfo);
 
@@ -149,7 +149,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRInfo qrInfo = QRInfo.creator().qrType(QRType.QRDynamic).create();
+        QRInfo qrInfo = QRInfo.builder().qrType(QRType.QRDynamic).build();
 
         SbpException thrown = assertThrows(SbpException.class,
                 () -> client.registerQR(qrInfo));
