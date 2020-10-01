@@ -31,8 +31,6 @@ class CreateQrTest {
 
         QRUrl response = TestUtils.CLIENT.registerQR(QR);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
-
-
     }
 
     @Test

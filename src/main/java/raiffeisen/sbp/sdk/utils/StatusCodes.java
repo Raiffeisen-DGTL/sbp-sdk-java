@@ -3,8 +3,8 @@ package raiffeisen.sbp.sdk.utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public enum StatusCodes {
     SUCCESS("SUCCESS"),
     COMPLETED("COMPLETED"),

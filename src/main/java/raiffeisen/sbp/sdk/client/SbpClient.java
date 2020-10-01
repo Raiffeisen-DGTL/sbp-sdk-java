@@ -2,7 +2,6 @@ package raiffeisen.sbp.sdk.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import lombok.extern.slf4j.Slf4j;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
@@ -60,50 +59,34 @@ public class SbpClient implements Closeable {
     public QRUrl registerQR(final QRInfo qr) throws SbpException, IOException {
         QRInfo verifiedQr = QrInfoUtils.calculateDate(qr);
         Response tempResponse = postRequester.request(domain + REGISTER_PATH, mapper.writeValueAsString(verifiedQr), null);
-        try {
-            return mapper.readValue(tempResponse.getBody(), QRUrl.class);
-        } catch (JsonProcessingException e) {
-            throw new SbpException(String.valueOf(tempResponse.getCode()), tempResponse.getBody());
-
-        }
+        return readValueOrThrow(tempResponse, QRUrl.class);
     }
 
     public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {
         Response tempResponse = postRequester.request(domain + REFUND_PATH, mapper.writeValueAsString(refund), secretKey);
-        try {
-            return mapper.readValue(tempResponse.getBody(), RefundStatus.class);
-        } catch (JsonProcessingException e) {
-            throw new SbpException(String.valueOf(tempResponse.getCode()), tempResponse.getBody());
-        }
+        return readValueOrThrow(tempResponse, RefundStatus.class);
     }
 
     public QRUrl getQRInfo(final QRId qrId) throws SbpException, IOException {
         Response tempResponse = getRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
-        try {
-            return mapper.readValue(tempResponse.getBody(), QRUrl.class);
-        } catch (JsonProcessingException e) {
-            throw new SbpException(String.valueOf(tempResponse.getCode()), tempResponse.getBody());
-
-        }
+        return readValueOrThrow(tempResponse, QRUrl.class);
     }
 
     public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, IOException {
         Response tempResponse = getRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
-        try {
-            return mapper.readValue(tempResponse.getBody(), PaymentInfo.class);
-        } catch (JsonProcessingException e) {
-            throw new SbpException(String.valueOf(tempResponse.getCode()), tempResponse.getBody());
-
-        }
+        return readValueOrThrow(tempResponse, PaymentInfo.class);
     }
 
     public RefundStatus getRefundInfo(final String refundId) throws SbpException, IOException {
         Response tempResponse = getRequester.request(domain + REFUND_INFO_PATH, refundId, secretKey);
+        return readValueOrThrow(tempResponse, RefundStatus.class);
+    }
+
+    private <T> T readValueOrThrow(Response tempResponse, Class<T> clazz) throws SbpException {
         try {
-            return mapper.readValue(tempResponse.getBody(), RefundStatus.class);
+            return mapper.readValue(tempResponse.getBody(), clazz);
         } catch (JsonProcessingException e) {
             throw new SbpException(String.valueOf(tempResponse.getCode()), tempResponse.getBody());
-
         }
     }
 
