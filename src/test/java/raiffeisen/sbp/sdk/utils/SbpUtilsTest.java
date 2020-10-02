@@ -1,7 +1,5 @@
 package raiffeisen.sbp.sdk.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.model.PaymentNotification;
@@ -22,13 +20,11 @@ class SbpUtilsTest {
     private static final String TRANSACTION_DATE = "2020-07-24T17:20:00.999232+03:00";
     private static final String TEST_SECRET_KEY = TestData.NOTIFICATION_TEST_SECRET_KEY;
 
-    private static final JsonMapper MAPPER = new JsonMapper();
-
     private static PaymentNotification notification;
 
     @BeforeEach
-    public void PaymentNotificationTest() throws JsonProcessingException {
-        notification = MAPPER.readValue(BODY, PaymentNotification.class);
+    public void PaymentNotificationTest() {
+        notification = SbpUtils.parseNotification(TestData.NOTIFICATION);
         assertEquals(AMOUNT, notification.getAmount());
         assertEquals(SBP_MERCHANT_ID, notification.getSbpMerchantId());
         assertEquals(ORDER, notification.getOrder());

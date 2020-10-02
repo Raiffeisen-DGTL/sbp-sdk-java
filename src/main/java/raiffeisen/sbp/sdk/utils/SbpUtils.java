@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Hex;
@@ -23,6 +24,17 @@ public abstract class SbpUtils {
     private static final String SHA_256_ALGORITHM = "HmacSHA256";
     private static final Charset ENCODING = StandardCharsets.UTF_8;
     private static final String SEPARATOR = "|";
+
+    private static final JsonMapper mapper = new JsonMapper();
+
+    public static PaymentNotification parseNotification(String json) {
+        try {
+            return mapper.readValue(json, PaymentNotification.class);
+        }
+        catch (JsonProcessingException e) {
+            return null;
+        }
+    }
 
     public static boolean checkNotificationSignature(String jsonBody, String headerSignature, String secretKey) {
         String hash = encrypt(joinFields(jsonBody),secretKey);
