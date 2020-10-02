@@ -94,7 +94,7 @@ class QrInfoUtilsTest {
 
     @Test
     void success_GetUUID() {
-        assertFalse(QrInfoUtils.createUUID().isEmpty());
+        assertFalse(QrInfoUtils.generateOrderNum().isEmpty());
     }
 
     @Test
