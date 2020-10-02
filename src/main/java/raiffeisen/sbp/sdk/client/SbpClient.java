@@ -1,8 +1,8 @@
 package raiffeisen.sbp.sdk.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import raiffeisen.sbp.sdk.exception.SbpException;
-import raiffeisen.sbp.sdk.json.JsonBuilder;
-import raiffeisen.sbp.sdk.json.JsonParser;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -27,24 +27,12 @@ public class SbpClient implements Closeable {
     private static final String REFUND_PATH = "/api/sbp/v1/refund";
     private static final String REFUND_INFO_PATH = "/api/sbp/v1/refund/?";
 
+    private static final JsonMapper mapper = new JsonMapper();
     private final String domain;
-
     private final String secretKey;
-
-    private WebClient webClient;
-
     private final PostRequester postRequester;
     private final GetRequester getRequester;
-
-    public void setWebClient(WebClient client) {
-        webClient = client;
-        postRequester.setWebClient(webClient);
-        getRequester.setWebClient(webClient);
-    }
-
-    public WebClient getWebClient() {
-        return webClient;
-    }
+    private WebClient webClient;
 
     public SbpClient(String domain, String secretKey) {
         this(domain, secretKey, new ApacheClient());
@@ -58,30 +46,48 @@ public class SbpClient implements Closeable {
         this.getRequester = new GetRequester(this.webClient);
     }
 
+    public WebClient getWebClient() {
+        return webClient;
+    }
+
+    public void setWebClient(WebClient client) {
+        webClient = client;
+        postRequester.setWebClient(webClient);
+        getRequester.setWebClient(webClient);
+    }
+
     public QRUrl registerQR(final QRInfo qr) throws SbpException, IOException {
-        QRInfo verifiedQr = QrInfoUtils.verify(qr);
-        Response tempResponse = postRequester.request(domain + REGISTER_PATH, JsonBuilder.fromObject(verifiedQr), null);
-        return JsonParser.getObjectOrThrow(tempResponse.getBody(), QRUrl.class, SbpException.class);
+        QRInfo verifiedQr = QrInfoUtils.calculateDate(qr);
+        Response tempResponse = postRequester.request(domain + REGISTER_PATH, mapper.writeValueAsString(verifiedQr), null);
+        return readValueOrThrow(tempResponse, QRUrl.class);
     }
 
     public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {
-        Response tempResponse = postRequester.request(domain + REFUND_PATH, JsonBuilder.fromObject(refund), secretKey);
-        return JsonParser.getObjectOrThrow(tempResponse.getBody(), RefundStatus.class, SbpException.class);
+        Response tempResponse = postRequester.request(domain + REFUND_PATH, mapper.writeValueAsString(refund), secretKey);
+        return readValueOrThrow(tempResponse, RefundStatus.class);
     }
 
     public QRUrl getQRInfo(final QRId qrId) throws SbpException, IOException {
         Response tempResponse = getRequester.request(domain + QR_INFO_PATH, qrId, secretKey);
-        return JsonParser.getObjectOrThrow(tempResponse.getBody(), QRUrl.class, SbpException.class);
+        return readValueOrThrow(tempResponse, QRUrl.class);
     }
 
     public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, IOException {
         Response tempResponse = getRequester.request(domain + PAYMENT_INFO_PATH, qrId, secretKey);
-        return JsonParser.getObjectOrThrow(tempResponse.getBody(), PaymentInfo.class, SbpException.class);
+        return readValueOrThrow(tempResponse, PaymentInfo.class);
     }
 
     public RefundStatus getRefundInfo(final String refundId) throws SbpException, IOException {
         Response tempResponse = getRequester.request(domain + REFUND_INFO_PATH, refundId, secretKey);
-        return JsonParser.getObjectOrThrow(tempResponse.getBody(), RefundStatus.class, SbpException.class);
+        return readValueOrThrow(tempResponse, RefundStatus.class);
+    }
+
+    private <T> T readValueOrThrow(Response tempResponse, Class<T> clazz) throws SbpException {
+        try {
+            return mapper.readValue(tempResponse.getBody(), clazz);
+        } catch (JsonProcessingException e) {
+            throw new SbpException(String.valueOf(tempResponse.getCode()), tempResponse.getBody());
+        }
     }
 
     @Override

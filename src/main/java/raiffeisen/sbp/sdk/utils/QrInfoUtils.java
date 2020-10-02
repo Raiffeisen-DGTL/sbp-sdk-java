@@ -18,7 +18,7 @@ public final class QrInfoUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static QRInfo verify(QRInfo qrInfo) {
+    public static QRInfo calculateDate(QRInfo qrInfo) {
         String createDate = checkCreateDate(qrInfo);
 
         String qrExpirationDate;
@@ -67,19 +67,19 @@ public final class QrInfoUtils {
         while (matcher.find()) {
             String number = str.substring(matcher.start(), matcher.end() - 1);
             switch (str.charAt(matcher.end() - 1)) {
-                case('M'):
+                case ('M'):
                     time = time.plusMonths(Integer.parseInt(number));
                     break;
-                case('d'):
+                case ('d'):
                     time = time.plusDays(Integer.parseInt(number));
                     break;
-                case('H'):
+                case ('H'):
                     time = time.plusHours(Integer.parseInt(number));
                     break;
-                case('m'):
+                case ('m'):
                     time = time.plusMinutes(Integer.parseInt(number));
                     break;
-                case('s'):
+                case ('s'):
                     time = time.plusSeconds(Integer.parseInt(number));
                     break;
                 default:
