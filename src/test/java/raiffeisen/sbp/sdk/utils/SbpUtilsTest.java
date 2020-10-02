@@ -58,7 +58,7 @@ class SbpUtilsTest {
     }
 
     @Test
-    void emptyJsonBody() {
+    void badJsonBody() {
         assertFalse(SbpUtils.checkNotificationSignature("bad json", API_SIGNATURE, TEST_SECRET_KEY));
     }
 }

@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import raiffeisen.sbp.sdk.client.PropertiesLoader;
 import raiffeisen.sbp.sdk.model.Response;
 
 import java.util.Map;
@@ -71,12 +72,11 @@ public abstract class TestData {
     public static final String MISSING_REFUND_ID_ERROR = "400, {\"code\":\"ERROR.INVALID_REQUEST\",\"message\":\"Id возврата не передан\"}";
     public static final String QR_CODE_NOT_MATCHING_ERROR = "200, {\"code\":\"ERROR.SECURITY_CHECK_ERROR\",\"message\":\"QR-код не соответствует ТСП\"}";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR = "200, {\"code\":\"ERROR.DYNAMIC_QR_WITHOUT_AMOUNT\",\"message\":\"Не передана сумма для динамического QR-кода\"}";
-    private static final String BASE_PATH = "/api/sbp/v1/"; //TODO move urls to config for the whole project
-    public static final String REGISTER_PATH = BASE_PATH + "qr/register";
-    public static final String QR_INFO_PATH = BASE_PATH + "qr/123/info";
-    public static final String PAYMENT_INFO_PATH = BASE_PATH + "qr/123/payment-info";
-    public static final String REFUND_PATH = BASE_PATH + "refund";
-    public static final String REFUND_INFO_PATH = BASE_PATH + "refund/123";
+    public static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
+    public static final String QR_INFO_PATH = PropertiesLoader.QR_INFO_PATH.replace("?", "123");
+    public static final String PAYMENT_INFO_PATH = PropertiesLoader.PAYMENT_INFO_PATH.replace("?", "123");
+    public static final String REFUND_PATH = PropertiesLoader.REFUND_PATH;
+    public static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH.replace("?", "123");
 
     public static String getNotFoundRefundError(String refundId) {
         String st = "200, {\"code\":\"ERROR.REFUND_NOT_FOUND\",\"message\":\"Возврат с refundId %s не найден\"}";

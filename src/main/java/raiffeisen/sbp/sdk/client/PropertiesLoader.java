@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class PropertiesLoader {
+public class PropertiesLoader {
     public static final String TEST_DOMAIN;
     public static final String PRODUCTION_DOMAIN;
 
