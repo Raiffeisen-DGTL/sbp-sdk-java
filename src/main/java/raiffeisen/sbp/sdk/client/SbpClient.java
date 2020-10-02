@@ -16,43 +16,20 @@ import raiffeisen.sbp.sdk.web.WebClient;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SbpClient implements Closeable {
-    public static final String TEST_DOMAIN;
-    public static final String PRODUCTION_DOMAIN;
+    public static final String TEST_DOMAIN = PropertiesLoader.TEST_DOMAIN;
+    public static final String PRODUCTION_DOMAIN = PropertiesLoader.PRODUCTION_DOMAIN;
 
-    private static final String REGISTER_PATH;
-    private static final String QR_INFO_PATH;
-    private static final String PAYMENT_INFO_PATH;
-    private static final String REFUND_PATH;
-    private static final String REFUND_INFO_PATH;
+    private static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
+    private static final String QR_INFO_PATH = PropertiesLoader.QR_INFO_PATH;
+    private static final String PAYMENT_INFO_PATH = PropertiesLoader.PAYMENT_INFO_PATH;
+    private static final String REFUND_PATH = PropertiesLoader.REFUND_PATH;
+    private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
 
     private static final JsonMapper mapper = new JsonMapper();
-
-    static {
-        Properties properties = new Properties();
-        try {
-            InputStream propertiesFile = ClassLoader.getSystemResourceAsStream("config.properties");
-            properties.load(propertiesFile);
-        } catch (NullPointerException e) {
-            // TODO: do logging here
-        } catch (IOException e) {
-            // TODO: do logging here
-        }
-
-        TEST_DOMAIN = properties.getProperty("domain.sandbox", "https://test.ecom.raiffeisen.ru");
-        PRODUCTION_DOMAIN = properties.getProperty("domain.production", "https://e-commerce.raiffeisen.ru");
-
-        REGISTER_PATH = properties.getProperty("path.register.qr", "/api/sbp/v1/qr/register");
-        QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v1/qr/?/info");
-        PAYMENT_INFO_PATH = properties.getProperty("path.payment.info", "/api/sbp/v1/qr/?/payment-info");
-        REFUND_PATH = properties.getProperty("path.refund", "/api/sbp/v1/refund");
-        REFUND_INFO_PATH = properties.getProperty("path.refund.info", "/api/sbp/v1/refund/?");
-    }
 
     private final String domain;
 
