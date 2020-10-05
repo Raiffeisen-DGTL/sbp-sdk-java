@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.client;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,16 +19,21 @@ public class PropertiesLoader {
     public static final String REFUND_PATH;
     public static final String REFUND_INFO_PATH;
 
+    public static final Logger logger = Logger.getLogger(PropertiesLoader.class);
+
     static {
         Properties properties = new Properties();
+        logger.info("Loading config file...");
+        boolean isLoaded = true;
         try {
             InputStream propertiesFile = ClassLoader.getSystemResourceAsStream("config.properties");
             properties.load(propertiesFile);
-        } catch (NullPointerException e) {
-            // TODO: do logging here
-        } catch (IOException e) {
-            // TODO: do logging here
+        } catch (NullPointerException | IOException e) {
+            isLoaded = false;
+            logger.warn("Cannot load configuration file. Loading default values.");
         }
+
+        if (isLoaded) logger.info("Loading config file is complete.");
 
         TEST_DOMAIN = properties.getProperty("domain.sandbox", "https://test.ecom.raiffeisen.ru");
         PRODUCTION_DOMAIN = properties.getProperty("domain.production", "https://e-commerce.raiffeisen.ru");
