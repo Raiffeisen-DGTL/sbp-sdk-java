@@ -14,6 +14,7 @@ import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 import raiffeisen.sbp.sdk.utils.StatusCodes;
 import raiffeisen.sbp.sdk.utils.TestData;
@@ -133,7 +134,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundStatus refundStatus = client.getRefundInfo("123");
+        RefundId refundId = RefundId.builder().refundId("123").build();
+
+        RefundStatus refundStatus = client.getRefundInfo(refundId);
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), refundStatus.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());

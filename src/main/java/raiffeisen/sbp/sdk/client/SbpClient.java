@@ -9,6 +9,7 @@ import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 import raiffeisen.sbp.sdk.utils.QrInfoUtils;
 import raiffeisen.sbp.sdk.web.ApacheClient;
@@ -72,8 +73,8 @@ public class SbpClient implements Closeable {
         return get(domain + PAYMENT_INFO_PATH, qrId.getQrId(), secretKey, PaymentInfo.class);
     }
 
-    public RefundStatus getRefundInfo(final String refundId) throws SbpException, IOException {
-        return get(domain + REFUND_INFO_PATH, refundId, secretKey, RefundStatus.class);
+    public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, IOException {
+        return get(domain + REFUND_INFO_PATH, refundId.getRefundId(), secretKey, RefundStatus.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass) throws SbpException, IOException {

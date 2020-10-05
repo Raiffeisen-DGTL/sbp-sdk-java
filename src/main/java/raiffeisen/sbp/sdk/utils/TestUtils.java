@@ -23,7 +23,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TestUtils {
+public final class TestUtils {
 
     public static final SbpClient CLIENT = new SbpClient(SbpClient.TEST_DOMAIN, TestData.SECRET_KEY);
 

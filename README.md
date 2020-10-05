@@ -226,7 +226,7 @@ RefundStatus response = client.refundPayment(refundInfo);
 Для выполнения данного запроса необходимо указать уникальный идентификатор запроса на возврат `refundId` при вызове метода `getRefundInfo(refundId)`:
 
 ~~~ java
-String refundId = "...";
+RefundId refundId = RefundId.builder().refundId("").build();
 
 RefundStatus response = client.getRefundInfo(refundId);
 ~~~
@@ -312,10 +312,11 @@ client.setWebClient(customClient);
 ~~~
 
 ## Шпаргалка
+
 | Тип запроса | Вызываемый метод | Принимаемый класс | Возвращаемый класс|
 | --- |---|---| ---|
 | Регистрация QR-кода |`registerQR`| `QRInfo` |`QRUrl`  |
 |Получение данных по зарегистрированному ранее QR-коду|`getQRInfo`|`QRId`|`QRUrl`|
 |Получение информации по платежу|`getPaymentInfo`|`QRId`|`PaymentInfo`|
 |Оформление возврата по платежу|`refundPayment`|`RefundInfo`|`RefundStatus`|
-|Получение информации по возврату|`getRefundInfo`|`String`|`RefundStatus`|
+|Получение информации по возврату|`getRefundInfo`|`RefundId`|`RefundStatus`|

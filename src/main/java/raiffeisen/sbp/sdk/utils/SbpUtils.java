@@ -19,7 +19,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public abstract class SbpUtils {
+public final class SbpUtils {
 
     private static final String SHA_256_ALGORITHM = "HmacSHA256";
     private static final Charset ENCODING = StandardCharsets.UTF_8;

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.utils.StatusCodes;
 import raiffeisen.sbp.sdk.utils.TestData;
 import raiffeisen.sbp.sdk.utils.TestUtils;
@@ -17,12 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RefundInfoTest {
 
     private static final BigDecimal AMOUNT = new BigDecimal(100);
-    private static String refundId;
+    private static RefundId refundId;
 
     @BeforeAll
     static void setup() throws IOException, SbpException {
         long transactionId = TestUtils.initStaticQR().getTransactionId();
-        refundId = TestUtils.refundPayment(AMOUNT, transactionId);
+        String id = TestUtils.refundPayment(AMOUNT, transactionId);
+        refundId = RefundId.builder().refundId(id).build();
     }
 
     @Test
@@ -36,8 +38,9 @@ class RefundInfoTest {
 
     @Test
     void refundInfoExceptionTest() {
-        String refundId = TestUtils.getRandomUUID();
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getRefundInfo(refundId));
-        assertEquals(TestData.getNotFoundRefundError(refundId), ex.getMessage());
+        String id = TestUtils.getRandomUUID();
+        RefundId randomRefundId = RefundId.builder().refundId(id).build();
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getRefundInfo(randomRefundId));
+        assertEquals(TestData.getNotFoundRefundError(id), ex.getMessage());
     }
 }
