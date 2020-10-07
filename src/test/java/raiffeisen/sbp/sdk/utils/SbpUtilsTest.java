@@ -1,5 +1,6 @@
 package raiffeisen.sbp.sdk.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.model.PaymentNotification;
@@ -24,7 +25,7 @@ class SbpUtilsTest {
     private static PaymentNotification notification;
 
     @BeforeEach
-    public void PaymentNotificationTest() {
+    public void PaymentNotificationTest() throws JsonProcessingException {
         notification = SbpUtils.parseNotification(TestData.NOTIFICATION);
         assertEquals(AMOUNT, notification.getAmount());
         assertEquals(SBP_MERCHANT_ID, notification.getSbpMerchantId());
@@ -57,10 +58,5 @@ class SbpUtilsTest {
     @Test
     void badJsonBody() {
         assertFalse(SbpUtils.checkNotificationSignature("bad json", API_SIGNATURE, TEST_SECRET_KEY));
-    }
-
-    @Test
-    void parseBadJson() {
-        assertNull(SbpUtils.parseNotification("bad json"));
     }
 }

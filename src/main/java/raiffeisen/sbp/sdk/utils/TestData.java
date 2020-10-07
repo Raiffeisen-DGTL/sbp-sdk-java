@@ -8,7 +8,7 @@ import raiffeisen.sbp.sdk.model.Response;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public abstract class TestData {
+public final class TestData {
     public static final String SANDBOX = "https://test.ecom.raiffeisen.ru";
     public static final String PAYMENT_URL = "https://test.ecom.raiffeisen.ru/sbp/v1/transaction/*/status?status=SUCCESS";
     public static final String SBP_MERCHANT_ID = "MA0000000552";

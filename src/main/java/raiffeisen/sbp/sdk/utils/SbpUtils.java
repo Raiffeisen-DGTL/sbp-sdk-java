@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
-import raiffeisen.sbp.sdk.exception.EncryptionException;
 import raiffeisen.sbp.sdk.model.PaymentNotification;
 
 import javax.crypto.Mac;
@@ -15,8 +15,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SbpUtils {
@@ -27,13 +25,8 @@ public final class SbpUtils {
 
     private static final JsonMapper mapper = new JsonMapper();
 
-    public static PaymentNotification parseNotification(String json) {
-        try {
-            return mapper.readValue(json, PaymentNotification.class);
-        }
-        catch (JsonProcessingException e) {
-            return null;
-        }
+    public static PaymentNotification parseNotification(String json) throws JsonProcessingException {
+        return mapper.readValue(json, PaymentNotification.class);
     }
 
     public static boolean checkNotificationSignature(String jsonBody, String headerSignature, String secretKey) {
@@ -65,22 +58,16 @@ public final class SbpUtils {
         return hash.equals(headerSignature);
     }
 
-
-    public static String encrypt(String data, String key) {
+    @SneakyThrows
+    private static String encrypt(String data, String key) {
         if (data.isEmpty()) {
             return "";
         }
-        try {
-            SecretKeySpec secret = new SecretKeySpec(key.getBytes(ENCODING), SHA_256_ALGORITHM);
-            Mac mac = Mac.getInstance(SHA_256_ALGORITHM);
-            mac.init(secret);
-            byte[] encoded = mac.doFinal(data.getBytes(ENCODING));
-            return Hex.encodeHexString(encoded);
-        }
-        catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new EncryptionException(e);
-        }
-
+        SecretKeySpec secret = new SecretKeySpec(key.getBytes(ENCODING), SHA_256_ALGORITHM);
+        Mac mac = Mac.getInstance(SHA_256_ALGORITHM);
+        mac.init(secret);
+        byte[] encoded = mac.doFinal(data.getBytes(ENCODING));
+        return Hex.encodeHexString(encoded);
     }
 
     private static String joinFields(String jsonString) {

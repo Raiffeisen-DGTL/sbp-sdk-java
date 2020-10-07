@@ -2,12 +2,13 @@ package raiffeisen.sbp.sdk.client;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PropertiesLoader {
     public static final String TEST_DOMAIN;
@@ -19,21 +20,16 @@ public class PropertiesLoader {
     public static final String REFUND_PATH;
     public static final String REFUND_INFO_PATH;
 
-    public static final Logger logger = Logger.getLogger(PropertiesLoader.class);
-
     static {
         Properties properties = new Properties();
-        logger.info("Loading config file...");
-        boolean isLoaded = true;
+        log.info("Loading config file...");
         try {
             InputStream propertiesFile = ClassLoader.getSystemResourceAsStream("config.properties");
             properties.load(propertiesFile);
+            log.info("Loading config file is complete.");
         } catch (NullPointerException | IOException e) {
-            isLoaded = false;
-            logger.warn("Cannot load configuration file. Loading default values.");
+            log.error("Cannot load configuration file. Loading default values.");
         }
-
-        if (isLoaded) logger.info("Loading config file is complete.");
 
         TEST_DOMAIN = properties.getProperty("domain.sandbox", "https://test.ecom.raiffeisen.ru");
         PRODUCTION_DOMAIN = properties.getProperty("domain.production", "https://e-commerce.raiffeisen.ru");

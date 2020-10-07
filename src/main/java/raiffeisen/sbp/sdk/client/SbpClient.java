@@ -48,14 +48,6 @@ public class SbpClient implements Closeable {
         webClient = customWebClient;
     }
 
-    public void setWebClient(WebClient client) {
-        webClient = client;
-    }
-
-    public WebClient getWebClient() {
-        return webClient;
-    }
-
     public QRUrl registerQR(final QRInfo qr) throws SbpException, IOException {
         QRInfo verifiedQr = QrInfoUtils.verify(qr);
         return post(domain + REGISTER_PATH, mapper.writeValueAsString(verifiedQr), QRUrl.class);

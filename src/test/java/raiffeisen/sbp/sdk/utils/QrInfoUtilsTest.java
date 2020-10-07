@@ -93,12 +93,7 @@ class QrInfoUtilsTest {
     }
 
     @Test
-    void success_GetUUID() {
-        assertFalse(QrInfoUtils.generateOrderNum().isEmpty());
-    }
-
-    @Test
-    void success_GenerateUUID() {
+    void success_OrderSavedIfPresent() {
         QRInfo qrInfo = QRInfo.builder().
                 order("1-2-3").
                 build();
@@ -109,7 +104,7 @@ class QrInfoUtilsTest {
     }
 
     @Test
-    void fail_EmptyShift() {
+    void fail_EmptyShiftDate() {
         QRInfo qrInfo = QRInfo.builder()
                 .qrExpirationDate("+")
                 .build();
@@ -119,7 +114,7 @@ class QrInfoUtilsTest {
     }
 
     @Test
-    void fail_InvalidSymbols() {
+    void fail_InvalidSymbolsInShiftDate() {
         QRInfo qrInfo = QRInfo.builder()
                 .qrExpirationDate("+389r")
                 .build();
@@ -129,7 +124,7 @@ class QrInfoUtilsTest {
     }
 
     @Test
-    void fail_InvalidInput() {
+    void fail_InvalidInputInShiftDate() {
         QRInfo qrInfo = QRInfo.builder()
                 .qrExpirationDate("+12Mm13sH")
                 .build();
