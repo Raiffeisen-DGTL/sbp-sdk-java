@@ -39,8 +39,10 @@ public final class TestUtils {
     private static void payQR(QRId id) throws IOException {
         HttpGet getter = new HttpGet(TestData.PAYMENT_URL.replace("*", id.getQrId()));
 
-        CloseableHttpClient client = HttpClients.createDefault();
-        CloseableHttpResponse response = client.execute(getter);
+        CloseableHttpResponse response;
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            response = client.execute(getter);
+        }
 
         assert response.getStatusLine().getStatusCode() == 200;
     }
