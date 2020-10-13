@@ -1,6 +1,7 @@
 package raiffeisen.sbp.sdk.utils;
 
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
 
 import static org.junit.jupiter.api.Assertions.*;

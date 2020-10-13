@@ -19,16 +19,7 @@ public final class QrInfoUtils {
     }
 
     public static QRInfo verify(QRInfo qrInfo) {
-        String createDate = checkCreateDate(qrInfo);
-
-        String qrExpirationDate;
-
-        if (qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")) {
-            qrExpirationDate = calculateQrExpirationDate(qrInfo, createDate);
-        }
-        else {
-            qrExpirationDate = qrInfo.getQrExpirationDate();
-        }
+        String createDate = (qrInfo.getCreateDate() == null ? ZonedDateTime.now().format(TIME_PATTERN) : qrInfo.getCreateDate());
 
         return QRInfo.builder().
                 createDate(createDate).
@@ -40,16 +31,10 @@ public final class QrInfoUtils {
                 amount(qrInfo.getAmount()).
                 currency(qrInfo.getCurrency()).
                 paymentDetails(qrInfo.getPaymentDetails()).
-                qrExpirationDate(qrExpirationDate).build();
-    }
-
-    private static String checkCreateDate(QRInfo qrInfo) {
-        if (qrInfo.getCreateDate() == null) {
-            return ZonedDateTime.now().format(TIME_PATTERN);
-        }
-        else {
-            return qrInfo.getCreateDate();
-        }
+                qrExpirationDate(qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")
+                        ? calculateQrExpirationDate(qrInfo, createDate)
+                        : qrInfo.getQrExpirationDate()).
+                build();
     }
 
     private static String calculateQrExpirationDate(QRInfo qrInfo, String createDate) {

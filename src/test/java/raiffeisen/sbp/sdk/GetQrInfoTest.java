@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.utils.StatusCodes;
-import raiffeisen.sbp.sdk.utils.TestData;
-import raiffeisen.sbp.sdk.utils.TestUtils;
+import raiffeisen.sbp.sdk.data.StatusCodes;
+import raiffeisen.sbp.sdk.data.TestData;
+import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 

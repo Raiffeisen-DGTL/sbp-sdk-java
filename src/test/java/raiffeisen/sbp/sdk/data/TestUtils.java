@@ -1,4 +1,4 @@
-package raiffeisen.sbp.sdk.utils;
+package raiffeisen.sbp.sdk.data;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,8 +18,6 @@ import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,11 +27,6 @@ public final class TestUtils {
 
     public static String getRandomUUID() {
         return UUID.randomUUID().toString();
-    }
-
-    public static String getCreateDate() {
-        String timestamp = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toString();
-        return timestamp.substring(0, timestamp.indexOf("["));
     }
 
     private static void payQR(QRId id) throws IOException {
@@ -51,7 +44,6 @@ public final class TestUtils {
         String orderInfo = getRandomUUID();
         QRInfo qrStatic = QRInfo
                 .builder()
-                .createDate(getCreateDate())
                 .order(orderInfo)
                 .qrType(QRType.QRStatic)
                 .sbpMerchantId(TestData.SBP_MERCHANT_ID)
@@ -69,7 +61,6 @@ public final class TestUtils {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
         QRInfo qrDynamic = QRInfo.builder()
-                .createDate(getCreateDate())
                 .order(orderInfo)
                 .qrType(QRType.QRDynamic)
                 .amount(moneyAmount)

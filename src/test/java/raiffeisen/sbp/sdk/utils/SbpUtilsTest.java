@@ -3,6 +3,8 @@ package raiffeisen.sbp.sdk.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.data.StatusCodes;
+import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.model.PaymentNotification;
 
 import java.math.BigDecimal;
@@ -11,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static raiffeisen.sbp.sdk.utils.TestData.SBP_MERCHANT_ID;
+import static raiffeisen.sbp.sdk.data.TestData.SBP_MERCHANT_ID;
 
 class SbpUtilsTest {
 
