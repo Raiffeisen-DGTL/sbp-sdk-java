@@ -31,10 +31,17 @@ public final class QrInfoUtils {
                 amount(qrInfo.getAmount()).
                 currency(qrInfo.getCurrency()).
                 paymentDetails(qrInfo.getPaymentDetails()).
-                qrExpirationDate(qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")
-                        ? calculateQrExpirationDate(qrInfo, createDate)
-                        : qrInfo.getQrExpirationDate()).
+                qrExpirationDate(verifyQrExpirationDate(qrInfo, createDate)).
                 build();
+    }
+
+    private static String verifyQrExpirationDate(QRInfo qrInfo, String createDate) {
+        if (qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")) {
+            return calculateQrExpirationDate(qrInfo, createDate);
+        }
+        else  {
+            return qrInfo.getQrExpirationDate();
+        }
     }
 
     private static String calculateQrExpirationDate(QRInfo qrInfo, String createDate) {
