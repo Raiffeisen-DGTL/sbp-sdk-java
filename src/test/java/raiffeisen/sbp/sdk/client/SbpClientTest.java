@@ -72,7 +72,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId qrId = QRId.builder().qrId(TestData.TEST_ID).build();
+        QRId qrId = QRId.builder().qrId(TestData.TEST_QR_ID).build();
 
         QRUrl response = client.getQRInfo(qrId);
 
@@ -91,7 +91,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId id = QRId.builder().qrId(TestData.TEST_ID).build();
+        QRId id = QRId.builder().qrId(TestData.TEST_QR_ID).build();
 
         PaymentInfo response = client.getPaymentInfo(id);
 
@@ -134,7 +134,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundId refundId = RefundId.builder().refundId(TestData.TEST_ID).build();
+        RefundId refundId = RefundId.builder().refundId(TestData.TEST_REFUND_ID).build();
 
         RefundStatus refundStatus = client.getRefundInfo(refundId);
 
