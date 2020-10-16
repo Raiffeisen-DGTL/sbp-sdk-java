@@ -1,4 +1,4 @@
-package raiffeisen.sbp.sdk.utils;
+package raiffeisen.sbp.sdk.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

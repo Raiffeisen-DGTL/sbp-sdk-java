@@ -1,23 +1,21 @@
-package raiffeisen.sbp.sdk;
+package raiffeisen.sbp.sdk.utils;
 
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
-import raiffeisen.sbp.sdk.utils.QrInfoUtils;
-import raiffeisen.sbp.sdk.utils.TestData;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QrInfoUtilsTest {
 
     @Test
     void success_GivenDates() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE)
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE, result.getCreateDate());
         assertEquals(TestData.DATE_QR_EXPIRATION_DATE, result.getQrExpirationDate());
@@ -25,103 +23,114 @@ class QrInfoUtilsTest {
 
     @Test
     void success_ShiftMonth() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate("+1M")
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_MONTH, result.getQrExpirationDate());
     }
 
     @Test
     void success_ShiftDays() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate("+1d")
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, result.getQrExpirationDate());
     }
 
     @Test
     void success_ShiftHours() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate("+24H")
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, result.getQrExpirationDate());
     }
 
     @Test
     void success_ShiftMinutes() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate("+" + 24 * 60 + "m")
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, result.getQrExpirationDate());
     }
 
     @Test
     void success_ShiftSeconds() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate("+" + 24 * 60 * 60 + "s")
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, result.getQrExpirationDate());
     }
 
     @Test
     void success_ShiftAll() {
-        QRInfo qrInfo = QRInfo.creator()
+        QRInfo qrInfo = QRInfo.builder()
                 .createDate(TestData.DATE_CREATE_DATE)
                 .qrExpirationDate("+23H59m60s")
-                .create();
+                .build();
 
-        QRInfo result = QrInfoUtils.calculateDate(qrInfo);
+        QRInfo result = QrInfoUtils.verify(qrInfo);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, result.getQrExpirationDate());
     }
 
     @Test
-    void fail_EmptyShift() {
-        QRInfo qrInfo = QRInfo.creator()
-                .qrExpirationDate("+")
-                .create();
+    void success_OrderSavedIfPresent() {
+        QRInfo qrInfo = QRInfo.builder().
+                order("1-2-3").
+                build();
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QrInfoUtils.calculateDate(qrInfo));
+        QRInfo result = QrInfoUtils.verify(qrInfo);
+
+        assertEquals("1-2-3", result.getOrder());
+    }
+
+    @Test
+    void fail_EmptyShiftDate() {
+        QRInfo qrInfo = QRInfo.builder()
+                .qrExpirationDate("+")
+                .build();
+
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QrInfoUtils.verify(qrInfo));
         assertEquals("Time shift is not specified", thrown.getMessage());
     }
 
     @Test
-    void fail_InvalidSymbols() {
-        QRInfo qrInfo = QRInfo.creator()
+    void fail_InvalidSymbolsInShiftDate() {
+        QRInfo qrInfo = QRInfo.builder()
                 .qrExpirationDate("+389r")
-                .create();
+                .build();
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QrInfoUtils.calculateDate(qrInfo));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QrInfoUtils.verify(qrInfo));
         assertEquals("Invalid chars in QRInfo.qrExpirationDate", thrown.getMessage());
     }
 
     @Test
-    void fail_InvalidInput() {
-        QRInfo qrInfo = QRInfo.creator()
+    void fail_InvalidInputInShiftDate() {
+        QRInfo qrInfo = QRInfo.builder()
                 .qrExpirationDate("+12Mm13sH")
-                .create();
+                .build();
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QrInfoUtils.calculateDate(qrInfo));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QrInfoUtils.verify(qrInfo));
         assertEquals("Bad input in QRInfo.qrExpirationDate", thrown.getMessage());
     }
 }

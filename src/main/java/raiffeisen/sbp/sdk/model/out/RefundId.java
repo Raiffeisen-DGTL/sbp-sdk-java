@@ -7,6 +7,6 @@ import lombok.Getter;
 @Value
 @Getter
 @Builder
-public class QRId {
-    String qrId;
+public class RefundId {
+    String refundId;
 }

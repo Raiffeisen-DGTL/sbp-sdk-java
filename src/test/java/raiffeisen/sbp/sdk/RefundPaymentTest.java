@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.utils.StatusCodes;
-import raiffeisen.sbp.sdk.utils.TestData;
-import raiffeisen.sbp.sdk.utils.TestUtils;
+import raiffeisen.sbp.sdk.data.StatusCodes;
+import raiffeisen.sbp.sdk.data.TestData;
+import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,12 +32,12 @@ class RefundPaymentTest {
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo =
                 RefundInfo
-                        .creator()
+                        .builder()
                         .amount(moneyAmount)
                         .order(TestUtils.getRandomUUID())
                         .refundId(refundId)
                         .transactionId(staticQrTransactionId)
-                        .create();
+                        .build();
 
         RefundStatus response = TestUtils.CLIENT.refundPayment(refundInfo);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -50,12 +50,12 @@ class RefundPaymentTest {
         String refundId = TestUtils.getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo = RefundInfo
-                .creator()
+                .builder()
                 .amount(moneyAmount)
                 .order(TestUtils.getRandomUUID())
                 .refundId(refundId)
                 .transactionId(dynamicQrTransactionId)
-                .create();
+                .build();
 
         RefundStatus response = TestUtils.CLIENT.refundPayment(refundInfo);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -66,10 +66,10 @@ class RefundPaymentTest {
     @Test
     void refundPaymentWithoutRefundIdNegative() {
         RefundInfo refundInfo = RefundInfo
-                .creator()
+                .builder()
                 .amount(new BigDecimal(1))
                 .transactionId(dynamicQrTransactionId)
-                .create();
+                .build();
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.refundPayment(refundInfo));
         assertEquals(TestData.MISSING_REFUND_ID_ERROR, ex.getMessage());

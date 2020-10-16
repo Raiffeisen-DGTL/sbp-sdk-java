@@ -18,19 +18,10 @@ public final class QrInfoUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static QRInfo calculateDate(QRInfo qrInfo) {
-        String createDate = checkCreateDate(qrInfo);
+    public static QRInfo verify(QRInfo qrInfo) {
+        String createDate = (qrInfo.getCreateDate() == null ? ZonedDateTime.now().format(TIME_PATTERN) : qrInfo.getCreateDate());
 
-        String qrExpirationDate;
-
-        if (qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")) {
-            qrExpirationDate = calculateQrExpirationDate(qrInfo, createDate);
-        }
-        else {
-            qrExpirationDate = qrInfo.getQrExpirationDate();
-        }
-
-        return QRInfo.creator().
+        return QRInfo.builder().
                 createDate(createDate).
                 order(qrInfo.getOrder() == null ? generateOrderNum() : qrInfo.getOrder()).
                 qrType(qrInfo.getQrType()).
@@ -40,15 +31,16 @@ public final class QrInfoUtils {
                 amount(qrInfo.getAmount()).
                 currency(qrInfo.getCurrency()).
                 paymentDetails(qrInfo.getPaymentDetails()).
-                qrExpirationDate(qrExpirationDate).create();
+                qrExpirationDate(verifyQrExpirationDate(qrInfo, createDate)).
+                build();
     }
 
-    private static String checkCreateDate(QRInfo qrInfo) {
-        if (qrInfo.getCreateDate() == null) {
-            return ZonedDateTime.now().format(TIME_PATTERN);
+    private static String verifyQrExpirationDate(QRInfo qrInfo, String createDate) {
+        if (qrInfo.getQrExpirationDate() != null && qrInfo.getQrExpirationDate().startsWith("+")) {
+            return calculateQrExpirationDate(qrInfo, createDate);
         }
-        else {
-            return qrInfo.getCreateDate();
+        else  {
+            return qrInfo.getQrExpirationDate();
         }
     }
 

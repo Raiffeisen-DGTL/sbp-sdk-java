@@ -1,27 +1,30 @@
-package raiffeisen.sbp.sdk;
+package raiffeisen.sbp.sdk.client;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.utils.StatusCodes;
-import raiffeisen.sbp.sdk.utils.TestData;
+import raiffeisen.sbp.sdk.data.StatusCodes;
+import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -43,13 +46,13 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRInfo qrInfo = QRInfo.creator().
+        QRInfo qrInfo = QRInfo.builder().
                 order("123-123-123").
                 createDate(TestData.DATE_CREATE_DATE).
                 qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE).
                 qrType(QRType.QRStatic).
                 sbpMerchantId(TestData.SBP_MERCHANT_ID).
-                create();
+                build();
 
         QRUrl response = client.registerQR(qrInfo);
 
@@ -69,7 +72,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId qrId = QRId.creator().qrId("123").create();
+        QRId qrId = QRId.builder().qrId(TestData.TEST_QR_ID).build();
 
         QRUrl response = client.getQRInfo(qrId);
 
@@ -88,7 +91,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId id = QRId.creator().qrId("123").create();
+        QRId id = QRId.builder().qrId(TestData.TEST_QR_ID).build();
 
         PaymentInfo response = client.getPaymentInfo(id);
 
@@ -107,12 +110,12 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundInfo refundInfo = RefundInfo.creator().
+        RefundInfo refundInfo = RefundInfo.builder().
                 refundId("12345").
                 amount(BigDecimal.TEN).
                 order("123-123").
                 transactionId(111).
-                create();
+                build();
 
         RefundStatus refundStatus = client.refundPayment(refundInfo);
 
@@ -131,9 +134,27 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundStatus refundStatus = client.getRefundInfo("123");
+        RefundId refundId = RefundId.builder().refundId(TestData.TEST_REFUND_ID).build();
+
+        RefundStatus refundStatus = client.getRefundInfo(refundId);
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), refundStatus.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
+    }
+
+    @Test
+    void fail_throwSbpException() throws Exception {
+        Mockito.when(webclient.request(any(),
+                any(),
+                any(),
+                any())).thenReturn(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+
+        QRInfo qrInfo = QRInfo.builder().qrType(QRType.QRDynamic).build();
+
+        SbpException thrown = assertThrows(SbpException.class,
+                () -> client.registerQR(qrInfo));
+        assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR, thrown.getMessage());
     }
 }

@@ -8,8 +8,8 @@
 - [Оформление возврата по платежу](#оформление-возврата-по-платежу)
 - [Получение информации по возврату](#получение-информации-по-возврату)
 - [Обработка уведомлений](#обработка-уведомлений)
-- [Проверка подписи](#проверка-подписи)
 - [Использование альтернативного HTTP-клиента](#использование-альтернативного-http-клиента)
+- [Шпаргалка](#шпаргалка)
 
 ## Документация
 
@@ -43,7 +43,7 @@ try {
 catch (IOException exc) {
     exc.getMessage();
 }
-catch (SbpExeption ex) {
+catch (SbpException ex) {
     ex.getCode(); // http code
     ex.getMessage();
 }
@@ -78,15 +78,15 @@ catch (SbpExeption ex) {
 Пример:
 
 ~~~ java
-QRInfo qrInfo = QRInfo.creator().
+QRInfo qrInfo = QRInfo.builder().
              qrExpirationDate("+1M2d3H2m30s").
-             create();
+             build();
 ~~~
 
 Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `QRInfo`:
 
 ~~~ java
-QRInfo exampleQR = QRInfo.creator().
+QRInfo exampleQR = QRInfo.builder().
                 account("40700000000000000000").
                 additionalInfo("Доп информация").
                 amount(new BigDecimal(1110)).
@@ -97,7 +97,7 @@ QRInfo exampleQR = QRInfo.creator().
                 qrType(QRType.QRStatic).
                 qrExpirationDate("2023-07-22T09:14:38.107227+03:00").
                 sbpMerchantId("MA0000000552").
-                create();
+                build();
 
 QRUrl response = client.registerQR(exampleQR);
 ~~~
@@ -116,17 +116,17 @@ QRUrl response = client.registerQR(exampleQR);
 Пример с минимальными данными:
 
 ~~~ java
-QRInfo minStaticQr = QRInfo.creator().
+QRInfo minStaticQr = QRInfo.builder().
                 qrType(QRType.QRStatic).
                 sbpMerchantId("MA0000000552").
-                create();
+                build();
 
-QRInfo minDynamicQr = QRInfo.creator().
+QRInfo minDynamicQr = QRInfo.builder().
                 amount(new BigDecimal(1110)).
                 currency("RUB").
                 qrType(QRType.QRDynamic).
                 sbpMerchantId("MA0000000552").
-                create();
+                build();
 
 ~~~
 
@@ -137,7 +137,7 @@ QRInfo minDynamicQr = QRInfo.creator().
 ~~~ java
 String qrIdString = "...";
 
-QRId id = QRId.creator().qrId(qrIdString).create();
+QRId id = QRId.builder().qrId(qrIdString).build();
 
 QRUrl response = client.getQRInfo(id);
 ~~~
@@ -161,7 +161,7 @@ QRUrl response = client.getQRInfo(id);
 ~~~ java
 String qrIdString = "...";
 
-QRId id = QRId.creator().qrId(qrIdString).create();
+QRId id = QRId.builder().qrId(qrIdString).build();
 
 PaymentInfo response = client.getPaymentInfo(id);
 ~~~
@@ -189,18 +189,24 @@ PaymentInfo response = client.getPaymentInfo(id);
 
 Для возврата средств необходимо создать объект класса `RefundInfo`, заполнив необходимые поля, и вызвать метод `refundPayment(RefundInfo)`. Подробности об обязательных полях в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
+Обязательные параметры:
+- cумма возврата в рублях `amount(BigDecimal)`
+- идентификатор заказа платежа в Райффайзенбанке, используется для возвратов по динамическому QR `order(String)`
+- уникальный идентификатор запроса на возврат`refundId(String)`
+- идентификатор зарегистрированного партнёра в СБП `sbpMerchantId(String)`
+
 ~~~ java
 BigDecimal moneyAmount = new BigDecimal(150)
 String orderInfo = "...";
 String refundId = "...";
 long transactionId = ...;
 
-RefundInfo refundInfo = RefundInfo.creator().
+RefundInfo refundInfo = RefundInfo.builder().
           			  amount(moneyAmount).
           			  order(orderInfo).
           			  refundId(refundInfo).
           			  transactionId(transactionId).
-          			  create();
+          			  build();
 
 RefundStatus response = client.refundPayment(refundInfo);
 ~~~
@@ -220,7 +226,7 @@ RefundStatus response = client.refundPayment(refundInfo);
 Для выполнения данного запроса необходимо указать уникальный идентификатор запроса на возврат `refundId` при вызове метода `getRefundInfo(refundId)`:
 
 ~~~ java
-String refundId = "...";
+RefundId refundId = RefundId.builder().refundId("").build();
 
 RefundStatus response = client.getRefundInfo(refundId);
 ~~~
@@ -237,16 +243,9 @@ RefundStatus response = client.getRefundInfo(refundId);
 
 ## Обработка уведомлений
 
-Для обработки уведомлений существует класс `PaymentNotification`. Инициализация происходит с помощью статического метода `PaymentNotification.fromJson(String)`:
+Для хранения и использования уведомлений существует класс `PaymentNotification`, экземпляр которого можно получить с помощью статического метода `SbpUtils.parseJson(String)`.
 
-~~~ java
-String jsonString = "...";
-PaymentNotification notification = PaymentNotification.fromJson(jsonString);
-~~~
-
-## Проверка подписи
-
-Для проверки подлинности уведомления существует класс `SbpUtils`. Проверка подписи осуществляется при помощи перегруженного статического метода `checkNotificationSignature`. Примеры использования:
+Для проверки подлинности уведомления существуют перегруженный статический метода `SbpUtils.checkNotificationSignature`. Примеры использования:
 
 ~~~ java
 String jsonString = "...";
@@ -257,7 +256,7 @@ boolean success = SbpUtils.checkNotificationSignature(jsonString, apiSignature, 
 ~~~
 
 ~~~ java
-PaymentNotification notification = ...;
+PaymentNotification notification = SbpUtils.parseJson(jsonString);
 String apiSignature = "...";
 String secretKey = "...";
 
@@ -311,3 +310,13 @@ SbpClient client = ...;
 CustomWebClient customClient = ...;
 client.setWebClient(customClient);
 ~~~
+
+## Шпаргалка
+
+| Тип запроса | Вызываемый метод | Принимаемый класс | Возвращаемый класс|
+| --- |---|---| ---|
+| Регистрация QR-кода |`registerQR`| `QRInfo` |`QRUrl`  |
+|Получение данных по зарегистрированному ранее QR-коду|`getQRInfo`|`QRId`|`QRUrl`|
+|Получение информации по платежу|`getPaymentInfo`|`QRId`|`PaymentInfo`|
+|Оформление возврата по платежу|`refundPayment`|`RefundInfo`|`RefundStatus`|
+|Получение информации по возврату|`getRefundInfo`|`RefundId`|`RefundStatus`|

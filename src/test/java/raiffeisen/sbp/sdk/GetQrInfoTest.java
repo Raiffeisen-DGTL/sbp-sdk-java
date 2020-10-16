@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.utils.StatusCodes;
-import raiffeisen.sbp.sdk.utils.TestData;
-import raiffeisen.sbp.sdk.utils.TestUtils;
+import raiffeisen.sbp.sdk.data.StatusCodes;
+import raiffeisen.sbp.sdk.data.TestData;
+import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ class GetQrInfoTest {
 
     @Test
     void getQrInfoTest() throws Exception {
-        QRId id = QRId.creator().qrId(qrId).create();
+        QRId id = QRId.builder().qrId(qrId).build();
         QRUrl response = TestUtils.CLIENT.getQRInfo(id);
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -35,7 +35,7 @@ class GetQrInfoTest {
     void getQrInfoByBadQrIdNegativeTest() {
         String badQrId = TestUtils.getRandomUUID();
 
-        QRId badId = QRId.creator().qrId(badQrId).create();
+        QRId badId = QRId.builder().qrId(badQrId).build();
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getQRInfo(badId));
         assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR, ex.getMessage());

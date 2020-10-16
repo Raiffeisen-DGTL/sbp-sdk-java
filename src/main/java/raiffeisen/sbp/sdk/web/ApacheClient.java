@@ -14,7 +14,15 @@ import java.util.Map;
 
 public class ApacheClient implements WebClient {
 
-    private static final CloseableHttpClient httpClient = HttpClients.createDefault();
+    private final CloseableHttpClient httpClient;
+
+    public ApacheClient() {
+        this(HttpClients.createDefault());
+    }
+
+    ApacheClient(CloseableHttpClient defaultHttpClient) {
+        httpClient = defaultHttpClient;
+    }
 
     @Override
     public Response request(String method, String url, Map<String, String> headers, String entity) throws IOException {
@@ -27,11 +35,6 @@ public class ApacheClient implements WebClient {
         else {
             return null;
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        httpClient.close();
     }
 
     private Response getRequest(String url, Map<String, String> headers) throws IOException {
@@ -58,5 +61,10 @@ public class ApacheClient implements WebClient {
 
             return new Response(code, EntityUtils.toString(response.getEntity()));
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        httpClient.close();
     }
 }
