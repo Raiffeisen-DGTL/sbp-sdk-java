@@ -10,6 +10,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,7 +19,6 @@ import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.model.Response;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class ApacheClientTest {
@@ -41,12 +41,15 @@ class ApacheClientTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(entity);
         Mockito.when(statusLine.getStatusCode()).thenReturn(200);
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
-        Mockito.when(httpClientMock.execute(any(HttpGet.class))).thenReturn(httpResponse);
+        ArgumentCaptor<HttpGet> getCaptor = ArgumentCaptor.forClass(HttpGet.class);
+        Mockito.when(httpClientMock.execute(getCaptor.capture())).thenReturn(httpResponse);
 
         Response response = client.request(WebClient.GET_METHOD, TestData.QR_INFO_PATH, TestData.MAP_HEADERS, null);
 
         assertEquals(200, response.getCode());
         assertEquals(TestData.RESPONSE_BODY, response.getBody());
+        assertTrue(getCaptor.getValue().containsHeader("content-type"));
+        assertTrue(getCaptor.getValue().containsHeader("charset"));
     }
 
     @Test
@@ -56,12 +59,15 @@ class ApacheClientTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(entity);
         Mockito.when(statusLine.getStatusCode()).thenReturn(200);
         Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
-        Mockito.when(httpClientMock.execute(any(HttpPost.class))).thenReturn(httpResponse);
+        ArgumentCaptor<HttpPost> postCaptor = ArgumentCaptor.forClass(HttpPost.class);
+        Mockito.when(httpClientMock.execute(postCaptor.capture())).thenReturn(httpResponse);
 
         Response response = client.request(WebClient.POST_METHOD, TestData.REGISTER_PATH, TestData.MAP_HEADERS, "NotNullEntity");
 
         assertEquals(200, response.getCode());
         assertEquals(TestData.RESPONSE_BODY, response.getBody());
+        assertTrue(postCaptor.getValue().containsHeader("content-type"));
+        assertTrue(postCaptor.getValue().containsHeader("charset"));
     }
 
     @Test
