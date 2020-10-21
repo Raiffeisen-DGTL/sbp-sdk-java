@@ -1,0 +1,25 @@
+stages:
+  - test
+  - build
+
+variables:
+  VERSION: 1.0-SNAPSHOT
+  APP_NAME: sbp-sdk-java
+
+test:
+  stage: test
+  script:
+    - mvn test -Dgroups="unit"
+  only:
+    - merge_request
+
+build:
+  stage: build
+  only:
+    - master
+  script:
+    - mvn package -DskipTests=true
+    - ls -lh target/
+  artifacts:
+    paths:
+      - target/$APP_NAME-$VERSION.jar

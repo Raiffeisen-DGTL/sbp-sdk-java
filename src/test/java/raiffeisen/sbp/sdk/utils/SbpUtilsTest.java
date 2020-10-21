@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.data.StatusCodes;
 import raiffeisen.sbp.sdk.data.TestData;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static raiffeisen.sbp.sdk.data.TestData.SBP_MERCHANT_ID;
 
+@Tag("unit")
 class SbpUtilsTest {
 
     private static final String API_SIGNATURE = "1eca6a084ff8a5b4f5740e0eeab2a72d8ff981bce5b5dea75a53bf44944a8c8d";

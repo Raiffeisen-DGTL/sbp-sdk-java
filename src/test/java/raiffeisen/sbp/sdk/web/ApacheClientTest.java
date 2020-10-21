@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,6 +21,7 @@ import raiffeisen.sbp.sdk.model.Response;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Tag("unit")
 @ExtendWith(MockitoExtension.class)
 class ApacheClientTest {
     @Mock (name = "httpClient")
