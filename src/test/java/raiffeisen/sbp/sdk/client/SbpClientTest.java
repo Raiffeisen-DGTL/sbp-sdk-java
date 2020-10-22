@@ -53,7 +53,7 @@ class SbpClientTest {
                 createDate(TestData.DATE_CREATE_DATE).
                 qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE).
                 qrType(QRType.QRStatic).
-                sbpMerchantId(TestData.SBP_MERCHANT_ID).
+                sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID).
                 build();
 
         QRUrl response = client.registerQR(qrInfo);

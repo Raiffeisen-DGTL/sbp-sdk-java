@@ -11,7 +11,7 @@ import java.util.Map;
 public final class TestData {
     public static final String SANDBOX = "https://test.ecom.raiffeisen.ru";
     public static final String PAYMENT_URL = "https://test.ecom.raiffeisen.ru/sbp/v1/transaction/*/status?status=SUCCESS";
-    public static final String SBP_MERCHANT_ID = "MA0000000552";
+    public static final String TEST_SBP_MERCHANT_ID = "MA0000000552";
     public static final String SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
             "eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi" +
             "1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGpsu4AX1QoY26FqBiuNuyT-s";

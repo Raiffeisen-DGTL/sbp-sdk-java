@@ -46,7 +46,7 @@ public final class TestUtils {
                 .builder()
                 .order(orderInfo)
                 .qrType(QRType.QRStatic)
-                .sbpMerchantId(TestData.SBP_MERCHANT_ID)
+                .sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID)
                 .build();
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
@@ -65,7 +65,7 @@ public final class TestUtils {
                 .qrType(QRType.QRDynamic)
                 .amount(moneyAmount)
                 .currency("RUB")
-                .sbpMerchantId(TestData.SBP_MERCHANT_ID)
+                .sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID)
                 .build();
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);

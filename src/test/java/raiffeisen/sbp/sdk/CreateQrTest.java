@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Tag("integration")
 class CreateQrTest {
 
-    private final String TEST_SBP_MERCHANT_ID = TestData.SBP_MERCHANT_ID;
+    private final String TEST_SBP_MERCHANT_ID = TestData.TEST_SBP_MERCHANT_ID;
 
     @Test
     void createQRInfoDynamicTest() throws IOException, SbpException {
