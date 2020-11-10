@@ -54,7 +54,13 @@ public final class TestUtils {
 
         payQR(id);
 
-        return CLIENT.getPaymentInfo(id);
+        PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
+
+        while (paymentInfo.getPaymentStatus().equals("NO_INFO")) {
+            paymentInfo = CLIENT.getPaymentInfo(id);
+        }
+
+        return paymentInfo;
     }
 
     public static PaymentInfo initDynamicQR() throws SbpException, IOException {
@@ -73,7 +79,13 @@ public final class TestUtils {
 
         payQR(id);
 
-        return CLIENT.getPaymentInfo(id);
+        PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
+
+        while (paymentInfo.getPaymentStatus().equals("NO_INFO")) {
+            paymentInfo = CLIENT.getPaymentInfo(id);
+        }
+
+        return paymentInfo;
     }
 
     public static String refundPayment(BigDecimal amount, long transactionId) throws IOException, SbpException {
