@@ -46,7 +46,7 @@ public final class TestUtils {
                 .builder()
                 .order(orderInfo)
                 .qrType(QRType.QRStatic)
-                .sbpMerchantId(TestData.SBP_MERCHANT_ID)
+                .sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID)
                 .build();
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
@@ -54,7 +54,13 @@ public final class TestUtils {
 
         payQR(id);
 
-        return CLIENT.getPaymentInfo(id);
+        PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
+
+        while (paymentInfo.getPaymentStatus().equals("NO_INFO")) {
+            paymentInfo = CLIENT.getPaymentInfo(id);
+        }
+
+        return paymentInfo;
     }
 
     public static PaymentInfo initDynamicQR() throws SbpException, IOException {
@@ -65,7 +71,7 @@ public final class TestUtils {
                 .qrType(QRType.QRDynamic)
                 .amount(moneyAmount)
                 .currency("RUB")
-                .sbpMerchantId(TestData.SBP_MERCHANT_ID)
+                .sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID)
                 .build();
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
@@ -73,7 +79,13 @@ public final class TestUtils {
 
         payQR(id);
 
-        return CLIENT.getPaymentInfo(id);
+        PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
+
+        while (paymentInfo.getPaymentStatus().equals("NO_INFO")) {
+            paymentInfo = CLIENT.getPaymentInfo(id);
+        }
+
+        return paymentInfo;
     }
 
     public static String refundPayment(BigDecimal amount, long transactionId) throws IOException, SbpException {

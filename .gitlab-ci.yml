@@ -1,0 +1,9 @@
+---
+include:
+  - project: 'acquiring/devops/pipelines'
+    ref: master
+    file: '.sdk-java-ci.yml'
+
+variables:
+  APP_NAME: sbp-sdk-java
+  VERSION: 1.0.0

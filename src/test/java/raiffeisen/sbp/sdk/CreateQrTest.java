@@ -1,5 +1,6 @@
 package raiffeisen.sbp.sdk;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.QRType;
@@ -15,9 +16,10 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Tag("integration")
 class CreateQrTest {
 
-    private final String TEST_SBP_MERCHANT_ID = TestData.SBP_MERCHANT_ID;
+    private final String TEST_SBP_MERCHANT_ID = TestData.TEST_SBP_MERCHANT_ID;
 
     @Test
     void createQRInfoDynamicTest() throws IOException, SbpException {

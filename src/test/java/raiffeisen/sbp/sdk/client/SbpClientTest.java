@@ -1,5 +1,6 @@
 package raiffeisen.sbp.sdk.client;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+@Tag("unit")
 @ExtendWith(MockitoExtension.class)
 class SbpClientTest {
 
@@ -51,7 +53,7 @@ class SbpClientTest {
                 createDate(TestData.DATE_CREATE_DATE).
                 qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE).
                 qrType(QRType.QRStatic).
-                sbpMerchantId(TestData.SBP_MERCHANT_ID).
+                sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID).
                 build();
 
         QRUrl response = client.registerQR(qrInfo);

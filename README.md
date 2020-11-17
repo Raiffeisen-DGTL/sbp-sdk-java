@@ -1,4 +1,4 @@
-# SBP API Java SDK
+# Java SDK для интеграции с API СБП
 ## Содержание
 - [Документация](#документация)
 - [Использование](#использование)
@@ -55,7 +55,7 @@ catch (SbpException ex) {
 Для регистрации кода необходимо создать экземпляр класса `QRInfo` и заполнить поля. Для разных типов QR-кодов обязательные параметры отличаются. Полную информацию о возможных параметрах можно посмотреть в [документации](https://e-commerce.raiffeisen.ru/api/doc/sbp.html#operation/registerUsingPOST_1 "Документация к API").
 
 Обязательные параметры:
-- (*для `QRDynamic`*) cумма в рублях `amount(BigDecimal)`
+- (*для `QRDynamic`*) сумма в рублях `amount(BigDecimal)`
 - (*для `QRDynamic`*) валюта платежа `currency("RUB")`
 - тип QR-кода `qrType(QRType.QRDynamic)`
 - идентификатор зарегистрированного партнёра в СБП `sbpMerchantId(String)`

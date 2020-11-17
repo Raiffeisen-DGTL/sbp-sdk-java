@@ -1,6 +1,7 @@
 package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Tag("integration")
 class RefundInfoTest {
 
     private static final BigDecimal AMOUNT = new BigDecimal(100);
