@@ -87,9 +87,18 @@ public class SbpClient implements Closeable {
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException {
         try {
-            return mapper.readValue(response.getBody(), resultClass);
+            String jsonCode = mapper.readTree(response.getBody()).get("code").textValue();
+
+            if (jsonCode.equals("SUCCESS")) {
+                return mapper.readValue(response.getBody(), resultClass);
+            }
+            if (jsonCode.contains("ERROR.")) {
+                String message = mapper.readTree(response.getBody()).get("message").textValue();
+                throw new SbpException(jsonCode, message);
+            }
+            throw new SbpException(String.valueOf(response.getCode()), response.getBody());
         }
-        catch (JsonProcessingException e) {
+        catch (JsonProcessingException exception) {
             throw new SbpException(String.valueOf(response.getCode()), response.getBody());
         }
     }
