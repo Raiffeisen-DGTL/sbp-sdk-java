@@ -26,7 +26,7 @@ class RefundInfoTest {
     static void setup() throws IOException, SbpException {
         long transactionId = TestUtils.initStaticQR().getTransactionId();
         String id = TestUtils.refundPayment(AMOUNT, transactionId);
-        refundId = RefundId.builder().refundId(id).build();
+        refundId = new RefundId(id);
     }
 
     @Test
@@ -41,7 +41,7 @@ class RefundInfoTest {
     @Test
     void refundInfoExceptionTest() {
         String id = TestUtils.getRandomUUID();
-        RefundId randomRefundId = RefundId.builder().refundId(id).build();
+        RefundId randomRefundId = new RefundId(id);
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getRefundInfo(randomRefundId));
         assertEquals(TestData.getNotFoundRefundError(id), ex.getMessage());
     }

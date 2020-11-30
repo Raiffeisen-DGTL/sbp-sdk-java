@@ -29,14 +29,14 @@ class GetPaymentInfoTest {
     @Test
     void unauthorizedTest() {
         SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_DOMAIN, TestUtils.getRandomUUID());
-        QRId id = QRId.builder().qrId(qrId).build();
+        QRId id = new QRId(qrId);
 
         assertThrows(SbpException.class, () -> clientUnauthorized.getPaymentInfo(id));
     }
 
     @Test
     void getPaymentInfo() throws IOException, SbpException {
-        QRId id = QRId.builder().qrId(qrId).build();
+        QRId id = new QRId(qrId);
 
         PaymentInfo response = TestUtils.CLIENT.getPaymentInfo(id);
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
@@ -46,7 +46,7 @@ class GetPaymentInfoTest {
     void getPaymentInfoExceptionTest() {
         String badQrId = TestUtils.getRandomUUID();
 
-        QRId badId = QRId.builder().qrId(badQrId).build();
+        QRId badId = new QRId(badQrId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getPaymentInfo(badId));
         assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR, ex.getMessage());

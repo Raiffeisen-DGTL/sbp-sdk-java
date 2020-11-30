@@ -63,11 +63,12 @@ public final class TestData {
     public static final String DATE_CREATE_DATE_PLUS_DAY = "2019-07-23T09:14:38.107227+03:00";
     public static final String DATE_CREATE_DATE_PLUS_MONTH = "2019-08-22T09:14:38.107227+03:00";
     public static final String DATE_QR_EXPIRATION_DATE = "2020-07-22T09:14:38.107227+03:00";
-    public static final String QR_INFO_BODY = "{\"createDate\":\"" + TestData.DATE_CREATE_DATE + "\"," +
+    public static final String QR_INFO_BODY = "{" +
             "\"order\":\"123-123-123\"," +
             "\"qrType\":\"QRStatic\"," +
-            "\"sbpMerchantId\":\"MA0000000552\"," +
-            "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"" +
+            "\"createDate\":\"" + TestData.DATE_CREATE_DATE + "\"," +
+            "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"," +
+            "\"sbpMerchantId\":\"MA0000000552\"" +
             "}";
     public static final String MISSING_REFUND_ID_ERROR = "ERROR.INVALID_REQUEST, Id возврата не передан";
     public static final String QR_CODE_NOT_MATCHING_ERROR = "ERROR.SECURITY_CHECK_ERROR, QR-код не соответствует ТСП";

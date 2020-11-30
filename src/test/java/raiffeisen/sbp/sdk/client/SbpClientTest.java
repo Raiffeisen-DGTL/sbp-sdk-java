@@ -9,12 +9,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raiffeisen.sbp.sdk.exception.SbpException;
-import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 import raiffeisen.sbp.sdk.data.StatusCodes;
@@ -48,15 +48,12 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRInfo qrInfo = QRInfo.builder().
-                order("123-123-123").
-                createDate(TestData.DATE_CREATE_DATE).
-                qrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE).
-                qrType(QRType.QRStatic).
-                sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID).
-                build();
+        QRStatic qrStatic = new QRStatic("123-123-123");
+        qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
+        qrStatic.setQrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE);
+        qrStatic.setSbpMerchantId(TestData.TEST_SBP_MERCHANT_ID);
 
-        QRUrl response = client.registerQR(qrInfo);
+        QRUrl response = client.registerQR(qrStatic);
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(TestData.HEADERS, headersCaptor.getValue());
@@ -74,7 +71,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId qrId = QRId.builder().qrId(TestData.TEST_QR_ID).build();
+        QRId qrId = new QRId(TestData.TEST_QR_ID);
 
         QRUrl response = client.getQRInfo(qrId);
 
@@ -93,9 +90,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRId id = QRId.builder().qrId(TestData.TEST_QR_ID).build();
+        QRId qrId = new QRId(TestData.TEST_QR_ID);
 
-        PaymentInfo response = client.getPaymentInfo(id);
+        PaymentInfo response = client.getPaymentInfo(qrId);
 
         assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
@@ -112,12 +109,8 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundInfo refundInfo = RefundInfo.builder().
-                refundId("12345").
-                amount(BigDecimal.TEN).
-                order("123-123").
-                transactionId(111).
-                build();
+        RefundInfo refundInfo = new RefundInfo(BigDecimal.TEN,"123-123","12345");
+        refundInfo.setTransactionId(111);
 
         RefundStatus refundStatus = client.refundPayment(refundInfo);
 
@@ -136,7 +129,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        RefundId refundId = RefundId.builder().refundId(TestData.TEST_REFUND_ID).build();
+        RefundId refundId = new RefundId(TestData.TEST_REFUND_ID);
 
         RefundStatus refundStatus = client.getRefundInfo(refundId);
 
@@ -153,10 +146,10 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
 
-        QRInfo qrInfo = QRInfo.builder().qrType(QRType.QRDynamic).build();
+        QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 
         SbpException thrown = assertThrows(SbpException.class,
-                () -> client.registerQR(qrInfo));
+                () -> client.registerQR(qrDynamic));
         assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR, thrown.getMessage());
     }
 }

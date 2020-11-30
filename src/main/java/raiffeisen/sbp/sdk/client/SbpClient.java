@@ -7,11 +7,11 @@ import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.model.out.QRInfo;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.utils.QrInfoUtils;
+import raiffeisen.sbp.sdk.utils.QRUtils;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 import raiffeisen.sbp.sdk.web.WebClient;
 
@@ -48,9 +48,9 @@ public class SbpClient implements Closeable {
         webClient = customWebClient;
     }
 
-    public QRUrl registerQR(final QRInfo qr) throws SbpException, IOException {
-        QRInfo verifiedQr = QrInfoUtils.verify(qr);
-        return post(domain + REGISTER_PATH, mapper.writeValueAsString(verifiedQr), QRUrl.class);
+    public QRUrl registerQR(final QR qr) throws SbpException, IOException {
+        QRUtils.verifyQR(qr);
+        return post(domain + REGISTER_PATH, mapper.writeValueAsString(qr), QRUrl.class);
     }
 
     public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {
