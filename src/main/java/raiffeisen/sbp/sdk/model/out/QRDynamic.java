@@ -10,4 +10,8 @@ public class QRDynamic extends QR {
         this.amount = amount;
         this.qrType = QRType.QRDynamic;
     }
+
+    public QRDynamic(QR code) {
+        makeCopy(code);
+    }
 }

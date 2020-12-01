@@ -36,21 +36,24 @@ public class SbpClient implements Closeable {
 
     private final String secretKey;
 
+    private final String sbpMerchantId;
+
     private WebClient webClient;
 
-    public SbpClient(String domain, String secretKey) {
-        this(domain, secretKey, new ApacheClient());
+    public SbpClient(String domain, String sbpMerchantId, String secretKey) {
+        this(domain, sbpMerchantId, secretKey, new ApacheClient());
     }
 
-    public SbpClient(String domain, String secretKey, WebClient customWebClient) {
+    public SbpClient(String domain, String sbpMerchantId, String secretKey, WebClient customWebClient) {
         this.domain = domain;
+        this.sbpMerchantId = sbpMerchantId;
         this.secretKey = secretKey;
         webClient = customWebClient;
     }
 
     public QRUrl registerQR(final QR qr) throws SbpException, IOException {
-        QRUtils.verifyQR(qr);
-        return post(domain + REGISTER_PATH, mapper.writeValueAsString(qr), QRUrl.class);
+        final QR verifiedQR = QRUtils.prepareQR(qr, sbpMerchantId);
+        return post(domain + REGISTER_PATH, mapper.writeValueAsString(verifiedQR), QRUrl.class);
     }
 
     public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {

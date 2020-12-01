@@ -23,7 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestUtils {
 
-    public static final SbpClient CLIENT = new SbpClient(SbpClient.TEST_DOMAIN, TestData.SECRET_KEY);
+    public static final SbpClient CLIENT = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, TestData.SECRET_KEY);
 
     public static String getRandomUUID() {
         return UUID.randomUUID().toString();

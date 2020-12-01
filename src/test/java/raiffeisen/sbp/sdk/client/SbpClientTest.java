@@ -46,7 +46,7 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRStatic qrStatic = new QRStatic("123-123-123");
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
@@ -69,7 +69,7 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRId qrId = new QRId(TestData.TEST_QR_ID);
 
@@ -88,7 +88,7 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.PAYMENT_INFO);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRId qrId = new QRId(TestData.TEST_QR_ID);
 
@@ -107,7 +107,7 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
 
         RefundInfo refundInfo = new RefundInfo(BigDecimal.TEN,"123-123","12345");
         refundInfo.setTransactionId(111);
@@ -127,7 +127,7 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         RefundId refundId = new RefundId(TestData.TEST_REFUND_ID);
 
@@ -144,7 +144,7 @@ class SbpClientTest {
                 any(),
                 any())).thenReturn(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
 
         QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 

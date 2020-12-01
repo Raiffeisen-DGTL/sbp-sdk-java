@@ -48,4 +48,17 @@ public abstract class QR {
     public void setQrExpirationDate(String time) {
         qrExpirationDate = time;
     }
+
+    protected void makeCopy(QR copy) {
+        order = copy.order;
+        amount = copy.amount;
+        qrType = copy.qrType;
+
+        account = copy.account;
+        additionalInfo = copy.additionalInfo;
+        createDate = copy.createDate;
+        paymentDetails = copy.paymentDetails;
+        qrExpirationDate = copy.qrExpirationDate;
+        sbpMerchantId = copy.sbpMerchantId;
+    }
 }

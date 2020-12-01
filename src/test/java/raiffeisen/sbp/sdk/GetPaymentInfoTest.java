@@ -28,7 +28,7 @@ class GetPaymentInfoTest {
 
     @Test
     void unauthorizedTest() {
-        SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_DOMAIN, TestUtils.getRandomUUID());
+        SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, TestUtils.getRandomUUID());
         QRId id = new QRId(qrId);
 
         assertThrows(SbpException.class, () -> clientUnauthorized.getPaymentInfo(id));

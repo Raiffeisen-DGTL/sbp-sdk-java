@@ -3,6 +3,8 @@ package raiffeisen.sbp.sdk.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import raiffeisen.sbp.sdk.model.out.QR;
+import raiffeisen.sbp.sdk.model.out.QRDynamic;
+import raiffeisen.sbp.sdk.model.out.QRStatic;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -15,11 +17,22 @@ public final class QRUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static void verifyQR(QR qr) {
-        if (qr.getCreateDate() == null) {
-            qr.setCreateDate(ZonedDateTime.now());
+    public static QR prepareQR(final QR qr, String sbpMerchantId) {
+        QR resultQR;
+        if (qr instanceof QRStatic) {
+            resultQR = new QRStatic(qr);
         }
-        verifyQrExpirationDate(qr);
+        else {
+            resultQR = new QRDynamic(qr);
+        }
+        if (resultQR.getSbpMerchantId() == null) {
+            resultQR.setSbpMerchantId(sbpMerchantId);
+        }
+        if (resultQR.getCreateDate() == null) {
+            resultQR.setCreateDate(ZonedDateTime.now());
+        }
+        verifyQrExpirationDate(resultQR);
+        return resultQR;
     }
 
     private static void verifyQrExpirationDate(QR qr) {

@@ -10,6 +10,10 @@ public class QRStatic extends QR {
         qrType = QRType.QRStatic;
     }
 
+    public QRStatic(QR qr) {
+        makeCopy(qr);
+    }
+
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
