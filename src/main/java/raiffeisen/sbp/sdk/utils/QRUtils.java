@@ -17,16 +17,13 @@ public final class QRUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static QR prepareQR(final QR qr, String sbpMerchantId) {
+    public static QR prepareQR(final QR qr) {
         QR resultQR;
         if (qr instanceof QRStatic) {
             resultQR = new QRStatic(qr);
         }
         else {
             resultQR = new QRDynamic(qr);
-        }
-        if (resultQR.getSbpMerchantId() == null) {
-            resultQR.setSbpMerchantId(sbpMerchantId);
         }
         if (resultQR.getCreateDate() == null) {
             resultQR.setCreateDate(ZonedDateTime.now());

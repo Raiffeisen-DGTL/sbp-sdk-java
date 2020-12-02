@@ -51,7 +51,6 @@ class SbpClientTest {
         QRStatic qrStatic = new QRStatic("123-123-123");
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE);
-        qrStatic.setSbpMerchantId(TestData.TEST_SBP_MERCHANT_ID);
 
         QRUrl response = client.registerQR(qrStatic);
 

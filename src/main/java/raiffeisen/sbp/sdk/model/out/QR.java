@@ -31,7 +31,6 @@ public abstract class QR {
     String createDate;
     String paymentDetails;
     String qrExpirationDate;
-    String sbpMerchantId;
 
     public void setCreateDate(ZonedDateTime time) {
         createDate = time.format(TIME_PATTERN);
@@ -59,6 +58,5 @@ public abstract class QR {
         createDate = copy.createDate;
         paymentDetails = copy.paymentDetails;
         qrExpirationDate = copy.qrExpirationDate;
-        sbpMerchantId = copy.sbpMerchantId;
     }
 }

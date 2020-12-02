@@ -44,7 +44,6 @@ public final class TestUtils {
         String orderInfo = getRandomUUID();
 
         QRStatic qrStatic = new QRStatic(orderInfo);
-        qrStatic.setSbpMerchantId(TestData.TEST_SBP_MERCHANT_ID);
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
         QRId id = new QRId(qr.getQrId());
@@ -65,7 +64,6 @@ public final class TestUtils {
         BigDecimal moneyAmount = new BigDecimal(314);
 
         QRDynamic qrDynamic = new QRDynamic(orderInfo,moneyAmount);
-        qrDynamic.setSbpMerchantId(TestData.TEST_SBP_MERCHANT_ID);
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
         QRId id = new QRId(qr.getQrId());

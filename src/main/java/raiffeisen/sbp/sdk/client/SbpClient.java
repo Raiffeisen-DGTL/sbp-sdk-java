@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
@@ -54,8 +55,10 @@ public class SbpClient implements Closeable {
     }
 
     public QRUrl registerQR(final QR qr) throws SbpException, IOException {
-        final QR verifiedQR = QRUtils.prepareQR(qr, sbpMerchantId);
-        return post(domain + REGISTER_PATH, mapper.writeValueAsString(verifiedQR), QRUrl.class);
+        final QR verifiedQR = QRUtils.prepareQR(qr);
+        ObjectNode jsonNode = mapper.valueToTree(verifiedQR);
+        jsonNode.put("sbpMerchantId", sbpMerchantId);
+        return post(domain + REGISTER_PATH, jsonNode.toString(), QRUrl.class);
     }
 
     public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {

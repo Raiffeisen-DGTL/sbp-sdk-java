@@ -21,7 +21,7 @@ class QRUtilsTest {
         qrDynamic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrDynamic.setQrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE);
 
-        QR qr = QRUtils.prepareQR(qrDynamic,"");
+        QR qr = QRUtils.prepareQR(qrDynamic);
 
         assertEquals(TestData.DATE_CREATE_DATE, qr.getCreateDate());
         assertEquals(TestData.DATE_QR_EXPIRATION_DATE, qr.getQrExpirationDate());
@@ -33,7 +33,7 @@ class QRUtilsTest {
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate("+1M");
 
-        QR qr = QRUtils.prepareQR(qrStatic, "");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_MONTH, qr.getQrExpirationDate());
     }
@@ -44,7 +44,7 @@ class QRUtilsTest {
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate("+1d");
 
-        QR qr = QRUtils.prepareQR(qrStatic, "");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, qr.getQrExpirationDate());
     }
@@ -55,7 +55,7 @@ class QRUtilsTest {
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate("+24H");
 
-        QR qr = QRUtils.prepareQR(qrStatic, "");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, qr.getQrExpirationDate());
     }
@@ -66,7 +66,7 @@ class QRUtilsTest {
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate("+" + 24 * 60 + "m");
 
-        QR qr = QRUtils.prepareQR(qrStatic, "");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, qr.getQrExpirationDate());
     }
@@ -77,7 +77,7 @@ class QRUtilsTest {
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate("+" + 24 * 60 * 60 + "s");
 
-        QR qr = QRUtils.prepareQR(qrStatic, "");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, qr.getQrExpirationDate());
     }
@@ -88,7 +88,7 @@ class QRUtilsTest {
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
         qrStatic.setQrExpirationDate("+23H59m60s");
 
-        QR qr = QRUtils.prepareQR(qrStatic, "");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals(TestData.DATE_CREATE_DATE_PLUS_DAY, qr.getQrExpirationDate());
     }
@@ -97,28 +97,9 @@ class QRUtilsTest {
     void success_OrderSavedIfPresent() {
         QRStatic qrStatic = new QRStatic("1-2-3");
 
-        QR qr = QRUtils.prepareQR(qrStatic,"");
+        QR qr = QRUtils.prepareQR(qrStatic);
 
         assertEquals("1-2-3", qr.getOrder());
-    }
-
-    @Test
-    void success_sbpMerchantIdSavedIfPresent() {
-        QRStatic qrStatic = new QRStatic("123");
-        qrStatic.setSbpMerchantId(TestData.TEST_SBP_MERCHANT_ID);
-
-        QR qr = QRUtils.prepareQR(qrStatic,"");
-
-        assertEquals(TestData.TEST_SBP_MERCHANT_ID, qr.getSbpMerchantId());
-    }
-
-    @Test
-    void success_sbpMerchantIdOverrideIfNotPresent() {
-        QRStatic qrStatic = new QRStatic("123");
-
-        QR qr = QRUtils.prepareQR(qrStatic,TestData.TEST_SBP_MERCHANT_ID);
-
-        assertEquals(TestData.TEST_SBP_MERCHANT_ID, qr.getSbpMerchantId());
     }
 
     @Test
@@ -126,7 +107,7 @@ class QRUtilsTest {
         QRStatic qrStatic = new QRStatic("");
         qrStatic.setQrExpirationDate("+");
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QRUtils.prepareQR(qrStatic, ""));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QRUtils.prepareQR(qrStatic));
         assertEquals("Time shift is not specified", thrown.getMessage());
     }
 
@@ -135,7 +116,7 @@ class QRUtilsTest {
         QRStatic qrStatic = new QRStatic("");
         qrStatic.setQrExpirationDate("+389r");
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QRUtils.prepareQR(qrStatic, ""));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QRUtils.prepareQR(qrStatic));
         assertEquals("Invalid chars in QRInfo.qrExpirationDate", thrown.getMessage());
     }
 
@@ -144,7 +125,7 @@ class QRUtilsTest {
         QRStatic qrStatic = new QRStatic("");
         qrStatic.setQrExpirationDate("+12Mm13sH");
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QRUtils.prepareQR(qrStatic, ""));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> QRUtils.prepareQR(qrStatic));
         assertEquals("Bad input in QRInfo.qrExpirationDate", thrown.getMessage());
     }
 }
