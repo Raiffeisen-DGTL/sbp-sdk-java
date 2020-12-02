@@ -163,7 +163,8 @@ class SbpClientTest {
 
         SbpException thrown = assertThrows(SbpException.class,
                 () -> client.registerQR(qrDynamic));
-        assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR, thrown.getMessage());
+        assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE, thrown.getCode());
+        assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test

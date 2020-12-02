@@ -43,6 +43,7 @@ class GetQrInfoTest {
         QRId badId = new QRId(badQrId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getQRInfo(badId));
-        assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR, ex.getMessage());
+        assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR_CODE, ex.getCode());
+        assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR_MESSAGE, ex.getMessage());
     }
 }

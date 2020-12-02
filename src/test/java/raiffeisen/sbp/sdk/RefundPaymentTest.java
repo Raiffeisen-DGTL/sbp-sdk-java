@@ -59,6 +59,7 @@ class RefundPaymentTest {
         refundInfo.setTransactionId(dynamicQrTransactionId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.refundPayment(refundInfo));
-        assertEquals(TestData.MISSING_REFUND_ID_ERROR, ex.getMessage());
+        assertEquals(TestData.MISSING_REFUND_ID_ERROR_CODE, ex.getCode());
+        assertEquals(TestData.MISSING_REFUND_ID_ERROR_MESSAGE, ex.getMessage());
     }
 }

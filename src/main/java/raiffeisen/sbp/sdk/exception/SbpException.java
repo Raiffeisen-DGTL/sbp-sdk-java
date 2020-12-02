@@ -6,12 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SbpException extends Exception {
-
     private final String code;
     private final String message;
-
-    @Override
-    public String getMessage() {
-        return code + ", " + message;
-    }
 }

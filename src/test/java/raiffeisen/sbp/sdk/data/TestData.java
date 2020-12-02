@@ -91,9 +91,12 @@ public final class TestData {
             "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"," +
             "\"sbpMerchantId\":\"MA0000000552\"" +
             "}";
-    public static final String MISSING_REFUND_ID_ERROR = "ERROR.INVALID_REQUEST, Id возврата не передан";
-    public static final String QR_CODE_NOT_MATCHING_ERROR = "ERROR.SECURITY_CHECK_ERROR, QR-код не соответствует ТСП";
-    public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT, Не передана сумма для динамического QR-кода";
+    public static final String MISSING_REFUND_ID_ERROR_CODE = "ERROR.INVALID_REQUEST";
+    public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Id возврата не передан";
+    public static final String QR_CODE_NOT_MATCHING_ERROR_CODE = "ERROR.SECURITY_CHECK_ERROR";
+    public static final String QR_CODE_NOT_MATCHING_ERROR_MESSAGE = "QR-код не соответствует ТСП";
+    public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
+    public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
     public static final String TEST_REFUND_ID = "123";
     public static final String TEST_QR_ID = "123";
     public static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
@@ -106,7 +109,7 @@ public final class TestData {
     public static final String RESPONSE_BODY = "{\"code\",\"SUCCESS\"}";
 
     public static String getNotFoundRefundError(String refundId) {
-        String st = "ERROR.REFUND_NOT_FOUND, Возврат с refundId %s не найден";
+        String st = "Возврат с refundId %s не найден";
         return String.format(st, refundId);
     }
 }
