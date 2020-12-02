@@ -8,10 +8,8 @@ import java.math.BigDecimal;
 @Getter
 @RequiredArgsConstructor
 public class PaymentInfo {
-
     private String additionalInfo;
     private BigDecimal amount;
-    private String code;
     private String createDate;
     private String currency;
     private long merchantId;

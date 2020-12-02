@@ -11,8 +11,8 @@ import java.util.Properties;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PropertiesLoader {
-    public static final String TEST_DOMAIN;
-    public static final String PRODUCTION_DOMAIN;
+    public static final String TEST_URL;
+    public static final String PRODUCTION_URL;
 
     public static final String REGISTER_PATH;
     public static final String QR_INFO_PATH;
@@ -30,8 +30,8 @@ public class PropertiesLoader {
             log.error("Cannot load configuration file. Loading default values.");
         }
 
-        TEST_DOMAIN = properties.getProperty("domain.sandbox", "https://test.ecom.raiffeisen.ru");
-        PRODUCTION_DOMAIN = properties.getProperty("domain.production", "https://e-commerce.raiffeisen.ru");
+        TEST_URL = properties.getProperty("domain.sandbox", "https://test.ecom.raiffeisen.ru");
+        PRODUCTION_URL = properties.getProperty("domain.production", "https://e-commerce.raiffeisen.ru");
 
         REGISTER_PATH = properties.getProperty("path.register.qr", "/api/sbp/v1/qr/register");
         QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v1/qr/?/info");

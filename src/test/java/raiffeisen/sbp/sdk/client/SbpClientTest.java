@@ -17,7 +17,6 @@ import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.data.StatusCodes;
 import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 
@@ -25,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,7 +46,7 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRStatic qrStatic = new QRStatic("123-123-123");
         qrStatic.setCreateDate(TestData.DATE_CREATE_DATE);
@@ -55,9 +55,12 @@ class SbpClientTest {
 
         QRUrl response = client.registerQR(qrStatic);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(TestData.HEADERS, headersCaptor.getValue());
         assertEquals(TestData.QR_INFO_BODY, bodyCaptor.getValue());
+
+        assertEquals(TestData.QR_URL_QR_ID, response.getQrId());
+        assertEquals(TestData.QR_URL_PAYLOAD, response.getPayload());
+        assertEquals(TestData.QR_URL_URL, response.getQrUrl());
     }
 
     @Test
@@ -69,14 +72,17 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRId qrId = new QRId(TestData.TEST_QR_ID);
 
         QRUrl response = client.getQRInfo(qrId);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
+
+        assertEquals(TestData.QR_URL_QR_ID, response.getQrId());
+        assertEquals(TestData.QR_URL_PAYLOAD, response.getPayload());
+        assertEquals(TestData.QR_URL_URL, response.getQrUrl());
     }
 
     @Test
@@ -88,14 +94,21 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.PAYMENT_INFO);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRId qrId = new QRId(TestData.TEST_QR_ID);
 
         PaymentInfo response = client.getPaymentInfo(qrId);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
+        assertNotNull(response.getAdditionalInfo());
+        assertNotNull(response.getAmount());
+        assertNotNull(response.getCreateDate());
+        assertNotNull(response.getCurrency());
+        assertNotNull(response.getOrder());
+        assertNotNull(response.getPaymentStatus());
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getTransactionDate());
     }
 
     @Test
@@ -107,15 +120,16 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
 
         RefundInfo refundInfo = new RefundInfo(BigDecimal.TEN,"123-123","12345");
         refundInfo.setTransactionId(111);
 
         RefundStatus refundStatus = client.refundPayment(refundInfo);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), refundStatus.getCode());
         assertEquals(TestData.REFUND_PAYMENT, bodyCaptor.getValue());
+        assertEquals(TestData.REFUND_STATUS_AMOUNT, refundStatus.getAmount().toString());
+        assertEquals(TestData.REFUND_STATUS_STATUS, refundStatus.getRefundStatus());
     }
 
     @Test
@@ -127,14 +141,15 @@ class SbpClientTest {
                 bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         RefundId refundId = new RefundId(TestData.TEST_REFUND_ID);
 
         RefundStatus refundStatus = client.getRefundInfo(refundId);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), refundStatus.getCode());
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
+        assertEquals(TestData.REFUND_STATUS_AMOUNT, refundStatus.getAmount().toString());
+        assertEquals(TestData.REFUND_STATUS_STATUS, refundStatus.getRefundStatus());
     }
 
     @Test
@@ -144,7 +159,7 @@ class SbpClientTest {
                 any(),
                 any())).thenReturn(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
 
         QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 

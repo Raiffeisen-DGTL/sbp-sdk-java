@@ -1,6 +1,7 @@
 package raiffeisen.sbp.sdk.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
@@ -21,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SbpClient implements Closeable {
-    public static final String TEST_DOMAIN = PropertiesLoader.TEST_DOMAIN;
-    public static final String PRODUCTION_DOMAIN = PropertiesLoader.PRODUCTION_DOMAIN;
+    public static final String TEST_URL = PropertiesLoader.TEST_URL;
+    public static final String PRODUCTION_URL = PropertiesLoader.PRODUCTION_URL;
 
     private static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
     private static final String QR_INFO_PATH = PropertiesLoader.QR_INFO_PATH;
@@ -38,7 +39,7 @@ public class SbpClient implements Closeable {
 
     private final String sbpMerchantId;
 
-    private WebClient webClient;
+    private final WebClient webClient;
 
     public SbpClient(String domain, String sbpMerchantId, String secretKey) {
         this(domain, sbpMerchantId, secretKey, new ApacheClient());
@@ -49,6 +50,7 @@ public class SbpClient implements Closeable {
         this.sbpMerchantId = sbpMerchantId;
         this.secretKey = secretKey;
         webClient = customWebClient;
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public QRUrl registerQR(final QR qr) throws SbpException, IOException {
@@ -91,7 +93,6 @@ public class SbpClient implements Closeable {
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException {
         try {
             String jsonCode = mapper.readTree(response.getBody()).get("code").textValue();
-
             if (jsonCode.equals("SUCCESS")) {
                 return mapper.readValue(response.getBody(), resultClass);
             }

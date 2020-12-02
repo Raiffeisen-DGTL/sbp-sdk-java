@@ -18,11 +18,14 @@ public final class TestData {
     public static final Map<String, String> HEADERS =
             Map.of("content-type", "application/json",
                     "charset", "UTF-8");
+    public static final String QR_URL_QR_ID = "qrId";
+    public static final String QR_URL_PAYLOAD = "payloadUrl";
+    public static final String QR_URL_URL = "qrUrl";
     public static final Response QR_URL = new Response(200,
             "{\"code\": \"SUCCESS\"," +
-                    "\"qrId\": \"qrId\"," +
-                    "\"payload\": \"payloadUrl\"," +
-                    "\"qrUrl\": \"qrUrl\" }");
+                    "\"qrId\": \"" + QR_URL_QR_ID + "\"," +
+                    "\"payload\": \"" + QR_URL_PAYLOAD + "\"," +
+                    "\"qrUrl\": \"" + QR_URL_URL + "\" }");
     public static final Response PAYMENT_INFO = new Response(200,
             "{\"additionalInfo\": \"addInfo\"," +
                     "\"amount\": 111," +
@@ -36,10 +39,12 @@ public final class TestData {
                     "\"sbpMerchantId\": \"MA0000000553\"," +
                     "\"transactionDate\": \"2019-07-11T17:45:13.109227+03:00\"," +
                     "\"transactionId\": 23 }");
+    public static final String REFUND_STATUS_AMOUNT = "150";
+    public static final String REFUND_STATUS_STATUS = "IN_PROGRESS";
     public static final Response REFUND_STATUS = new Response(200,
             "{ \"code\": \"SUCCESS\"," +
-                    "\"amount\": 150," +
-                    "\"refundStatus\": \"IN_PROGRESS\"}");
+                    "\"amount\": " + REFUND_STATUS_AMOUNT + "," +
+                    "\"refundStatus\": \"" + REFUND_STATUS_STATUS + "\"}");
     public static final Response QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE = new Response(200,
             "{\"code\":\"ERROR.DYNAMIC_QR_WITHOUT_AMOUNT\",\"message\":\"Не передана сумма для динамического QR-кода\"}");
     public static final String NULL_BODY = null;

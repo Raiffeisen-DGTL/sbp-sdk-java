@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class QRUrl {
-
-    private String code;
     private String qrId;
     private String payload;
     private String qrUrl;

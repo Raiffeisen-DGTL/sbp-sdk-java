@@ -36,7 +36,6 @@ class RefundPaymentTest {
         refundInfo.setTransactionId(staticQrTransactionId);
 
         RefundStatus response = TestUtils.CLIENT.refundPayment(refundInfo);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(moneyAmount, response.getAmount());
         assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
     }
@@ -49,7 +48,6 @@ class RefundPaymentTest {
         refundInfo.setTransactionId(dynamicQrTransactionId);
 
         RefundStatus response = TestUtils.CLIENT.refundPayment(refundInfo);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(moneyAmount, response.getAmount());
         assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
     }

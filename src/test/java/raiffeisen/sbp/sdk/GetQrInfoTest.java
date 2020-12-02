@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.data.StatusCodes;
 import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
@@ -30,7 +30,9 @@ class GetQrInfoTest {
         QRId id = new QRId(qrId);
         QRUrl response = TestUtils.CLIENT.getQRInfo(id);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getPayload());
+        assertNotNull(response.getQrUrl());
     }
 
     @Test

@@ -33,7 +33,6 @@ class RefundInfoTest {
     void refundInfoTest() throws IOException, SbpException {
         RefundStatus response = TestUtils.CLIENT.getRefundInfo(refundId);
 
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
         assertEquals(AMOUNT, response.getAmount());
         assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
     }

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
-import raiffeisen.sbp.sdk.data.StatusCodes;
 import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
@@ -13,7 +12,7 @@ import raiffeisen.sbp.sdk.model.out.QRStatic;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
@@ -27,7 +26,10 @@ class CreateQrTest {
         qrDynamic.setSbpMerchantId(TEST_SBP_MERCHANT_ID);
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrDynamic);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getPayload());
+        assertNotNull(response.getQrUrl());
     }
 
     @Test
@@ -36,7 +38,10 @@ class CreateQrTest {
         qrStatic.setSbpMerchantId(TEST_SBP_MERCHANT_ID);
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+
+        assertNotNull(response.getQrUrl());
+        assertNotNull(response.getPayload());
+        assertNotNull(response.getQrId());
     }
 
     @Test
@@ -50,7 +55,9 @@ class CreateQrTest {
         qrStatic.setSbpMerchantId(TEST_SBP_MERCHANT_ID);
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getQrUrl());
+        assertNotNull(response.getPayload());
     }
 
     @Test

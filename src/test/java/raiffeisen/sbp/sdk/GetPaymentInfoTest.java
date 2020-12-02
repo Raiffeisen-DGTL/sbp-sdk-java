@@ -7,13 +7,13 @@ import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.data.StatusCodes;
 import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
@@ -28,7 +28,7 @@ class GetPaymentInfoTest {
 
     @Test
     void unauthorizedTest() {
-        SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_DOMAIN, TestData.TEST_SBP_MERCHANT_ID, TestUtils.getRandomUUID());
+        SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, TestUtils.getRandomUUID());
         QRId id = new QRId(qrId);
 
         assertThrows(SbpException.class, () -> clientUnauthorized.getPaymentInfo(id));
@@ -39,7 +39,14 @@ class GetPaymentInfoTest {
         QRId id = new QRId(qrId);
 
         PaymentInfo response = TestUtils.CLIENT.getPaymentInfo(id);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+
+        assertNotNull(response.getAmount());
+        assertNotNull(response.getCreateDate());
+        assertNotNull(response.getCurrency());
+        assertNotNull(response.getOrder());
+        assertNotNull(response.getTransactionDate());
+        assertNotNull(response.getPaymentStatus());
+        assertNotNull(response.getQrId());
     }
 
     @Test
