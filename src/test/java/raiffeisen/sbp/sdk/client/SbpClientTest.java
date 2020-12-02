@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -101,14 +100,13 @@ class SbpClientTest {
         PaymentInfo response = client.getPaymentInfo(qrId);
 
         assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
-        assertNotNull(response.getAdditionalInfo());
-        assertNotNull(response.getAmount());
-        assertNotNull(response.getCreateDate());
-        assertNotNull(response.getCurrency());
-        assertNotNull(response.getOrder());
-        assertNotNull(response.getPaymentStatus());
-        assertNotNull(response.getQrId());
-        assertNotNull(response.getTransactionDate());
+        assertEquals(TestData.PAYMENT_INFO_ADDITIONAL_INFO, response.getAdditionalInfo());
+        assertEquals(TestData.PAYMENT_INFO_AMOUNT, response.getAmount().toString());
+        assertEquals(TestData.PAYMENT_INFO_CREATE_DATE, response.getCreateDate().toString());
+        assertEquals(TestData.PAYMENT_INFO_CURRENCY, response.getCurrency());
+        assertEquals(TestData.PAYMENT_INFO_TRANSACTION_DATE, response.getTransactionDate().toString());
+        assertEquals(TestData.PAYMENT_INFO_ORDER, response.getOrder());
+        assertEquals(TestData.PAYMENT_INFO_PAYMENT_STATUS, response.getPaymentStatus());
     }
 
     @Test

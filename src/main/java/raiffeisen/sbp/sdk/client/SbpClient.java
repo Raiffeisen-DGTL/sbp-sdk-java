@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
@@ -33,7 +34,7 @@ public class SbpClient implements Closeable {
     private static final String REFUND_PATH = PropertiesLoader.REFUND_PATH;
     private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
 
-    private static final JsonMapper mapper = new JsonMapper();
+    private static final JsonMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
     private final String domain;
 
@@ -53,6 +54,7 @@ public class SbpClient implements Closeable {
         this.secretKey = secretKey;
         webClient = customWebClient;
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
     }
 
     public QRUrl registerQR(final QR qr) throws SbpException, ContractViolationException, IOException {

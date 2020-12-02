@@ -1,23 +1,14 @@
 package raiffeisen.sbp.sdk.model.out;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
-
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RefundInfo {
-    @Setter(AccessLevel.NONE)
+public final class RefundInfo {
     final BigDecimal amount;
-    @Setter(AccessLevel.NONE)
     final String order;
-    @Setter(AccessLevel.NONE)
     final String refundId;
 
     String paymentDetails;

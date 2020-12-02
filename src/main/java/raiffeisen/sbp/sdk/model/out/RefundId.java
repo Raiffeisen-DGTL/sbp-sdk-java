@@ -1,12 +1,8 @@
 package raiffeisen.sbp.sdk.model.out;
 
-import lombok.AllArgsConstructor;
-import lombok.Value;
-import lombok.Getter;
+import lombok.Data;
 
-@Value
-@Getter
-@AllArgsConstructor
-public class RefundId {
-    String refundId;
+@Data
+public final class RefundId {
+    private final String refundId;
 }

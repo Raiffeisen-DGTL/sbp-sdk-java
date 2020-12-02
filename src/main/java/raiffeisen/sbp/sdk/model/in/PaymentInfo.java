@@ -1,22 +1,21 @@
 package raiffeisen.sbp.sdk.model.in;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
-@Getter
-@RequiredArgsConstructor
-public class PaymentInfo {
-    private String additionalInfo;
-    private BigDecimal amount;
-    private String createDate;
-    private String currency;
-    private long merchantId;
-    private String order;
-    private String paymentStatus;
-    private String qrId;
-    private String sbpMerchantId;
-    private String transactionDate;
-    private long transactionId;
+@Data
+public final class PaymentInfo {
+    String additionalInfo;
+    BigDecimal amount;
+    ZonedDateTime createDate;
+    String currency;
+    long merchantId;
+    String order;
+    String paymentStatus;
+    String qrId;
+    String sbpMerchantId;
+    ZonedDateTime transactionDate;
+    long transactionId;
 }

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import raiffeisen.sbp.sdk.client.PropertiesLoader;
 import raiffeisen.sbp.sdk.model.Response;
 
-import java.security.interfaces.RSAKey;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -27,18 +26,27 @@ public final class TestData {
                     "\"qrId\": \"" + QR_URL_QR_ID + "\"," +
                     "\"payload\": \"" + QR_URL_PAYLOAD + "\"," +
                     "\"qrUrl\": \"" + QR_URL_URL + "\" }");
+    public static final String PAYMENT_INFO_ADDITIONAL_INFO = "addInfo";
+    public static final String PAYMENT_INFO_AMOUNT = "111";
+    public static final String PAYMENT_INFO_CREATE_DATE = "2020-01-31T09:14:38.107227+03:00";
+    public static final String PAYMENT_INFO_CURRENCY = "RUB";
+    public static final String PAYMENT_INFO_MERCHANT_ID = "456";
+    public static final String PAYMENT_INFO_ORDER = "282a60f8-dd75-4286-bde0-af321dd081b3";
+    public static final String PAYMENT_INFO_PAYMENT_STATUS = "NO_INFO";
+    public static final String PAYMENT_INFO_QR_ID = "AD100051KNSNR64I98CRUJUASC9M72QT";
+    public static final String PAYMENT_INFO_TRANSACTION_DATE = "2019-07-11T17:45:13.109227+03:00";
     public static final Response PAYMENT_INFO = new Response(200,
-            "{\"additionalInfo\": \"addInfo\"," +
-                    "\"amount\": 111," +
+            "{\"additionalInfo\": \"" + PAYMENT_INFO_ADDITIONAL_INFO + "\"," +
+                    "\"amount\": " + PAYMENT_INFO_AMOUNT + "," +
                     "\"code\": \"SUCCESS\"," +
-                    "\"createDate\": \"2020-01-31T09:14:38.107227+03:00\"," +
-                    "\"currency\": \"RUB\"," +
-                    "\"merchantId\": 456," +
-                    "\"order\": \"282a60f8-dd75-4286-bde0-af321dd081b3\"," +
-                    "\"paymentStatus\": \"NO_INFO\"," +
-                    "\"qrId\": \"AD100051KNSNR64I98CRUJUASC9M72QT\"," +
+                    "\"createDate\": \"" + PAYMENT_INFO_CREATE_DATE + "\"," +
+                    "\"currency\": \"" + PAYMENT_INFO_CURRENCY + "\"," +
+                    "\"merchantId\": " + PAYMENT_INFO_MERCHANT_ID + "," +
+                    "\"order\": \"" + PAYMENT_INFO_ORDER + "\"," +
+                    "\"paymentStatus\": \"" + PAYMENT_INFO_PAYMENT_STATUS + "\"," +
+                    "\"qrId\": \"" + PAYMENT_INFO_QR_ID + "\"," +
                     "\"sbpMerchantId\": \"MA0000000553\"," +
-                    "\"transactionDate\": \"2019-07-11T17:45:13.109227+03:00\"," +
+                    "\"transactionDate\": \"" + PAYMENT_INFO_TRANSACTION_DATE + "\"," +
                     "\"transactionId\": 23 }");
     public static final String REFUND_STATUS_AMOUNT = "150";
     public static final String REFUND_STATUS_STATUS = "IN_PROGRESS";

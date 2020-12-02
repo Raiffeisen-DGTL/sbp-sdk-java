@@ -4,7 +4,7 @@ import raiffeisen.sbp.sdk.model.QRType;
 
 import java.math.BigDecimal;
 
-public class QRStatic extends QR {
+public final class QRStatic extends QR {
     public QRStatic(String order) {
         this.order = order;
         qrType = QRType.QRStatic;

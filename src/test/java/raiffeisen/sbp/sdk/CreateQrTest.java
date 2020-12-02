@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CreateQrTest {
 
     @Test
-    void createQRDynamicTest() throws SbpException, ContractViolationException, IOException {
+    void createQRDynamicTest() throws IOException, ContractViolationException, SbpException {
         QRDynamic qrDynamic = new QRDynamic(TestUtils.getRandomUUID(), new BigDecimal(314));
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrDynamic);
@@ -30,7 +30,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRStaticTest() throws SbpException, ContractViolationException, IOException {
+    void createQRStaticTest() throws IOException, ContractViolationException, SbpException {
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
@@ -41,7 +41,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRMaxTest() throws SbpException, ContractViolationException, IOException {
+    void createQRMaxTest() throws IOException, ContractViolationException, SbpException {
         // Test without "account" parameter
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
         qrStatic.setAdditionalInfo("Доп информация");

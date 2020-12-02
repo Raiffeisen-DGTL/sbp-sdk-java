@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.model.out;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import raiffeisen.sbp.sdk.model.QRType;
@@ -10,8 +11,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Getter
-@Setter
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class QR {
 
@@ -20,17 +20,17 @@ public abstract class QR {
     private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
     @Setter(AccessLevel.NONE)
-    String order;
+    protected String order;
     @Setter(AccessLevel.NONE)
-    BigDecimal amount;
+    protected BigDecimal amount;
     @Setter(AccessLevel.NONE)
-    QRType qrType;
+    protected QRType qrType;
 
-    String account;
-    String additionalInfo;
-    String createDate;
-    String paymentDetails;
-    String qrExpirationDate;
+    protected String account;
+    protected String additionalInfo;
+    protected String createDate;
+    protected String paymentDetails;
+    protected String qrExpirationDate;
 
     public void setCreateDate(ZonedDateTime time) {
         createDate = time.format(TIME_PATTERN);

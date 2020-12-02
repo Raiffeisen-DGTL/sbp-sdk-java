@@ -1,13 +1,11 @@
 package raiffeisen.sbp.sdk.model.in;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@RequiredArgsConstructor
-public class RefundStatus {
-    private BigDecimal amount;
-    private String refundStatus;
+@Data
+public final class RefundStatus {
+    BigDecimal amount;
+    String refundStatus;
 }
