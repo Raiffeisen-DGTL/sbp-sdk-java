@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
@@ -23,13 +24,13 @@ class RefundPaymentTest {
     public static long staticQrTransactionId;
 
     @BeforeEach
-    void setup() throws IOException, SbpException {
+    void setup() throws SbpException, ContractViolationException, IOException {
         staticQrTransactionId = TestUtils.initStaticQR().getTransactionId();
         dynamicQrTransactionId = TestUtils.initDynamicQR().getTransactionId();
     }
 
     @Test
-    void refundPaymentStaticTest() throws SbpException, IOException {
+    void refundPaymentStaticTest() throws SbpException, ContractViolationException, IOException {
         String refundId = TestUtils.getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo = new RefundInfo(moneyAmount, TestUtils.getRandomUUID(), refundId);
@@ -41,7 +42,7 @@ class RefundPaymentTest {
     }
 
     @Test
-    void refundPaymentDynamicTest() throws SbpException, IOException {
+    void refundPaymentDynamicTest() throws SbpException, ContractViolationException, IOException {
         String refundId = TestUtils.getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo = new RefundInfo(moneyAmount, TestUtils.getRandomUUID(), refundId);

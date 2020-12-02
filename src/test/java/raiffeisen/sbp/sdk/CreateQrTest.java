@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CreateQrTest {
 
     @Test
-    void createQRDynamicTest() throws IOException, SbpException {
+    void createQRDynamicTest() throws SbpException, ContractViolationException, IOException {
         QRDynamic qrDynamic = new QRDynamic(TestUtils.getRandomUUID(), new BigDecimal(314));
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrDynamic);
@@ -29,7 +30,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRStaticTest() throws IOException, SbpException {
+    void createQRStaticTest() throws SbpException, ContractViolationException, IOException {
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
@@ -40,7 +41,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRMaxTest() throws IOException, SbpException {
+    void createQRMaxTest() throws SbpException, ContractViolationException, IOException {
         // Test without "account" parameter
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
         qrStatic.setAdditionalInfo("Доп информация");

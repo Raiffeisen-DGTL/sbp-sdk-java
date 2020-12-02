@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
@@ -54,46 +55,49 @@ public class SbpClient implements Closeable {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public QRUrl registerQR(final QR qr) throws SbpException, IOException {
+    public QRUrl registerQR(final QR qr) throws SbpException, ContractViolationException, IOException {
         final QR verifiedQR = QRUtils.prepareQR(qr);
         ObjectNode jsonNode = mapper.valueToTree(verifiedQR);
         jsonNode.put("sbpMerchantId", sbpMerchantId);
         return post(domain + REGISTER_PATH, jsonNode.toString(), QRUrl.class);
     }
 
-    public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, IOException {
+    public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, ContractViolationException, IOException {
         return post(domain + REFUND_PATH, mapper.writeValueAsString(refund), secretKey, RefundStatus.class);
     }
 
-    public QRUrl getQRInfo(final QRId qrId) throws SbpException, IOException {
+    public QRUrl getQRInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException {
         return get(domain + QR_INFO_PATH, qrId.getQrId(), secretKey, QRUrl.class);
     }
 
-    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, IOException {
+    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException {
         return get(domain + PAYMENT_INFO_PATH, qrId.getQrId(), secretKey, PaymentInfo.class);
     }
 
-    public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, IOException {
+    public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, ContractViolationException, IOException {
         return get(domain + REFUND_INFO_PATH, refundId.getRefundId(), secretKey, RefundStatus.class);
     }
 
-    private <T> T post(String url, String body, Class<T> resultClass) throws SbpException, IOException {
+    private <T> T post(String url, String body, Class<T> resultClass)
+            throws SbpException, ContractViolationException, IOException {
         Response response = webClient.request(WebClient.POST_METHOD, url, getHeaders(), body);
         return convert(response, resultClass);
     }
 
-    private <T> T post(String url, String body, final String secretKey, Class<T> resultClass) throws SbpException, IOException {
+    private <T> T post(String url, String body, final String secretKey, Class<T> resultClass)
+            throws SbpException,ContractViolationException, IOException {
         Response response = webClient.request(WebClient.POST_METHOD, url, prepareHeaders(secretKey), body);
         return convert(response, resultClass);
     }
 
-    private <T> T get(String url, final String pathParameter, final String secretKey, Class<T> resultClass) throws SbpException, IOException {
+    private <T> T get(String url, final String pathParameter, final String secretKey, Class<T> resultClass)
+            throws SbpException, ContractViolationException ,IOException {
         url = url.replace("?", pathParameter);
         Response response = webClient.request(WebClient.GET_METHOD, url, prepareHeaders(secretKey), null);
         return convert(response, resultClass);
     }
 
-    private <T> T convert(Response response, Class<T> resultClass) throws SbpException {
+    private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
         try {
             String jsonCode = mapper.readTree(response.getBody()).get("code").textValue();
             if (jsonCode.equals("SUCCESS")) {
@@ -103,10 +107,10 @@ public class SbpClient implements Closeable {
                 String message = mapper.readTree(response.getBody()).get("message").textValue();
                 throw new SbpException(jsonCode, message);
             }
-            throw new SbpException(String.valueOf(response.getCode()), response.getBody());
+            throw new ContractViolationException(response.getCode(), response.getBody());
         }
         catch (JsonProcessingException exception) {
-            throw new SbpException(String.valueOf(response.getCode()), response.getBody());
+            throw new ContractViolationException(response.getCode(), response.getBody());
         }
     }
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.out.QRId;
@@ -22,7 +23,7 @@ class GetPaymentInfoTest {
     private static String qrId;
 
     @BeforeAll
-    public static void initTest() throws IOException, SbpException {
+    public static void initTest() throws SbpException, ContractViolationException, IOException {
         qrId = TestUtils.initDynamicQR().getQrId();
     }
 
@@ -31,11 +32,11 @@ class GetPaymentInfoTest {
         SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, TestUtils.getRandomUUID());
         QRId id = new QRId(qrId);
 
-        assertThrows(SbpException.class, () -> clientUnauthorized.getPaymentInfo(id));
+        assertThrows(ContractViolationException.class, () -> clientUnauthorized.getPaymentInfo(id));
     }
 
     @Test
-    void getPaymentInfo() throws IOException, SbpException {
+    void getPaymentInfo() throws SbpException, ContractViolationException, IOException {
         QRId id = new QRId(qrId);
 
         PaymentInfo response = TestUtils.CLIENT.getPaymentInfo(id);

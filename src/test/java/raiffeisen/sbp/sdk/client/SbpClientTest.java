@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -166,4 +167,39 @@ class SbpClientTest {
                 () -> client.registerQR(qrDynamic));
         assertEquals(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR, thrown.getMessage());
     }
+
+    @Test
+    void fail_throwContractViolationException() throws Exception {
+        Mockito.when(webclient.request(any(),
+                any(),
+                any(),
+                any())).thenReturn(TestData.UNSUPPORTED_RESPONSE1);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+
+        QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
+
+        ContractViolationException thrown = assertThrows(ContractViolationException.class,
+                () -> client.registerQR(qrDynamic));
+        assertEquals(TestData.UNSUPPORTED_RESPONSE1_HTTPCODE, thrown.getHttpCode());
+        assertEquals(TestData.UNSUPPORTED_RESPONSE1_MESSAGE, thrown.getMessage());
+    }
+
+    @Test
+    void fail_throwContractViolationExceptionWithCode() throws Exception {
+        Mockito.when(webclient.request(any(),
+                any(),
+                any(),
+                any())).thenReturn(TestData.UNSUPPORTED_RESPONSE2);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+
+        QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
+
+        ContractViolationException thrown = assertThrows(ContractViolationException.class,
+                () -> client.registerQR(qrDynamic));
+        assertEquals(TestData.UNSUPPORTED_RESPONSE2_HTTPCODE, thrown.getHttpCode());
+        assertEquals(TestData.UNSUPPORTED_RESPONSE2_MESSAGE, thrown.getMessage());
+    }
+
 }

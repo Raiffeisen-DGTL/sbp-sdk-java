@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -40,7 +41,7 @@ public final class TestUtils {
         assert response.getStatusLine().getStatusCode() == 200;
     }
 
-    public static PaymentInfo initStaticQR() throws IOException, SbpException {
+    public static PaymentInfo initStaticQR() throws SbpException, ContractViolationException, IOException {
         String orderInfo = getRandomUUID();
 
         QRStatic qrStatic = new QRStatic(orderInfo);
@@ -59,7 +60,7 @@ public final class TestUtils {
         return paymentInfo;
     }
 
-    public static PaymentInfo initDynamicQR() throws SbpException, IOException {
+    public static PaymentInfo initDynamicQR() throws SbpException, ContractViolationException, IOException {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
 
@@ -79,7 +80,8 @@ public final class TestUtils {
         return paymentInfo;
     }
 
-    public static String refundPayment(BigDecimal amount, long transactionId) throws IOException, SbpException {
+    public static String refundPayment(BigDecimal amount, long transactionId)
+            throws SbpException, ContractViolationException, IOException {
         String refundId = getRandomUUID();
         String orderInfo = getRandomUUID();
 
@@ -87,7 +89,9 @@ public final class TestUtils {
         refundInfo.setTransactionId(transactionId);
 
         RefundStatus response = CLIENT.refundPayment(refundInfo);
-        //assert response.getCode().equals(StatusCodes.SUCCESS.getMessage());
+
+        assert (response.getAmount().equals(amount));
+        assert (!response.getRefundStatus().isEmpty());
 
         return refundId;
     }

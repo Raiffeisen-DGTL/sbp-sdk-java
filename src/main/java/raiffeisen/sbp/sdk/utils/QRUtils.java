@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QRUtils {
-    public static String generateOrderNum() {
+    public static String generateOrderNumber() {
         return UUID.randomUUID().toString();
     }
 

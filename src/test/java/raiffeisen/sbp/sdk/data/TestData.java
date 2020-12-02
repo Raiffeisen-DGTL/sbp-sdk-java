@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import raiffeisen.sbp.sdk.client.PropertiesLoader;
 import raiffeisen.sbp.sdk.model.Response;
 
+import java.security.interfaces.RSAKey;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -47,6 +48,13 @@ public final class TestData {
                     "\"refundStatus\": \"" + REFUND_STATUS_STATUS + "\"}");
     public static final Response QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE = new Response(200,
             "{\"code\":\"ERROR.DYNAMIC_QR_WITHOUT_AMOUNT\",\"message\":\"Не передана сумма для динамического QR-кода\"}");
+    public static final int UNSUPPORTED_RESPONSE1_HTTPCODE = 400;
+    public static final String UNSUPPORTED_RESPONSE1_MESSAGE = "Error execution request";
+    public static final Response UNSUPPORTED_RESPONSE1 =
+            new Response(UNSUPPORTED_RESPONSE1_HTTPCODE, UNSUPPORTED_RESPONSE1_MESSAGE);
+    public static final int UNSUPPORTED_RESPONSE2_HTTPCODE = 200;
+    public static final String UNSUPPORTED_RESPONSE2_MESSAGE = "{\"code\":\"BAD_MESSAGE\"}";
+    public static final Response UNSUPPORTED_RESPONSE2 = new Response(UNSUPPORTED_RESPONSE2_HTTPCODE, UNSUPPORTED_RESPONSE2_MESSAGE);
     public static final String NULL_BODY = null;
     public static final String REFUND_PAYMENT = "{\"amount\":10," +
             "\"order\":\"123-123\"," +
