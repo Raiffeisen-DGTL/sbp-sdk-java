@@ -7,10 +7,10 @@ import java.math.BigDecimal;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class RefundInfo {
-    final BigDecimal amount;
-    final String order;
-    final String refundId;
+    private final BigDecimal amount;
+    private final String order;
+    private final String refundId;
 
-    String paymentDetails;
-    long transactionId;
+    private String paymentDetails;
+    private long transactionId;
 }

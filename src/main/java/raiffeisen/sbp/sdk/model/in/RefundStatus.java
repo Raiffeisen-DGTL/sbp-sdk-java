@@ -6,6 +6,6 @@ import java.math.BigDecimal;
 
 @Data
 public final class RefundStatus {
-    BigDecimal amount;
-    String refundStatus;
+    private BigDecimal amount;
+    private String refundStatus;
 }

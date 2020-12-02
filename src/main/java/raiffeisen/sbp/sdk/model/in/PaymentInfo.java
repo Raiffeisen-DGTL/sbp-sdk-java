@@ -7,15 +7,15 @@ import java.time.ZonedDateTime;
 
 @Data
 public final class PaymentInfo {
-    String additionalInfo;
-    BigDecimal amount;
-    ZonedDateTime createDate;
-    String currency;
-    long merchantId;
-    String order;
-    String paymentStatus;
-    String qrId;
-    String sbpMerchantId;
-    ZonedDateTime transactionDate;
-    long transactionId;
+    private String additionalInfo;
+    private BigDecimal amount;
+    private ZonedDateTime createDate;
+    private String currency;
+    private long merchantId;
+    private String order;
+    private String paymentStatus;
+    private String qrId;
+    private String sbpMerchantId;
+    private ZonedDateTime transactionDate;
+    private long transactionId;
 }

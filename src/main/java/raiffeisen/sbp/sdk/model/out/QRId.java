@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public final class QRId {
-    final String qrId;
+    private final String qrId;
 }

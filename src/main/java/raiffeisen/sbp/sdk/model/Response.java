@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public final class Response {
-    final int code;
-    final String body;
+    private final int code;
+    private final String body;
 }
