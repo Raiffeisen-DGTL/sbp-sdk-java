@@ -15,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class QR {
 
-    @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
