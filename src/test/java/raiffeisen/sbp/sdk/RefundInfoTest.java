@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
@@ -24,6 +25,7 @@ class RefundInfoTest {
     private static RefundId refundId;
 
     @BeforeAll
+    @Timeout(15)
     static void setup() throws SbpException, ContractViolationException, IOException {
         long transactionId = TestUtils.initStaticQR().getTransactionId();
         String id = TestUtils.refundPayment(AMOUNT, transactionId);

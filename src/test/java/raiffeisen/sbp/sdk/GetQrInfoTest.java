@@ -3,6 +3,7 @@ package raiffeisen.sbp.sdk;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -22,6 +23,7 @@ class GetQrInfoTest {
     private static String qrId;
 
     @BeforeAll
+    @Timeout(15)
     static void initTest() throws SbpException, ContractViolationException, IOException {
         qrId = TestUtils.initDynamicQR().getQrId();
     }
