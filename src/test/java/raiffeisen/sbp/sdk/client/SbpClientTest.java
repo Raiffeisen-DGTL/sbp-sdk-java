@@ -201,4 +201,21 @@ class SbpClientTest {
         assertEquals(TestData.UNSUPPORTED_RESPONSE2_MESSAGE, thrown.getMessage());
     }
 
+    @Test
+    void fail_throwContractViolationExceptionWhenCodeIsNull() throws Exception {
+        Mockito.when(webclient.request(any(),
+                any(),
+                any(),
+                any())).thenReturn(TestData.UNSUPPORTED_RESPONSE3);
+
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+
+        QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
+
+        ContractViolationException thrown = assertThrows(ContractViolationException.class,
+                () -> client.registerQR(qrDynamic));
+        assertEquals(TestData.UNSUPPORTED_RESPONSE3_HTTPCODE, thrown.getHttpCode());
+        assertEquals(TestData.UNSUPPORTED_RESPONSE3_MESSAGE, thrown.getMessage());
+    }
+
 }

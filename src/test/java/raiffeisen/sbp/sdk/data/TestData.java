@@ -63,6 +63,13 @@ public final class TestData {
     public static final int UNSUPPORTED_RESPONSE2_HTTPCODE = 200;
     public static final String UNSUPPORTED_RESPONSE2_MESSAGE = "{\"code\":\"BAD_MESSAGE\"}";
     public static final Response UNSUPPORTED_RESPONSE2 = new Response(UNSUPPORTED_RESPONSE2_HTTPCODE, UNSUPPORTED_RESPONSE2_MESSAGE);
+    public static final int UNSUPPORTED_RESPONSE3_HTTPCODE = 404;
+    public static final String UNSUPPORTED_RESPONSE3_MESSAGE =
+            "{\"timestamp\":\"2020-12-03T17:56:36.546+0000\"," +
+                    "\"status\":404,\"error\":\"Not Found\"," +
+                    "\"message\":\"No message available\"," +
+                    "\"path\":\"/sbp/v1/qr/register1\"}";
+    public static final Response UNSUPPORTED_RESPONSE3 = new Response(UNSUPPORTED_RESPONSE3_HTTPCODE, UNSUPPORTED_RESPONSE3_MESSAGE);
     public static final String NULL_BODY = null;
     public static final String REFUND_PAYMENT = "{\"amount\":10," +
             "\"order\":\"123-123\"," +

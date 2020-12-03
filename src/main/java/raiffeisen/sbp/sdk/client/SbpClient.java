@@ -2,6 +2,7 @@ package raiffeisen.sbp.sdk.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -101,7 +102,11 @@ public class SbpClient implements Closeable {
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
         try {
-            String jsonCode = mapper.readTree(response.getBody()).get("code").textValue();
+            JsonNode jsonNode = mapper.readTree(response.getBody()).get("code");
+            if (jsonNode == null) {
+                throw new ContractViolationException(response.getCode(), response.getBody());
+            }
+            String jsonCode = jsonNode.textValue();
             if (jsonCode.equals("SUCCESS")) {
                 return mapper.readValue(response.getBody(), resultClass);
             }
