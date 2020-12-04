@@ -87,6 +87,7 @@ public final class TestUtils {
 
         RefundInfo refundInfo = new RefundInfo(amount, orderInfo, refundId);
         refundInfo.setTransactionId(transactionId);
+        refundInfo.setPaymentDetails("Возврат");
 
         RefundStatus response = CLIENT.refundPayment(refundInfo);
 

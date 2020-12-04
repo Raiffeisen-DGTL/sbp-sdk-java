@@ -23,7 +23,7 @@ public class PropertiesLoader {
     static {
         Properties properties = new Properties();
         log.info("Loading config file...");
-        try (InputStream propertiesFile = ClassLoader.getSystemResourceAsStream("config.properties")) {
+        try (InputStream propertiesFile = PropertiesLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
             properties.load(propertiesFile);
             log.info("Loading config file is complete.");
         } catch (NullPointerException | IOException e) {
