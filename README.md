@@ -19,14 +19,13 @@
 ## Подключение
 
 Требования:
-    - Java 11+
-    - Apache Maven
+- Java 11+
+- Apache Maven
 
 Для подключения SDK требуется:
-1. Создать каталог с названием "dependencies".
-2. Поместить в созданный каталог файл .jar и [pom.xml](pom.xml).
-3. pom.xml своего проекта поместить следующее:
-
+- Создать в корне проекта каталог с названием "dependencies".
+- Поместить в созданный каталог файл .jar и [pom.xml по ссылке](/docs/dependencies/pom.xml).
+- pom.xml __своего__ проекта поместить следующее:
 ~~~
 
     <dependencies>
@@ -67,18 +66,16 @@
     </build>
 
 ~~~
+- Выполнить validate в maven(`mvn validate`).
+
+
 
 ## Использование
 
 Для использования SDK необходимо создать объект класса `SbpClient`, указав в конструкторе URL, на который будут отправляться запросы (`SbpClient.PRODUCTION_URL` или `SbpClient.TEST_URL`), id мерчанта в системе СБП и секретный ключ для авторизации.
 Этот клиент используется для всех взаимодействий с API.
 
-Все запросы осуществляются классом `SbpClient` и возвращают объекты следующих классов:
-- `QRUrl` для информации, связанной с QR-кодом
-- `PaymentInfo` - для платежей
-- `RefundStatus` - для возвратов
-
-Эти классы содержат в себе те же поля, что и ответ сервера.
+Все запросы осуществляются классом `SbpClient`. Посмотреть возвращаемые значения можно по [ссылке](#шпаргалка).
 
 Клиент может вернуть следующие типы исключений:
 - `IOException` - ошибка сетевого взаимодействия
@@ -86,16 +83,14 @@
 - `ContractViolationException` - ошибка в обработке ответа от сервера
 
  ~~~ java
-String secretKey = "...";
+String secretKey = "..."; // change this to your secretKey
 
-String sbpMerchantId = "...";
+String sbpMerchantId = "..."; // change this to your sbpMerchantId
 
-SbpClient client = new SbpClient(SbpClient.PRODUCTION_URL, sbpMerchantId, secretKey);
-
-QRUrl response;
+SbpClient client = new SbpClient(SbpClient.TEST_URL, sbpMerchantId, secretKey);
 
 try {
-    response = client.registerQR(QR);
+    // add your code here
 }
 catch (IOException networkException) {
     networkException.getMessage();
@@ -104,11 +99,10 @@ catch (SbpException sbpException) {
     sbpException.getCode(); // Error id
     sbpException.getMessage();
 }
-catch (ContractViolationException conratctException) {
+catch (ContractViolationException contractException) {
     contractException.getHttpCode();
     contractException.getMessage();
 }
-
  ~~~
 
 ## Регистрация QR-кода
@@ -120,29 +114,6 @@ catch (ContractViolationException conratctException) {
 - (*`QRDynamic`*) сумма в рублях `amount(BigDecimal)`
 
 Опциональные параметры могут быть заполнены с помощью set методов.
-  
-Также существует возможность заполнить необязательный параметр `qrExpirationDate` с помощью сдвига относительно даты создания. Для этого в поле `qrExpirationDate` следует указать строку вида `"+<число1><буква1>"`.
-
-- 'M' - месяц
-- 'd' - день
-- 'H' - час
-- 'm' - минута
-- 's' - секунда
-
-Пример:
-
-~~~ java
-String order = QRUtils.generateOrderNumber(); // UUID_v4
-
-// save order in a database;
-
-QR qrStatic = new QRStatic(order);
-qrStatic.setQrExpirationDate(+5m); // + 5 minutes
-
-QR qrDynamic = new QRDynamic(order, new BigDecimal(100));
-qrDynamic.setQrExpirationDate(+1d5m); // + 1 day 5 minutes
-
-~~~
 
 Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `QR`:
 
@@ -155,9 +126,11 @@ QR qrCode = new QRDynamic(order, new BigDecimal(100));
 qrCode.setAccount("40700000000000000000");
 qrCode.setAdditionalInfo("Доп информация");
 qrCode.setPaymentDetails("Назначение платежа");
-qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00").
+qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
 
 QRUrl response = client.registerQR(qrCode);
+
+// place your code here
 ~~~
 
 Ответ:
@@ -177,10 +150,33 @@ String order = QRUtils.generateOrderNumber(); // UUID_v4
 
 // save order in a database;
 
+// QR qrStatic = new QRStatic(order);
+//
+// or
+//
+// QR qrDynamic = new QRDynamic(order, new BigDecimal(100));
+~~~
+
+Также существует возможность заполнить необязательный параметр `qrExpirationDate` с помощью сдвига относительно даты создания. Для этого в поле `qrExpirationDate` следует указать строку вида `"+<число1><буква1>"`.
+
+- 'M' - месяц
+- 'd' - день
+- 'H' - час
+- 'm' - минута
+- 's' - секунда
+
+Пример:
+
+~~~ java
+String order = QRUtils.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
 QR qrStatic = new QRStatic(order);
+qrStatic.setQrExpirationDate("+5m"); // + 5 minutes
 
 QR qrDynamic = new QRDynamic(order, new BigDecimal(100));
-
+qrDynamic.setQrExpirationDate("+1d5m"); // + 1 day 5 minutes
 ~~~
 
 ## Получение данных по зарегистрированному ранее QR-коду
@@ -193,6 +189,8 @@ String qrIdString = "...";
 QRId id = new QRId(qrIdString);
 
 QRUrl response = client.getQRInfo(id);
+
+// place your code here
 ~~~
 
 Ответ
@@ -216,6 +214,8 @@ String qrIdString = "...";
 QRId id = new QRId(qrIdString);
 
 PaymentInfo response = client.getPaymentInfo(id);
+
+// place your code here
 ~~~
 
 Ответ:
@@ -254,6 +254,8 @@ long transactionId = ...;
 RefundInfo refundInfo = new RefundInfo(moneyAmount, orderInfo, refundId);
 
 RefundStatus response = client.refundPayment(refundInfo);
+
+// place your code here
 ~~~
 
 Ответ:
@@ -274,6 +276,8 @@ String refundIdString = "...";
 RefundId refundId = new RefundId(refundIdString);
 
 RefundStatus response = client.getRefundInfo(refundId);
+
+// place your code here
 ~~~
 
 Ответ:
