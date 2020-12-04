@@ -27,6 +27,10 @@
 - Поместить в созданный каталог файл .jar и [pom.xml по ссылке](/docs/dependencies/pom.xml).
 - pom.xml __своего__ проекта поместить следующее:
 ~~~
+<properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -35,7 +39,6 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
@@ -64,11 +67,8 @@
             </plugin>
         </plugins>
     </build>
-
 ~~~
-- Выполнить validate в maven(`mvn validate`).
-
-
+- Выполнить validate, install в maven(`mvn validate install`).
 
 ## Использование
 
@@ -83,25 +83,46 @@
 - `ContractViolationException` - ошибка в обработке ответа от сервера
 
  ~~~ java
-String secretKey = "..."; // change this to your secretKey
+import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
+import raiffeisen.sbp.sdk.exception.SbpException;
+import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.out.QR;
+import raiffeisen.sbp.sdk.model.out.QRDynamic;
+import raiffeisen.sbp.sdk.utils.QRUtils;
 
-String sbpMerchantId = "..."; // change this to your sbpMerchantId
+import java.io.IOException;
+import java.math.BigDecimal;
 
-SbpClient client = new SbpClient(SbpClient.TEST_URL, sbpMerchantId, secretKey);
-
-try {
-    // add your code here
-}
-catch (IOException networkException) {
-    networkException.getMessage();
-}
-catch (SbpException sbpException) {
-    sbpException.getCode(); // Error id
-    sbpException.getMessage();
-}
-catch (ContractViolationException contractException) {
-    contractException.getHttpCode();
-    contractException.getMessage();
+public class AppExample {
+    public static void main(String[] args) {
+        String secretKey = "..."; // change this to your secretKey
+        String sbpMerchantId = "..."; // change this to your sbpMerchantId
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, sbpMerchantId, secretKey);
+        try {
+            String order = QRUtils.generateOrderNumber();
+            // save order in a database;
+            QR qrCode = new QRDynamic(order, new BigDecimal(100));
+            qrCode.setAccount("40700000000000000000");
+            qrCode.setAdditionalInfo("Доп информация");
+            qrCode.setPaymentDetails("Назначение платежа");
+            qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
+            
+            QRUrl response = client.registerQR(qrCode);
+            // place your code here
+        }
+        catch (IOException networkException) {
+            networkException.getMessage();
+        }
+        catch (SbpException sbpException) {
+            sbpException.getCode(); // Error id
+            sbpException.getMessage();
+        }
+        catch (ContractViolationException contractException) {
+            contractException.getHttpCode();
+            contractException.getMessage();
+        }
+    }
 }
  ~~~
 
@@ -122,7 +143,7 @@ String order = QRUtils.generateOrderNumber();
 
 // save order in a database;
 
-QR qrCode = new QRDynamic(order, new BigDecimal(100));
+QRDynamic qrCode = new QRDynamic(order, new BigDecimal(100));
 qrCode.setAccount("40700000000000000000");
 qrCode.setAdditionalInfo("Доп информация");
 qrCode.setPaymentDetails("Назначение платежа");
@@ -150,11 +171,11 @@ String order = QRUtils.generateOrderNumber(); // UUID_v4
 
 // save order in a database;
 
-// QR qrStatic = new QRStatic(order);
+// QRStatic qrStatic = new QRStatic(order);
 //
 // or
 //
-// QR qrDynamic = new QRDynamic(order, new BigDecimal(100));
+// QRDynamic qrDynamic = new QRDynamic(order, new BigDecimal(100));
 ~~~
 
 Также существует возможность заполнить необязательный параметр `qrExpirationDate` с помощью сдвига относительно даты создания. Для этого в поле `qrExpirationDate` следует указать строку вида `"+<число1><буква1>"`.
@@ -172,10 +193,10 @@ String order = QRUtils.generateOrderNumber(); // UUID_v4
 
 // save order in a database;
 
-QR qrStatic = new QRStatic(order);
+QRStatic qrStatic = new QRStatic(order);
 qrStatic.setQrExpirationDate("+5m"); // + 5 minutes
 
-QR qrDynamic = new QRDynamic(order, new BigDecimal(100));
+QRDynamic qrDynamic = new QRDynamic(order, new BigDecimal(100));
 qrDynamic.setQrExpirationDate("+1d5m"); // + 1 day 5 minutes
 ~~~
 

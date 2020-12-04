@@ -3,7 +3,6 @@ package raiffeisen.sbp.sdk.model.out;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Setter;
 import raiffeisen.sbp.sdk.model.QRType;
 
@@ -15,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class QR {
 
-    @Getter(AccessLevel.NONE)
     private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
     @Setter(AccessLevel.NONE)
