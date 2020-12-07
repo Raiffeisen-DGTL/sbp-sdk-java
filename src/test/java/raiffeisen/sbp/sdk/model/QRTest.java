@@ -1,4 +1,4 @@
-package raiffeisen.sbp.sdk.utils;
+package raiffeisen.sbp.sdk.model;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("unit")
-class QRUtilsTest {
+class QRTest {
 
     @Test
     void success_GivenDates() {

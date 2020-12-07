@@ -91,7 +91,7 @@ import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
-import raiffeisen.sbp.sdk.utils.QRUtils;
+import raiffeisen.sbp.sdk.util.QRUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;

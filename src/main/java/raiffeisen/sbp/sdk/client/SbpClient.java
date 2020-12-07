@@ -16,7 +16,6 @@ import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.utils.QRUtils;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 import raiffeisen.sbp.sdk.web.WebClient;
 
