@@ -27,7 +27,7 @@
 - Поместить в созданный каталог файл .jar и [pom.xml по ссылке](/docs/dependencies/pom.xml).
 - pom.xml __своего__ проекта поместить следующее:
 ~~~
-<properties>
+    <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -68,7 +68,9 @@
         </plugins>
     </build>
 ~~~
-- Выполнить validate, install в maven(`mvn validate install`).
+- Выполнить команды в maven:
+   + validate(`mvn validate`)
+   + install(`mvn install`)
 
 ## Использование
 
@@ -100,6 +102,7 @@ public class AppExample {
         String sbpMerchantId = "..."; // change this to your sbpMerchantId
         SbpClient client = new SbpClient(SbpClient.TEST_URL, sbpMerchantId, secretKey);
         try {
+            // place your code here. Example:
             String order = QRUtils.generateOrderNumber();
             // save order in a database;
             QR qrCode = new QRDynamic(order, new BigDecimal(100));
