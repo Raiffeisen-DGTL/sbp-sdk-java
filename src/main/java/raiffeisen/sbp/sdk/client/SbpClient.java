@@ -58,9 +58,10 @@ public class SbpClient implements Closeable {
         mapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
     }
 
-    public QRUrl registerQR(final QR qr) throws SbpException, ContractViolationException, IOException {
-        final QR verifiedQR = QRUtils.prepareQR(qr);
-        ObjectNode jsonNode = mapper.valueToTree(verifiedQR);
+    public QRUrl registerQR(final QR customerQr) throws SbpException, ContractViolationException, IOException {
+        final QR qr = customerQr.newInstance();
+        qr.verify();
+        ObjectNode jsonNode = mapper.valueToTree(qr);
         jsonNode.put("sbpMerchantId", sbpMerchantId);
         return post(domain + REGISTER_PATH, jsonNode.toString(), QRUrl.class);
     }
