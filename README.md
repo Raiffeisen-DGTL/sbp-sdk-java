@@ -102,17 +102,17 @@ public class AppExample {
         String sbpMerchantId = "..."; // change this to your sbpMerchantId
         SbpClient client = new SbpClient(SbpClient.TEST_URL, sbpMerchantId, secretKey);
         try {
-            // place your code here. Example:
-            String order = QRUtils.generateOrderNumber();
+            String order = QRUtil.generateOrderNumber();
             // save order in a database;
             QR qrCode = new QRDynamic(order, new BigDecimal(100));
             qrCode.setAccount("40700000000000000000");
             qrCode.setAdditionalInfo("Доп информация");
             qrCode.setPaymentDetails("Назначение платежа");
-            qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
-            
+            qrCode.setQrExpirationDate(ZonedDateTime.now().plusDays(1));
             QRUrl response = client.registerQR(qrCode);
-            // place your code here
+            response.getQrId();
+            response.getOrUrl();
+            response.getPayload();
         }
         catch (IOException networkException) {
             networkException.getMessage();
@@ -315,24 +315,24 @@ RefundStatus response = client.getRefundInfo(refundId);
 
 ## Обработка уведомлений
 
-Для хранения и использования уведомлений существует класс `PaymentNotification`, экземпляр которого можно получить с помощью статического метода `SbpUtils.parseJson(String)`.
+Для хранения и использования уведомлений существует класс `PaymentNotification`, экземпляр которого можно получить с помощью статического метода `SbpUtil.parseJson(String)`.
 
-Для проверки подлинности уведомления существуют перегруженный статический метода `SbpUtils.checkNotificationSignature`. Примеры использования:
+Для проверки подлинности уведомления существуют перегруженный статический метода `SbpUtil.checkNotificationSignature`. Примеры использования:
 
 ~~~ java
 String jsonString = "...";
 String apiSignature = "...";
 String secretKey = "...";
 
-boolean success = SbpUtils.checkNotificationSignature(jsonString, apiSignature, secretKey);
+boolean success = SbpUtil.checkNotificationSignature(jsonString, apiSignature, secretKey);
 ~~~
 
 ~~~ java
-PaymentNotification notification = SbpUtils.parseJson(jsonString);
+PaymentNotification notification = SbpUtil.parseJson(jsonString);
 String apiSignature = "...";
 String secretKey = "...";
 
-boolean success = SbpUtils.checkNotificationSignature(notification, apiSignature, secretKey);
+boolean success = SbpUtil.checkNotificationSignature(notification, apiSignature, secretKey);
 ~~~
 
 ~~~ java
@@ -345,7 +345,7 @@ String transactionDate = "...";
 String apiSignature = "...";
 String secretKey = "...";
 
-boolean success = SbpUtils.checkNotificationSignature(amount, 
+boolean success = SbpUtil.checkNotificationSignature(amount, 
                  	sbpMerchantId, 
                  	order,
                  	paymentStatus,

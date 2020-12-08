@@ -65,7 +65,7 @@ public abstract class QR {
             String str = qrExpirationDate.substring(1);
 
             if (Pattern.compile("[^\\dMdHms+]").matcher(str).find())
-                throw new IllegalArgumentException("Invalid chars in QRInfo.qrExpirationDate");
+                throw new IllegalArgumentException("Invalid chars in QR.qrExpirationDate");
 
             if (str.isEmpty())
                 throw new IllegalArgumentException("Time shift is not specified");
@@ -92,11 +92,11 @@ public abstract class QR {
                         time = time.plusSeconds(Integer.parseInt(number));
                         break;
                     default:
-                        throw new IllegalArgumentException("Bad input in QRInfo.qrExpirationDate");
+                        throw new IllegalArgumentException("Bad input in QR.qrExpirationDate");
                 }
             }
             if (!matcher.replaceAll("").equals("")) {
-                throw new IllegalArgumentException("Bad input in QRInfo.qrExpirationDate");
+                throw new IllegalArgumentException("Bad input in QR.qrExpirationDate");
             }
             setQrExpirationDate(time);
         }

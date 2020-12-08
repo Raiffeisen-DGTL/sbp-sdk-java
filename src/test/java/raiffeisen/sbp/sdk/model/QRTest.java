@@ -116,7 +116,7 @@ class QRTest {
         qrStatic.setQrExpirationDate("+389r");
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> qrStatic.verify());
-        assertEquals("Invalid chars in QRInfo.qrExpirationDate", thrown.getMessage());
+        assertEquals("Invalid chars in QR.qrExpirationDate", thrown.getMessage());
     }
 
     @Test
@@ -125,6 +125,6 @@ class QRTest {
         qrStatic.setQrExpirationDate("+12Mm13sH");
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> qrStatic.verify());
-        assertEquals("Bad input in QRInfo.qrExpirationDate", thrown.getMessage());
+        assertEquals("Bad input in QR.qrExpirationDate", thrown.getMessage());
     }
 }
