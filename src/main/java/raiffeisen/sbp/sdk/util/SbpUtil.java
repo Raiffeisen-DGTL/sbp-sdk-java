@@ -1,4 +1,4 @@
-package raiffeisen.sbp.sdk.utils;
+package raiffeisen.sbp.sdk.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SbpUtils {
+public final class SbpUtil {
 
     private static final String SHA_256_ALGORITHM = "HmacSHA256";
     private static final Charset ENCODING = StandardCharsets.UTF_8;

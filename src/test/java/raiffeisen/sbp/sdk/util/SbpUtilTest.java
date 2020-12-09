@@ -1,4 +1,4 @@
-package raiffeisen.sbp.sdk.utils;
+package raiffeisen.sbp.sdk.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static raiffeisen.sbp.sdk.data.TestData.TEST_SBP_MERCHANT_ID;
 
 @Tag("unit")
-class SbpUtilsTest {
+class SbpUtilTest {
     private static final String TEST_API_SIGNATURE = "1eca6a084ff8a5b4f5740e0eeab2a72d8ff981bce5b5dea75a53bf44944a8c8d";
     private static final String BODY = "{\"transactionId\":17998,\"qrId\":\"AS1000408BSPMRDI8IHBGO4DFQAISU9O\",\"sbpMerchantId\":\"MA0000000552\",\"merchantId\":123,\"amount\":101.01,\"currency\":\"RUB\",\"transactionDate\":\"2020-07-24T17:20:00.999232+03:00\",\"paymentStatus\":\"SUCCESS\",\"additionalInfo\":null,\"order\":\"dfe0ff08-4796-46bb-a9fb-93fcd99ce748\",\"createDate\":\"2020-07-24T17:19:58+03:00\"}";
     private static final BigDecimal AMOUNT = BigDecimal.valueOf(101.01);
@@ -28,7 +28,7 @@ class SbpUtilsTest {
 
     @BeforeEach
     public void PaymentNotificationTest() throws JsonProcessingException {
-        notification = SbpUtils.parseNotification(TestData.NOTIFICATION);
+        notification = SbpUtil.parseNotification(TestData.NOTIFICATION);
         assertEquals(AMOUNT, notification.getAmount());
         assertEquals(TEST_SBP_MERCHANT_ID, notification.getSbpMerchantId());
         assertEquals(ORDER, notification.getOrder());
@@ -38,27 +38,27 @@ class SbpUtilsTest {
 
     @Test
     void checkSignatureFromJson() {
-        assertTrue(SbpUtils.checkNotificationSignature(BODY, TEST_API_SIGNATURE, TEST_SECRET_KEY));
+        assertTrue(SbpUtil.checkNotificationSignature(BODY, TEST_API_SIGNATURE, TEST_SECRET_KEY));
     }
 
     @Test
     void checkSignatureFromPaymentNotification() {
-        assertTrue(SbpUtils.checkNotificationSignature(notification, TEST_API_SIGNATURE, TEST_SECRET_KEY));
+        assertTrue(SbpUtil.checkNotificationSignature(notification, TEST_API_SIGNATURE, TEST_SECRET_KEY));
     }
 
     @Test
     void checkSignatureFromFields() {
-        assertTrue(SbpUtils.checkNotificationSignature(AMOUNT, TEST_SBP_MERCHANT_ID, ORDER, StatusCodes.SUCCESS.getMessage(), TRANSACTION_DATE,
+        assertTrue(SbpUtil.checkNotificationSignature(AMOUNT, TEST_SBP_MERCHANT_ID, ORDER, StatusCodes.SUCCESS.getMessage(), TRANSACTION_DATE,
                 TEST_API_SIGNATURE, TEST_SECRET_KEY));
     }
 
     @Test
     void wrongSignature() {
-        assertFalse(SbpUtils.checkNotificationSignature(notification, TEST_API_SIGNATURE.substring(5), TEST_SECRET_KEY));
+        assertFalse(SbpUtil.checkNotificationSignature(notification, TEST_API_SIGNATURE.substring(5), TEST_SECRET_KEY));
     }
 
     @Test
     void badJsonBody() {
-        assertFalse(SbpUtils.checkNotificationSignature("bad json", TEST_API_SIGNATURE, TEST_SECRET_KEY));
+        assertFalse(SbpUtil.checkNotificationSignature("bad json", TEST_API_SIGNATURE, TEST_SECRET_KEY));
     }
 }

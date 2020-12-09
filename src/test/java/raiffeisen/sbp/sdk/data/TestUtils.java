@@ -7,13 +7,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import raiffeisen.sbp.sdk.client.SbpClient;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
-import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.model.out.QRInfo;
+import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestUtils {
 
-    public static final SbpClient CLIENT = new SbpClient(SbpClient.TEST_DOMAIN, TestData.SECRET_KEY);
+    public static final SbpClient CLIENT = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, TestData.SECRET_KEY);
 
     public static String getRandomUUID() {
         return UUID.randomUUID().toString();
@@ -40,17 +41,13 @@ public final class TestUtils {
         assert response.getStatusLine().getStatusCode() == 200;
     }
 
-    public static PaymentInfo initStaticQR() throws IOException, SbpException {
+    public static PaymentInfo initStaticQR() throws SbpException, ContractViolationException, IOException {
         String orderInfo = getRandomUUID();
-        QRInfo qrStatic = QRInfo
-                .builder()
-                .order(orderInfo)
-                .qrType(QRType.QRStatic)
-                .sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID)
-                .build();
+
+        QRStatic qrStatic = new QRStatic(orderInfo);
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
-        QRId id = QRId.builder().qrId(qr.getQrId()).build();
+        QRId id = new QRId(qr.getQrId());
 
         payQR(id);
 
@@ -63,19 +60,14 @@ public final class TestUtils {
         return paymentInfo;
     }
 
-    public static PaymentInfo initDynamicQR() throws SbpException, IOException {
+    public static PaymentInfo initDynamicQR() throws SbpException, ContractViolationException, IOException {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
-        QRInfo qrDynamic = QRInfo.builder()
-                .order(orderInfo)
-                .qrType(QRType.QRDynamic)
-                .amount(moneyAmount)
-                .currency("RUB")
-                .sbpMerchantId(TestData.TEST_SBP_MERCHANT_ID)
-                .build();
+
+        QRDynamic qrDynamic = new QRDynamic(orderInfo,moneyAmount);
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
-        QRId id = QRId.builder().qrId(qr.getQrId()).build();
+        QRId id = new QRId(qr.getQrId());
 
         payQR(id);
 
@@ -88,19 +80,19 @@ public final class TestUtils {
         return paymentInfo;
     }
 
-    public static String refundPayment(BigDecimal amount, long transactionId) throws IOException, SbpException {
+    public static String refundPayment(BigDecimal amount, long transactionId)
+            throws SbpException, ContractViolationException, IOException {
         String refundId = getRandomUUID();
         String orderInfo = getRandomUUID();
 
-        RefundInfo refundInfo = RefundInfo.builder()
-                .amount(amount)
-                .order(orderInfo)
-                .refundId(refundId)
-                .transactionId(transactionId)
-                .build();
+        RefundInfo refundInfo = new RefundInfo(amount, orderInfo, refundId);
+        refundInfo.setTransactionId(transactionId);
+        refundInfo.setPaymentDetails("Возврат");
 
         RefundStatus response = CLIENT.refundPayment(refundInfo);
-        assert response.getCode().equals(StatusCodes.SUCCESS.getMessage());
+
+        assert (response.getAmount().equals(amount));
+        assert (!response.getRefundStatus().isEmpty());
 
         return refundId;
     }

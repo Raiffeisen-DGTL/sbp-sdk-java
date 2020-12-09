@@ -18,30 +18,58 @@ public final class TestData {
     public static final Map<String, String> HEADERS =
             Map.of("content-type", "application/json",
                     "charset", "UTF-8");
+    public static final String QR_URL_QR_ID = "qrId";
+    public static final String QR_URL_PAYLOAD = "payloadUrl";
+    public static final String QR_URL_URL = "qrUrl";
     public static final Response QR_URL = new Response(200,
             "{\"code\": \"SUCCESS\"," +
-                    "\"qrId\": \"qrId\"," +
-                    "\"payload\": \"payloadUrl\"," +
-                    "\"qrUrl\": \"qrUrl\" }");
+                    "\"qrId\": \"" + QR_URL_QR_ID + "\"," +
+                    "\"payload\": \"" + QR_URL_PAYLOAD + "\"," +
+                    "\"qrUrl\": \"" + QR_URL_URL + "\" }");
+    public static final String PAYMENT_INFO_ADDITIONAL_INFO = "addInfo";
+    public static final String PAYMENT_INFO_AMOUNT = "111";
+    public static final String PAYMENT_INFO_CREATE_DATE = "2020-01-31T09:14:38.107227+03:00";
+    public static final String PAYMENT_INFO_CURRENCY = "RUB";
+    public static final String PAYMENT_INFO_MERCHANT_ID = "456";
+    public static final String PAYMENT_INFO_ORDER = "282a60f8-dd75-4286-bde0-af321dd081b3";
+    public static final String PAYMENT_INFO_PAYMENT_STATUS = "NO_INFO";
+    public static final String PAYMENT_INFO_QR_ID = "AD100051KNSNR64I98CRUJUASC9M72QT";
+    public static final String PAYMENT_INFO_TRANSACTION_DATE = "2019-07-11T17:45:13.109227+03:00";
     public static final Response PAYMENT_INFO = new Response(200,
-            "{\"additionalInfo\": \"addInfo\"," +
-                    "\"amount\": 111," +
+            "{\"additionalInfo\": \"" + PAYMENT_INFO_ADDITIONAL_INFO + "\"," +
+                    "\"amount\": " + PAYMENT_INFO_AMOUNT + "," +
                     "\"code\": \"SUCCESS\"," +
-                    "\"createDate\": \"2020-01-31T09:14:38.107227+03:00\"," +
-                    "\"currency\": \"RUB\"," +
-                    "\"merchantId\": 456," +
-                    "\"order\": \"282a60f8-dd75-4286-bde0-af321dd081b3\"," +
-                    "\"paymentStatus\": \"NO_INFO\"," +
-                    "\"qrId\": \"AD100051KNSNR64I98CRUJUASC9M72QT\"," +
+                    "\"createDate\": \"" + PAYMENT_INFO_CREATE_DATE + "\"," +
+                    "\"currency\": \"" + PAYMENT_INFO_CURRENCY + "\"," +
+                    "\"merchantId\": " + PAYMENT_INFO_MERCHANT_ID + "," +
+                    "\"order\": \"" + PAYMENT_INFO_ORDER + "\"," +
+                    "\"paymentStatus\": \"" + PAYMENT_INFO_PAYMENT_STATUS + "\"," +
+                    "\"qrId\": \"" + PAYMENT_INFO_QR_ID + "\"," +
                     "\"sbpMerchantId\": \"MA0000000553\"," +
-                    "\"transactionDate\": \"2019-07-11T17:45:13.109227+03:00\"," +
+                    "\"transactionDate\": \"" + PAYMENT_INFO_TRANSACTION_DATE + "\"," +
                     "\"transactionId\": 23 }");
+    public static final String REFUND_STATUS_AMOUNT = "150";
+    public static final String REFUND_STATUS_STATUS = "IN_PROGRESS";
     public static final Response REFUND_STATUS = new Response(200,
             "{ \"code\": \"SUCCESS\"," +
-                    "\"amount\": 150," +
-                    "\"refundStatus\": \"IN_PROGRESS\"}");
+                    "\"amount\": " + REFUND_STATUS_AMOUNT + "," +
+                    "\"refundStatus\": \"" + REFUND_STATUS_STATUS + "\"}");
     public static final Response QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE = new Response(200,
             "{\"code\":\"ERROR.DYNAMIC_QR_WITHOUT_AMOUNT\",\"message\":\"Не передана сумма для динамического QR-кода\"}");
+    public static final int UNSUPPORTED_RESPONSE1_HTTPCODE = 400;
+    public static final String UNSUPPORTED_RESPONSE1_MESSAGE = "Error execution request";
+    public static final Response UNSUPPORTED_RESPONSE1 =
+            new Response(UNSUPPORTED_RESPONSE1_HTTPCODE, UNSUPPORTED_RESPONSE1_MESSAGE);
+    public static final int UNSUPPORTED_RESPONSE2_HTTPCODE = 200;
+    public static final String UNSUPPORTED_RESPONSE2_MESSAGE = "{\"code\":\"BAD_MESSAGE\"}";
+    public static final Response UNSUPPORTED_RESPONSE2 = new Response(UNSUPPORTED_RESPONSE2_HTTPCODE, UNSUPPORTED_RESPONSE2_MESSAGE);
+    public static final int UNSUPPORTED_RESPONSE3_HTTPCODE = 404;
+    public static final String UNSUPPORTED_RESPONSE3_MESSAGE =
+            "{\"timestamp\":\"2020-12-03T17:56:36.546+0000\"," +
+                    "\"status\":404,\"error\":\"Not Found\"," +
+                    "\"message\":\"No message available\"," +
+                    "\"path\":\"/sbp/v1/qr/register1\"}";
+    public static final Response UNSUPPORTED_RESPONSE3 = new Response(UNSUPPORTED_RESPONSE3_HTTPCODE, UNSUPPORTED_RESPONSE3_MESSAGE);
     public static final String NULL_BODY = null;
     public static final String REFUND_PAYMENT = "{\"amount\":10," +
             "\"order\":\"123-123\"," +
@@ -63,15 +91,19 @@ public final class TestData {
     public static final String DATE_CREATE_DATE_PLUS_DAY = "2019-07-23T09:14:38.107227+03:00";
     public static final String DATE_CREATE_DATE_PLUS_MONTH = "2019-08-22T09:14:38.107227+03:00";
     public static final String DATE_QR_EXPIRATION_DATE = "2020-07-22T09:14:38.107227+03:00";
-    public static final String QR_INFO_BODY = "{\"createDate\":\"" + TestData.DATE_CREATE_DATE + "\"," +
+    public static final String QR_INFO_BODY = "{" +
             "\"order\":\"123-123-123\"," +
             "\"qrType\":\"QRStatic\"," +
-            "\"sbpMerchantId\":\"MA0000000552\"," +
-            "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"" +
+            "\"createDate\":\"" + TestData.DATE_CREATE_DATE + "\"," +
+            "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"," +
+            "\"sbpMerchantId\":\"MA0000000552\"" +
             "}";
-    public static final String MISSING_REFUND_ID_ERROR = "400, {\"code\":\"ERROR.INVALID_REQUEST\",\"message\":\"Id возврата не передан\"}";
-    public static final String QR_CODE_NOT_MATCHING_ERROR = "200, {\"code\":\"ERROR.SECURITY_CHECK_ERROR\",\"message\":\"QR-код не соответствует ТСП\"}";
-    public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR = "200, {\"code\":\"ERROR.DYNAMIC_QR_WITHOUT_AMOUNT\",\"message\":\"Не передана сумма для динамического QR-кода\"}";
+    public static final String MISSING_REFUND_ID_ERROR_CODE = "ERROR.INVALID_REQUEST";
+    public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Id возврата не передан";
+    public static final String QR_CODE_NOT_MATCHING_ERROR_CODE = "ERROR.SECURITY_CHECK_ERROR";
+    public static final String QR_CODE_NOT_MATCHING_ERROR_MESSAGE = "QR-код не соответствует ТСП";
+    public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
+    public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
     public static final String TEST_REFUND_ID = "123";
     public static final String TEST_QR_ID = "123";
     public static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
@@ -84,7 +116,7 @@ public final class TestData {
     public static final String RESPONSE_BODY = "{\"code\",\"SUCCESS\"}";
 
     public static String getNotFoundRefundError(String refundId) {
-        String st = "200, {\"code\":\"ERROR.REFUND_NOT_FOUND\",\"message\":\"Возврат с refundId %s не найден\"}";
+        String st = "Возврат с refundId %s не найден";
         return String.format(st, refundId);
     }
 }

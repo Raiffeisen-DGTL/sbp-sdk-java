@@ -1,13 +1,11 @@
 package raiffeisen.sbp.sdk.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@RequiredArgsConstructor
-public class PaymentNotification {
+@Data
+public final class PaymentNotification {
     private long transactionId;
     private String qrId;
     private String sbpMerchantId;

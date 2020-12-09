@@ -1,10 +1,9 @@
 package raiffeisen.sbp.sdk.model;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
-public class Response {
-    int code;
-
-    String body;
+@Data
+public final class Response {
+    private final int code;
+    private final String body;
 }

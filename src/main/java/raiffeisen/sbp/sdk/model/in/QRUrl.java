@@ -1,13 +1,9 @@
 package raiffeisen.sbp.sdk.model.in;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
-@Getter
-@RequiredArgsConstructor
-public class QRUrl {
-
-    private String code;
+@Data
+public final class QRUrl {
     private String qrId;
     private String payload;
     private String qrUrl;

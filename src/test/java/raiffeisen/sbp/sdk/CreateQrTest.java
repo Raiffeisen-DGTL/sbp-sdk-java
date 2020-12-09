@@ -2,74 +2,62 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
-import raiffeisen.sbp.sdk.model.QRType;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
-import raiffeisen.sbp.sdk.model.out.QRInfo;
-import raiffeisen.sbp.sdk.data.StatusCodes;
-import raiffeisen.sbp.sdk.data.TestData;
+import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.data.TestUtils;
+import raiffeisen.sbp.sdk.model.out.QRStatic;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
 class CreateQrTest {
 
-    private final String TEST_SBP_MERCHANT_ID = TestData.TEST_SBP_MERCHANT_ID;
-
     @Test
-    void createQRInfoDynamicTest() throws IOException, SbpException {
-        QRInfo QR = QRInfo.builder()
-                .order(TestUtils.getRandomUUID())
-                .qrType(QRType.QRDynamic)
-                .amount(new BigDecimal(314))
-                .currency("RUB")
-                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .build();
+    void createQRDynamicTest() throws IOException, ContractViolationException, SbpException {
+        QRDynamic qrDynamic = new QRDynamic(TestUtils.getRandomUUID(), new BigDecimal(314));
 
-        QRUrl response = TestUtils.CLIENT.registerQR(QR);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+        QRUrl response = TestUtils.CLIENT.registerQR(qrDynamic);
+
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getPayload());
+        assertNotNull(response.getQrUrl());
     }
 
     @Test
-    void createQRInfoStaticTest() throws IOException, SbpException {
-        QRInfo QR = QRInfo.builder()
-                .order(TestUtils.getRandomUUID())
-                .qrType(QRType.QRStatic)
-                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .build();
+    void createQRStaticTest() throws IOException, ContractViolationException, SbpException {
+        QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
 
-        QRUrl response = TestUtils.CLIENT.registerQR(QR);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+        QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
+
+        assertNotNull(response.getQrUrl());
+        assertNotNull(response.getPayload());
+        assertNotNull(response.getQrId());
     }
 
     @Test
-    void createQRInfoMaxTest() throws IOException, SbpException {
+    void createQRMaxTest() throws IOException, ContractViolationException, SbpException {
         // Test without "account" parameter
-        QRInfo QR = QRInfo.builder()
-                .additionalInfo("Доп информация")
-                .amount(new BigDecimal(1110))
-                .currency("RUB")
-                .order(TestUtils.getRandomUUID())
-                .paymentDetails("Назначение платежа")
-                .qrType(QRType.QRStatic)
-                .qrExpirationDate("2023-07-22T09:14:38.107227+03:00")
-                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .build();
+        QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
+        qrStatic.setAdditionalInfo("Доп информация");
+        qrStatic.setAmount(new BigDecimal(1110));
+        qrStatic.setPaymentDetails("Назначение платежа");
+        qrStatic.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
 
-        QRUrl response = TestUtils.CLIENT.registerQR(QR);
-        assertEquals(StatusCodes.SUCCESS.getMessage(), response.getCode());
+        QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getQrUrl());
+        assertNotNull(response.getPayload());
     }
 
     @Test
     void createQRWithoutAmountNegativeTest() {
-        QRInfo badQR = QRInfo.builder() // QR without type and without order
-                .sbpMerchantId(TEST_SBP_MERCHANT_ID)
-                .build();
+        QRStatic badQR = new QRStatic("");
 
         assertThrows(SbpException.class, () -> TestUtils.CLIENT.registerQR(badQR));
     }

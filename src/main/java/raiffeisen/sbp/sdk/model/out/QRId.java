@@ -1,12 +1,8 @@
 package raiffeisen.sbp.sdk.model.out;
 
-import lombok.Builder;
-import lombok.Value;
-import lombok.Getter;
+import lombok.Data;
 
-@Value
-@Getter
-@Builder
-public class QRId {
-    String qrId;
+@Data
+public final class QRId {
+    private final String qrId;
 }
