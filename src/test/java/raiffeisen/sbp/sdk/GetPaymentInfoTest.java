@@ -59,8 +59,8 @@ class GetPaymentInfoTest {
         QRId badId = new QRId(badQrId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getPaymentInfo(badId));
-        assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR_CODE, ex.getCode());
-        assertEquals(TestData.QR_CODE_NOT_MATCHING_ERROR_MESSAGE, ex.getMessage());
+        assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_CODE, ex.getCode());
+        assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_MESSAGE, ex.getMessage());
     }
 
 }
