@@ -99,9 +99,9 @@ public final class TestData {
             "\"sbpMerchantId\":\"MA0000000552\"" +
             "}";
     public static final String MISSING_REFUND_ID_ERROR_CODE = "ERROR.INVALID_REQUEST";
-    public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Id возврата не передан";
-    public static final String QR_CODE_NOT_MATCHING_ERROR_CODE = "ERROR.SECURITY_CHECK_ERROR";
-    public static final String QR_CODE_NOT_MATCHING_ERROR_MESSAGE = "QR-код не соответствует ТСП";
+    public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Не передан обязательный параметр";
+    public static final String QR_CODE_NOT_FOUND_ERROR_CODE = "ERROR.NOT_FOUND";
+    public static final String QR_CODE_NOT_FOUND_ERROR_MESSAGE = "QR-код не найден у данного партнера";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
     public static final String TEST_REFUND_ID = "123";

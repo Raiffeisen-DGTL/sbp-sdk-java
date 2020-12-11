@@ -109,4 +109,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>Github of AO Raiffeisen</name>
+            <url>https://maven.pkg.github.com/raiffeisen-dgtl/sbp-sdk-java</url>
+        </repository>
+    </distributionManagement>
 </project>
