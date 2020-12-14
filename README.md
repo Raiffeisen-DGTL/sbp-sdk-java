@@ -1,4 +1,5 @@
 # Java SDK для интеграции с API СБП
+[Link to English version](/README.en.md)
 ## Содержание
 - [Документация](#документация)
 - [Подключение](#подключение)
@@ -317,7 +318,7 @@ RefundStatus response = client.getRefundInfo(refundId);
 
 Для хранения и использования уведомлений существует класс `PaymentNotification`, экземпляр которого можно получить с помощью статического метода `SbpUtil.parseJson(String)`.
 
-Для проверки подлинности уведомления существуют перегруженный статический метода `SbpUtil.checkNotificationSignature`. Примеры использования:
+Для проверки подлинности уведомления существуют перегруженные статические методы `SbpUtil.checkNotificationSignature`. Примеры использования:
 
 ~~~ java
 String jsonString = "...";
