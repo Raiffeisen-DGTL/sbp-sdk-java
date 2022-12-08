@@ -4,12 +4,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import raiffeisen.sbp.sdk.data.TestData;
+import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.data.TestData;
-import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 

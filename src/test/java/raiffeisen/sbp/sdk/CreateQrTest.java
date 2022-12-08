@@ -2,11 +2,11 @@ package raiffeisen.sbp.sdk;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
-import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 
 import java.io.IOException;

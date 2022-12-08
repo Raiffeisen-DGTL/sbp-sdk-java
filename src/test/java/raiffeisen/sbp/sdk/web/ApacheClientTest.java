@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
 class ApacheClientTest {
-    @Mock (name = "httpClient")
+    @Mock(name = "httpClient")
     CloseableHttpClient httpClientMock;
 
     @Mock

@@ -4,13 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import raiffeisen.sbp.sdk.data.StatusCodes;
+import raiffeisen.sbp.sdk.data.TestData;
+import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.data.StatusCodes;
-import raiffeisen.sbp.sdk.data.TestData;
-import raiffeisen.sbp.sdk.data.TestUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -57,7 +57,7 @@ class RefundPaymentTest {
 
     @Test
     void refundPaymentWithoutRefundIdNegative() {
-        RefundInfo refundInfo = new RefundInfo(BigDecimal.ONE,null,null);
+        RefundInfo refundInfo = new RefundInfo(BigDecimal.ONE, null, null);
         refundInfo.setTransactionId(dynamicQrTransactionId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.refundPayment(refundInfo));

@@ -1,9 +1,11 @@
 package raiffeisen.sbp.sdk.data;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import raiffeisen.sbp.sdk.client.SbpClient;
@@ -26,16 +28,22 @@ public final class TestUtils {
 
     public static final SbpClient CLIENT = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, TestData.SECRET_KEY);
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     public static String getRandomUUID() {
         return UUID.randomUUID().toString();
     }
 
     private static void payQR(QRId id) throws IOException {
-        HttpGet getter = new HttpGet(TestData.PAYMENT_URL.replace("*", id.getQrId()));
-
+        HttpPost httpPost = new HttpPost(TestData.PAYMENT_URL);
+        InitPayment initPayment = new InitPayment(id.getQrId(), BigDecimal.valueOf(314L));
+        StringEntity entity = new StringEntity(MAPPER.writeValueAsString(initPayment));
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
         CloseableHttpResponse response;
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            response = client.execute(getter);
+            response = client.execute(httpPost);
         }
 
         assert response.getStatusLine().getStatusCode() == 200;
@@ -64,7 +72,7 @@ public final class TestUtils {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
 
-        QRDynamic qrDynamic = new QRDynamic(orderInfo,moneyAmount);
+        QRDynamic qrDynamic = new QRDynamic(orderInfo, moneyAmount);
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
         QRId id = new QRId(qr.getQrId());

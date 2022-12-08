@@ -30,11 +30,11 @@ public class PropertiesLoader {
             log.error("Cannot load configuration file. Loading default values.");
         }
 
-        TEST_URL = properties.getProperty("domain.sandbox", "https://test.ecom.raiffeisen.ru");
-        PRODUCTION_URL = properties.getProperty("domain.production", "https://e-commerce.raiffeisen.ru");
+        TEST_URL = properties.getProperty("domain.sandbox", "https://pay-test.raif.ru");
+        PRODUCTION_URL = properties.getProperty("domain.production", "https://pay.raif.ru");
 
-        REGISTER_PATH = properties.getProperty("path.register.qr", "/api/sbp/v1/qr/register");
-        QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v1/qr/?/info");
+        REGISTER_PATH = properties.getProperty("path.register.qr", "/api/sbp/v2/qrs");
+        QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v2/qrs/?");
         PAYMENT_INFO_PATH = properties.getProperty("path.payment.info", "/api/sbp/v1/qr/?/payment-info");
         REFUND_PATH = properties.getProperty("path.refund", "/api/sbp/v1/refund");
         REFUND_INFO_PATH = properties.getProperty("path.refund.info", "/api/sbp/v1/refund/?");

@@ -9,12 +9,13 @@ import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestData {
-    public static final String SANDBOX = "https://test.ecom.raiffeisen.ru";
-    public static final String PAYMENT_URL = "https://test.ecom.raiffeisen.ru/sbp/v1/transaction/*/status?status=SUCCESS";
-    public static final String TEST_SBP_MERCHANT_ID = "MA0000000552";
-    public static final String SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-            "eyJzdWIiOiJNQTAwMDAwMDA1NTIiLCJqdGkiOiI0ZDFmZWIwNy0xZDExLTRjOWEtYmViNi" +
-            "1kZjUwY2Y2Mzc5YTUifQ.pxU8KYfqbVlxvQV7wfbGpsu4AX1QoY26FqBiuNuyT-s";
+    public static final String SANDBOX = "https://pay-test.raif.ru";
+    public static final String PAYMENT_URL = "https://pay-test.raif.ru/api/nspc-mock/v01/rfuture/payment/init";
+    public static final String TEST_SBP_MERCHANT_ID = "MA341037";
+
+    public static final String TEST_NOTIFICATION_SBP_MERCHANT_ID = "MA0000000552";
+
+    public static final String SECRET_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTM0MTAzNyIsImp0aSI6IjllMjY2YmIwLTA4OTgtNGMwMC04YzIwLTk2NDNmMmQxMjNkMiJ9.1NbE__vzECn9UZBJIincgnoOP0h1llZtGxikZJOqkpc";
     public static final Map<String, String> HEADERS =
             Map.of("content-type", "application/json",
                     "charset", "UTF-8");
@@ -45,7 +46,7 @@ public final class TestData {
                     "\"order\": \"" + PAYMENT_INFO_ORDER + "\"," +
                     "\"paymentStatus\": \"" + PAYMENT_INFO_PAYMENT_STATUS + "\"," +
                     "\"qrId\": \"" + PAYMENT_INFO_QR_ID + "\"," +
-                    "\"sbpMerchantId\": \"MA0000000553\"," +
+                    "\"sbpMerchantId\": \"MA341037\"," +
                     "\"transactionDate\": \"" + PAYMENT_INFO_TRANSACTION_DATE + "\"," +
                     "\"transactionId\": 23 }");
     public static final String REFUND_STATUS_AMOUNT = "150";
@@ -96,7 +97,7 @@ public final class TestData {
             "\"qrType\":\"QRStatic\"," +
             "\"createDate\":\"" + TestData.DATE_CREATE_DATE + "\"," +
             "\"qrExpirationDate\":\"" + TestData.DATE_QR_EXPIRATION_DATE + "\"," +
-            "\"sbpMerchantId\":\"MA0000000552\"" +
+            "\"sbpMerchantId\":\"MA341037\"" +
             "}";
     public static final String MISSING_REFUND_ID_ERROR_CODE = "ERROR.INVALID_REQUEST";
     public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Не передан обязательный параметр";
@@ -119,4 +120,5 @@ public final class TestData {
         String st = "Возврат с refundId %s не найден";
         return String.format(st, refundId);
     }
+
 }
