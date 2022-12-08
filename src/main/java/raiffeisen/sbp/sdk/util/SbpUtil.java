@@ -30,7 +30,7 @@ public final class SbpUtil {
     }
 
     public static boolean checkNotificationSignature(String jsonBody, String headerSignature, String secretKey) {
-        String hash = encrypt(joinFields(jsonBody),secretKey);
+        String hash = encrypt(joinFields(jsonBody), secretKey);
         return hash.equals(headerSignature);
     }
 
@@ -78,8 +78,7 @@ public final class SbpUtil {
                     json.path("order").asText(),
                     json.path("paymentStatus").asText(),
                     json.path("transactionDate").asText());
-        }
-        catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             return "";
         }
     }

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static raiffeisen.sbp.sdk.data.TestData.TEST_SBP_MERCHANT_ID;
+import static raiffeisen.sbp.sdk.data.TestData.TEST_NOTIFICATION_SBP_MERCHANT_ID;
 
 @Tag("unit")
 class SbpUtilTest {
@@ -30,7 +30,7 @@ class SbpUtilTest {
     public void PaymentNotificationTest() throws JsonProcessingException {
         notification = SbpUtil.parseNotification(TestData.NOTIFICATION);
         assertEquals(AMOUNT, notification.getAmount());
-        assertEquals(TEST_SBP_MERCHANT_ID, notification.getSbpMerchantId());
+        assertEquals(TEST_NOTIFICATION_SBP_MERCHANT_ID, notification.getSbpMerchantId());
         assertEquals(ORDER, notification.getOrder());
         assertEquals(StatusCodes.SUCCESS.getMessage(), notification.getPaymentStatus());
         assertEquals(TRANSACTION_DATE, notification.getTransactionDate());
@@ -48,7 +48,7 @@ class SbpUtilTest {
 
     @Test
     void checkSignatureFromFields() {
-        assertTrue(SbpUtil.checkNotificationSignature(AMOUNT, TEST_SBP_MERCHANT_ID, ORDER, StatusCodes.SUCCESS.getMessage(), TRANSACTION_DATE,
+        assertTrue(SbpUtil.checkNotificationSignature(AMOUNT, TEST_NOTIFICATION_SBP_MERCHANT_ID, ORDER, StatusCodes.SUCCESS.getMessage(), TRANSACTION_DATE,
                 TEST_API_SIGNATURE, TEST_SECRET_KEY));
     }
 

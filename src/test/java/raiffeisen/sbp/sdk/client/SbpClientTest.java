@@ -3,11 +3,11 @@ package raiffeisen.sbp.sdk.client;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
@@ -18,7 +18,6 @@ import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.web.ApacheClient;
 
 import java.math.BigDecimal;
@@ -41,9 +40,9 @@ class SbpClientTest {
         ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("POST"),
-                eq(TestData.SANDBOX + TestData.REGISTER_PATH),
-                headersCaptor.capture(),
-                bodyCaptor.capture())).
+                        eq(TestData.SANDBOX + TestData.REGISTER_PATH),
+                        headersCaptor.capture(),
+                        bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -53,6 +52,7 @@ class SbpClientTest {
         qrStatic.setQrExpirationDate(TestData.DATE_QR_EXPIRATION_DATE);
 
         QRUrl response = client.registerQR(qrStatic);
+
 
         assertEquals(TestData.HEADERS, headersCaptor.getValue());
         assertEquals(TestData.QR_INFO_BODY, bodyCaptor.getValue());
@@ -66,9 +66,9 @@ class SbpClientTest {
     void success_getQRInfo() throws Exception {
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("GET"),
-                eq(TestData.SANDBOX + TestData.QR_INFO_PATH),
-                any(),
-                bodyCaptor.capture())).
+                        eq(TestData.SANDBOX + TestData.QR_INFO_PATH),
+                        any(),
+                        bodyCaptor.capture())).
                 thenReturn(TestData.QR_URL);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -88,9 +88,9 @@ class SbpClientTest {
     void success_getPaymentInfo() throws Exception {
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("GET"),
-                eq(TestData.SANDBOX + TestData.PAYMENT_INFO_PATH),
-                any(),
-                bodyCaptor.capture())).
+                        eq(TestData.SANDBOX + TestData.PAYMENT_INFO_PATH),
+                        any(),
+                        bodyCaptor.capture())).
                 thenReturn(TestData.PAYMENT_INFO);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -113,14 +113,14 @@ class SbpClientTest {
     void success_refundPayment() throws Exception {
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("POST"),
-                eq(TestData.SANDBOX + TestData.REFUND_PATH),
-                any(),
-                bodyCaptor.capture())).
+                        eq(TestData.SANDBOX + TestData.REFUND_PATH),
+                        any(),
+                        bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        RefundInfo refundInfo = new RefundInfo(BigDecimal.TEN,"123-123","12345");
+        RefundInfo refundInfo = new RefundInfo(BigDecimal.TEN, "123-123", "12345");
         refundInfo.setTransactionId(111);
 
         RefundStatus refundStatus = client.refundPayment(refundInfo);
@@ -134,9 +134,9 @@ class SbpClientTest {
     void success_getRefundInfo() throws Exception {
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.when(webclient.request(eq("GET"),
-                eq(TestData.SANDBOX + TestData.REFUND_INFO_PATH),
-                any(),
-                bodyCaptor.capture())).
+                        eq(TestData.SANDBOX + TestData.REFUND_INFO_PATH),
+                        any(),
+                        bodyCaptor.capture())).
                 thenReturn(TestData.REFUND_STATUS);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -157,7 +157,7 @@ class SbpClientTest {
                 any(),
                 any())).thenReturn(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 
@@ -174,7 +174,7 @@ class SbpClientTest {
                 any(),
                 any())).thenReturn(TestData.UNSUPPORTED_RESPONSE1);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 
@@ -191,7 +191,7 @@ class SbpClientTest {
                 any(),
                 any())).thenReturn(TestData.UNSUPPORTED_RESPONSE2);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 
@@ -208,7 +208,7 @@ class SbpClientTest {
                 any(),
                 any())).thenReturn(TestData.UNSUPPORTED_RESPONSE3);
 
-        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID,"secretKey", webclient);
+        SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
         QRDynamic qrDynamic = new QRDynamic("", BigDecimal.ONE);
 

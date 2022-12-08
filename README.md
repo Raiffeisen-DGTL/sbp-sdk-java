@@ -37,7 +37,7 @@
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </dependency>
     </dependencies>
 
@@ -50,9 +50,9 @@
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.2</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.0.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.2.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -143,7 +143,7 @@ public class AppExample {
 Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `QR`:
 
 ~~~ java
-String order = QRUtils.generateOrderNumber();
+String order = QRUtil.generateOrderNumber();
 
 // save order in a database;
 
@@ -171,7 +171,7 @@ QRUrl response = client.registerQR(qrCode);
 Пример с минимальными данными:
 
 ~~~ java
-String order = QRUtils.generateOrderNumber(); // UUID_v4
+String order = QRUtil.generateOrderNumber(); // UUID_v4
 
 // save order in a database;
 
@@ -193,7 +193,7 @@ String order = QRUtils.generateOrderNumber(); // UUID_v4
 Пример:
 
 ~~~ java
-String order = QRUtils.generateOrderNumber(); // UUID_v4
+String order = QRUtil.generateOrderNumber(); // UUID_v4
 
 // save order in a database;
 

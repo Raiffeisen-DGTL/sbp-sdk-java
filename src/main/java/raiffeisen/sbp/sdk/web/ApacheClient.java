@@ -26,13 +26,11 @@ public class ApacheClient implements WebClient {
 
     @Override
     public Response request(String method, String url, Map<String, String> headers, String entity) throws IOException {
-        if(method.equals(GET_METHOD)) {
+        if (method.equals(GET_METHOD)) {
             return getRequest(url, headers);
-        }
-        else if(method.equals(POST_METHOD)) {
+        } else if (method.equals(POST_METHOD)) {
             return postRequest(url, headers, entity);
-        }
-        else {
+        } else {
             return null;
         }
     }
