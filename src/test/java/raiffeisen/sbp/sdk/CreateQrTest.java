@@ -8,6 +8,7 @@ import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
+import raiffeisen.sbp.sdk.model.out.QRVariable;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,6 +35,16 @@ class CreateQrTest {
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
+
+        assertNotNull(response.getQrUrl());
+        assertNotNull(response.getPayload());
+        assertNotNull(response.getQrId());
+    }
+
+    @Test
+    void createQRVariableTest() throws IOException, ContractViolationException, SbpException {
+        QRVariable qrVariable = new QRVariable();
+        QRUrl response = TestUtils.CLIENT.registerQR(qrVariable);
 
         assertNotNull(response.getQrUrl());
         assertNotNull(response.getPayload());

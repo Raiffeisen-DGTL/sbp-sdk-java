@@ -9,9 +9,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
@@ -33,6 +35,8 @@ public class SbpClient implements Closeable {
     private static final String PAYMENT_INFO_PATH = PropertiesLoader.PAYMENT_INFO_PATH;
     private static final String REFUND_PATH = PropertiesLoader.REFUND_PATH;
     private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
+
+    private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
 
     private static final JsonMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
@@ -79,6 +83,11 @@ public class SbpClient implements Closeable {
 
     public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, ContractViolationException, IOException {
         return get(domain + REFUND_INFO_PATH, refundId.getRefundId(), secretKey, RefundStatus.class);
+    }
+
+    public OrderInfo createOrder(final Order order) throws SbpException, IOException, ContractViolationException {
+        ObjectNode jsonNode = mapper.valueToTree(order);
+        return post(domain + CREATE_ORDER_PATH, jsonNode.toString(), secretKey, OrderInfo.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)

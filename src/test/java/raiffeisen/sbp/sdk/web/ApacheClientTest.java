@@ -19,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.model.Response;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
