@@ -32,7 +32,9 @@ public class CreateOrderTest {
     void createOrderWithQr() throws SbpException, IOException, ContractViolationException {
         QRVariable qrVariable = new QRVariable();
         QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
-        OrderQr orderQr = new OrderQr(qr.getQrId());
+
+        OrderQr orderQr = new OrderQr();
+        orderQr.setId(qr.getQrId());
 
         Order order = Order.builder().amount(new BigDecimal(314)).qr(orderQr).build();
         OrderInfo response = TestUtils.CLIENT.createOrder(order);
