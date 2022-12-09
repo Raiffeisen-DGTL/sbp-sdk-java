@@ -16,11 +16,8 @@ public class Order {
 
     @Setter(AccessLevel.NONE)
     private BigDecimal amount;
-    @Setter(AccessLevel.NONE)
     private OrderQr qr;
-    @Setter(AccessLevel.PUBLIC)
     private OrderExtra extra;
-
     private String id;
     private String comment;
     private String createDate;
@@ -41,11 +38,6 @@ public class Order {
 
     public Order(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public Order(BigDecimal amount, OrderQr orderQr) {
-        this.amount = amount;
-        this.qr = orderQr;
     }
 
 }

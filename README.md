@@ -327,19 +327,7 @@ RefundStatus response = client.getRefundInfo(refundId);
 
 ~~~ java
 
-// Заказ без QrVariable
-
 Order order = new Order(new BigDecimal(314));
-OrderInfo response = TestUtils.CLIENT.createOrder(order);
-
-//Заказ с QrVariable
-
-QRVariable qrVariable = new QRVariable();
-QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
-
-OrderQr orderQr = new OrderQr(qr.getQrId());
-
-Order order = new Order(new BigDecimal(314), orderQr);
 OrderInfo response = TestUtils.CLIENT.createOrder(order);
 
 ~~~
@@ -372,6 +360,27 @@ order1.setExpirationDate("+1d5m"); // + 1 day 5 minutes
 Order order = new Order(new BigDecimal(314));
 OrderExtra orderExtra = new OrderExtra("apiClient", "1.0.2");
 order.setExtra(orderExtra);
+~~~
+
+Также существует возможность заполнить необязательный параметр `qr`:
+Для этого нужно создать экземпляр класса OrderQr
+
+OrderQr:
+- id (required, Параметр должен быть заполнен идентификатором QR, который был получен в ответе на запрос регистрации QR-кода)
+- additionalInfo
+- paymentDetails
+
+
+Пример:
+
+~~~ java
+QRVariable qrVariable = new QRVariable();
+QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
+OrderQr orderQr = new OrderQr(qr.getQrId());
+
+Order order = new Order(new BigDecimal(314));
+order.setQr(orderQr);
+OrderInfo response = TestUtils.CLIENT.createOrder(order);
 ~~~
 
 Также существует возможность заполнить необязательный параметр `id`:
