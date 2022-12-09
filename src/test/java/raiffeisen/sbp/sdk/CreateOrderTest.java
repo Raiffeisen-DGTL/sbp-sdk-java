@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CreateOrderTest {
     @Test
     void createOrderTest() throws IOException, ContractViolationException, SbpException {
-        Order order = new Order(new BigDecimal(314));
+        Order order = Order.builder().amount(new BigDecimal(314)).build();
         OrderInfo response = TestUtils.CLIENT.createOrder(order);
 
         assertNotNull(response.getId());
@@ -34,8 +34,7 @@ public class CreateOrderTest {
         QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
         OrderQr orderQr = new OrderQr(qr.getQrId());
 
-        Order order = new Order(new BigDecimal(314));
-        order.setQr(orderQr);
+        Order order = Order.builder().amount(new BigDecimal(314)).qr(orderQr).build();
         OrderInfo response = TestUtils.CLIENT.createOrder(order);
 
         assertNotNull(response.getId());
@@ -45,9 +44,8 @@ public class CreateOrderTest {
 
     @Test
     void createOrderWithExtra() throws SbpException, IOException, ContractViolationException {
-        Order order = new Order(new BigDecimal(314));
         OrderExtra orderExtra = new OrderExtra("apiClient", "1.0.2");
-        order.setExtra(orderExtra);
+        Order order = Order.builder().amount(new BigDecimal(314)).extra(orderExtra).build();
         OrderInfo response = TestUtils.CLIENT.createOrder(order);
         assertNotNull(response.getId());
         assertNotNull(response.getAmount());

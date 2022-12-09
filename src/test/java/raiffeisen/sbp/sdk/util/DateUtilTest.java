@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DateUtilTest {
     @Test
     void success_GivenDates() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate(TestData.DATE_QR_EXPIRATION_DATE);
 
@@ -27,7 +27,7 @@ public class DateUtilTest {
 
     @Test
     void success_ShiftMonth() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate("+1M");
 
@@ -38,7 +38,7 @@ public class DateUtilTest {
 
     @Test
     void success_ShiftDays() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate("+1d");
 
@@ -49,7 +49,7 @@ public class DateUtilTest {
 
     @Test
     void success_ShiftHours() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate("+24H");
 
@@ -60,7 +60,7 @@ public class DateUtilTest {
 
     @Test
     void success_ShiftMinutes() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate("+" + 24 * 60 + "m");
 
@@ -71,7 +71,7 @@ public class DateUtilTest {
 
     @Test
     void success_ShiftSeconds() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate("+" + 24 * 60 * 60 + "s");
 
@@ -82,7 +82,7 @@ public class DateUtilTest {
 
     @Test
     void success_ShiftAll() {
-        Order order = new Order(BigDecimal.ZERO);
+        Order order = Order.builder().amount(BigDecimal.ZERO).build();
         order.setCreateDate(TestData.DATE_CREATE_DATE);
         order.setExpirationDate("+23H59m60s");
 

@@ -327,7 +327,7 @@ RefundStatus response = client.getRefundInfo(refundId);
 
 ~~~ java
 
-Order order = new Order(new BigDecimal(314));
+Order order = Order.builder().amount(BigDecimal.ZERO).build();
 OrderInfo response = TestUtils.CLIENT.createOrder(order);
 
 ~~~
@@ -344,11 +344,10 @@ OrderInfo response = TestUtils.CLIENT.createOrder(order);
 Пример:
 
 ~~~ java
-Order order = new Order(new BigDecimal(314));
-order.setExpirationDate("+5m"); // + 5 minutes
+Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+5m").build(); // + 5 minutes
 
-Order order1 = new Order(new BigDecimal(100));
-order1.setExpirationDate("+1d5m"); // + 1 day 5 minutes
+Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+1d5m").build(); // + 1 day 5 minutes
+
 ~~~
 
 Также существует возможность заполнить необязательный параметр `extra`:
@@ -357,9 +356,8 @@ order1.setExpirationDate("+1d5m"); // + 1 day 5 minutes
 Пример:
 
 ~~~ java
-Order order = new Order(new BigDecimal(314));
 OrderExtra orderExtra = new OrderExtra("apiClient", "1.0.2");
-order.setExtra(orderExtra);
+Order order = Order.builder().amount(BigDecimal.ZERO).extra(orderExtra).build();
 ~~~
 
 Также существует возможность заполнить необязательный параметр `qr`:
@@ -378,8 +376,7 @@ QRVariable qrVariable = new QRVariable();
 QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
 OrderQr orderQr = new OrderQr(qr.getQrId());
 
-Order order = new Order(new BigDecimal(314));
-order.setQr(orderQr);
+Order order = Order.builder().amount(new BigDecimal(314)).qr(orderQr).build();
 OrderInfo response = TestUtils.CLIENT.createOrder(order);
 ~~~
 
@@ -390,8 +387,7 @@ OrderInfo response = TestUtils.CLIENT.createOrder(order);
 Пример:
 
 ~~~ java
-Order order = new Order(new BigDecimal(314));
-order.setId("QUAaOlCRU0Bdub8J4TeEpddUacwZmCIv221208");
+Order order = Order.builder().amount(new BigDecimal(314)).id("QUAaOlCRU0Bdub8J4TeEpddUacwZmCIv221208").build();
 ~~~
 
 Также существует возможность заполнить необязательный параметр `comment`:
@@ -400,8 +396,7 @@ order.setId("QUAaOlCRU0Bdub8J4TeEpddUacwZmCIv221208");
 Пример:
 
 ~~~ java
-Order order = new Order(new BigDecimal(314));
-order.setComment("Комментарий к заказу");
+Order order = Order.builder().amount(new BigDecimal(314)).comment("Комментарий к заказу")).build();
 ~~~
 
 
