@@ -2,7 +2,8 @@ package raiffeisen.sbp.sdk.model;
 
 public enum QRType {
     QRStatic("QRStatic"),
-    QRDynamic("QRDynamic");
+    QRDynamic("QRDynamic"),
+    QRVariable("QRVariable");
 
     private final String type;
 

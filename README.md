@@ -132,7 +132,7 @@ public class AppExample {
 
 ## Регистрация QR-кода
 
-Для регистрации кода необходимо создать экземпляр класса `QRStatic` или `QRDynamic`. Для разных типов QR-кодов обязательные параметры отличаются.
+Для регистрации кода необходимо создать экземпляр класса `QRStatic`, `QRDynamic` или `QRVariable`. Для разных типов QR-кодов обязательные параметры отличаются.
 
 Обязательные параметры:
 - номер заказа в системе партнера `order(String)`
@@ -313,6 +313,93 @@ RefundStatus response = client.getRefundInfo(refundId);
   "refundStatus": "IN_PROGRESS"
 }
 ~~~
+
+## Создание заказа
+
+Для создания заказа необходимо создать экземпляр класса `Order`
+
+Обязательные параметры:
+- Сумма в рублях `amount`
+
+Опциональные параметры могут быть заполнены с помощью set методов.
+
+Для выполнения запроса необходимо вызвать соответствующий метод класса `SbpClient`, принимающий в качестве аргумента объект класса `Order`:
+
+~~~ java
+
+Order order = Order.builder().amount(BigDecimal.ZERO).build();
+OrderInfo response = TestUtils.CLIENT.createOrder(order);
+
+~~~
+
+
+Также существует возможность заполнить необязательный параметр `qrExpirationDate` с помощью сдвига относительно даты создания. Для этого в поле `qrExpirationDate` следует указать строку вида `"+<число1><буква1>"`.
+
+- 'M' - месяц
+- 'd' - день
+- 'H' - час
+- 'm' - минута
+- 's' - секунда
+
+Пример:
+
+~~~ java
+Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+5m").build(); // + 5 minutes
+
+Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+1d5m").build(); // + 1 day 5 minutes
+
+~~~
+
+Также существует возможность заполнить необязательный параметр `extra`:
+Для этого нужно создать экземпляр класса OrderExtra c параметрами apiClient и apiClientVersion
+
+Пример:
+
+~~~ java
+OrderExtra orderExtra = new OrderExtra("apiClient", "1.0.2");
+Order order = Order.builder().amount(BigDecimal.ZERO).extra(orderExtra).build();
+~~~
+
+Также существует возможность заполнить необязательный параметр `qr`:
+Для этого нужно создать экземпляр класса OrderQr
+
+OrderQr:
+- id (required, Параметр должен быть заполнен идентификатором QR, который был получен в ответе на запрос регистрации QR-кода)
+- additionalInfo
+- paymentDetails
+
+
+Пример:
+
+~~~ java
+QRVariable qrVariable = new QRVariable();
+QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
+OrderQr orderQr = new OrderQr(qr.getQrId());
+
+Order order = Order.builder().amount(new BigDecimal(314)).qr(orderQr).build();
+OrderInfo response = TestUtils.CLIENT.createOrder(order);
+~~~
+
+Также существует возможность заполнить необязательный параметр `id`:
+Это уникальный идентификатор заказа. Рекомендуется использовать формат, не допускающий возможность перебора, например, UUID v4
+Если параметр не передан, то идентификатор присвоится заказу автоматически
+
+Пример:
+
+~~~ java
+Order order = Order.builder().amount(new BigDecimal(314)).id("QUAaOlCRU0Bdub8J4TeEpddUacwZmCIv221208").build();
+~~~
+
+Также существует возможность заполнить необязательный параметр `comment`:
+Комментарий к заказу
+
+Пример:
+
+~~~ java
+Order order = Order.builder().amount(new BigDecimal(314)).comment("Комментарий к заказу")).build();
+~~~
+
+
 
 ## Обработка уведомлений
 
