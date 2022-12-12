@@ -49,6 +49,6 @@ public class GetOrderInfoTest {
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getOrderInfo(badOrderId));
         assertEquals(TestData.ORDER_NOT_FOUND_ERROR_CODE, ex.getCode());
-        assertEquals(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE.replace("?", badOrderId.getQrId()), ex.getMessage());
+        assertEquals(String.format(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE, badOrderId.getQrId()), ex.getMessage());
     }
 }
