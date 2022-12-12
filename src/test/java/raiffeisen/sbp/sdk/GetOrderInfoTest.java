@@ -8,7 +8,7 @@ import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
-import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.out.RequestModelId;
 
 import java.io.IOException;
@@ -19,34 +19,38 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
-class GetQrInfoTest {
+public class GetOrderInfoTest {
 
-    private static String qrId;
+    private static String orderId;
 
     @BeforeAll
     @Timeout(15)
     static void initTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        qrId = TestUtils.initDynamicQR().getQrId();
+        orderId = TestUtils.initOrderWithQrVariable().getId();
     }
 
     @Test
-    void getQrInfoTest() throws Exception {
-        RequestModelId id = new RequestModelId(qrId);
-        QRUrl response = TestUtils.CLIENT.getQRInfo(id);
+    void getOrderInfoTest() throws Exception {
+        RequestModelId id = new RequestModelId(orderId);
+        OrderInfo response = TestUtils.CLIENT.getOrderInfo(id);
 
-        assertNotNull(response.getQrId());
-        assertNotNull(response.getPayload());
-        assertNotNull(response.getQrUrl());
+        assertNotNull(response.getId());
+        assertNotNull(response.getAmount());
+        assertNotNull(response.getComment());
+        assertNotNull(response.getExtra());
+        assertNotNull(response.getStatus());
+        assertNotNull(response.getExpirationDate());
+        assertNotNull(response.getQr());
     }
 
     @Test
-    void getQrInfoByBadQrIdNegativeTest() {
+    void getOrderInfoByBadQrIdNegativeTest() {
         String badQrId = TestUtils.getRandomUUID();
 
         RequestModelId badId = new RequestModelId(badQrId);
 
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getQRInfo(badId));
-        assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_CODE, ex.getCode());
-        assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_MESSAGE, ex.getMessage());
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getOrderInfo(badId));
+        assertEquals(TestData.ORDER_NOT_FOUND_ERROR_CODE, ex.getCode());
+        assertEquals(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE.replace("?", badQrId), ex.getMessage());
     }
 }

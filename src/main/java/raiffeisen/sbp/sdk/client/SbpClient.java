@@ -15,9 +15,9 @@ import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.QR;
-import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
+import raiffeisen.sbp.sdk.model.out.RequestModelId;
 import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
 import java.io.IOException;
@@ -36,6 +36,7 @@ public class SbpClient {
     private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
 
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
+    private static final String ORDER_INFO_PATH = PropertiesLoader.ORDER_INFO_PATH;
 
     private static final JsonMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
@@ -72,12 +73,12 @@ public class SbpClient {
         return post(domain + REFUND_PATH, mapper.writeValueAsString(refund), secretKey, RefundStatus.class);
     }
 
-    public QRUrl getQRInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        return get(domain + QR_INFO_PATH, qrId.getQrId(), secretKey, QRUrl.class);
+    public QRUrl getQRInfo(final RequestModelId requestModelId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        return get(domain + QR_INFO_PATH, requestModelId.getId(), secretKey, QRUrl.class);
     }
 
-    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        return get(domain + PAYMENT_INFO_PATH, qrId.getQrId(), secretKey, PaymentInfo.class);
+    public PaymentInfo getPaymentInfo(final RequestModelId requestModelId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        return get(domain + PAYMENT_INFO_PATH, requestModelId.getId(), secretKey, PaymentInfo.class);
     }
 
     public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
@@ -87,6 +88,10 @@ public class SbpClient {
     public OrderInfo createOrder(final Order order) throws SbpException, IOException, ContractViolationException, URISyntaxException, InterruptedException {
         ObjectNode jsonNode = mapper.valueToTree(order);
         return post(domain + CREATE_ORDER_PATH, jsonNode.toString(), secretKey, OrderInfo.class);
+    }
+
+    public OrderInfo getOrderInfo(final RequestModelId orderId) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
+        return get(domain + ORDER_INFO_PATH, orderId.getId(), secretKey, OrderInfo.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
@@ -136,7 +141,8 @@ public class SbpClient {
     }
 
     private void errorHandler(Response response, JsonNode codeNode) throws SbpException, ContractViolationException, JsonProcessingException {
-        if (codeNode != null && codeNode.textValue().contains("ERROR.")) {
+        if (codeNode != null &&
+                (codeNode.textValue().contains("ERROR.") || codeNode.textValue().contains("ORDER_"))) {
             String message = mapper.readTree(response.getBody()).get("message").textValue();
             throw new SbpException(codeNode.textValue(), message);
         }
