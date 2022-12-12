@@ -50,5 +50,3 @@ class GetQrInfoTest {
         assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_MESSAGE, ex.getMessage());
     }
 }
-
-
