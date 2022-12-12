@@ -17,7 +17,6 @@ import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.model.out.ModelId;
 import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
 import java.math.BigDecimal;
@@ -71,9 +70,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        ModelId modelId = new ModelId(TestData.TEST_QR_ID);
+        String id = TestData.TEST_QR_ID;
 
-        QRUrl response = client.getQRInfo(modelId);
+        QRUrl response = client.getQRInfo(id);
 
         assertEquals(TestData.QR_URL_QR_ID, response.getQrId());
         assertEquals(TestData.QR_URL_PAYLOAD, response.getPayload());
@@ -89,9 +88,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        ModelId modelId = new ModelId(TestData.TEST_QR_ID);
+        String id = TestData.TEST_QR_ID;
 
-        PaymentInfo response = client.getPaymentInfo(modelId);
+        PaymentInfo response = client.getPaymentInfo(id);
 
         assertEquals(TestData.PAYMENT_INFO_ADDITIONAL_INFO, response.getAdditionalInfo());
         assertEquals(TestData.PAYMENT_INFO_AMOUNT, response.getAmount().toString());
