@@ -5,6 +5,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class StringUtil {
     public boolean isBlank(String string) {
-        return string != null && !string.equals("");
+        return string == null || string.isBlank();
     }
 }

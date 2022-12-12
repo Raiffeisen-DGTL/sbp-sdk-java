@@ -10,17 +10,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class StringUtilTest {
 
     @Test
-    void isEmptyTrue() {
-        assertTrue(StringUtil.isBlank("12345"));
+    void isEmptyFalse() {
+        assertFalse(StringUtil.isBlank("12345"));
     }
 
     @Test
-    void isEmptyWithNullFalse() {
-        assertFalse(StringUtil.isBlank(null));
+    void isEmptyWithNullTrue() {
+        assertTrue(StringUtil.isBlank(null));
     }
 
     @Test
-    void isEmptyWithBlankFalse() {
-        assertFalse(StringUtil.isBlank(""));
+    void isEmptyWithBlankTrue() {
+        assertTrue(StringUtil.isBlank(""));
     }
 }
