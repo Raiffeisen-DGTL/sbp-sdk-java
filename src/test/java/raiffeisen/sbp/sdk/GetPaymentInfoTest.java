@@ -10,7 +10,7 @@ import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
-import raiffeisen.sbp.sdk.model.out.RequestModelId;
+import raiffeisen.sbp.sdk.model.out.ModelId;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -33,14 +33,14 @@ class GetPaymentInfoTest {
     @Test
     void unauthorizedTest() {
         SbpClient clientUnauthorized = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, TestUtils.getRandomUUID());
-        RequestModelId id = new RequestModelId(qrId);
+        ModelId id = new ModelId(qrId);
 
         assertThrows(ContractViolationException.class, () -> clientUnauthorized.getPaymentInfo(id));
     }
 
     @Test
     void getPaymentInfo() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        RequestModelId id = new RequestModelId(qrId);
+        ModelId id = new ModelId(qrId);
 
         PaymentInfo response = TestUtils.CLIENT.getPaymentInfo(id);
 
@@ -57,7 +57,7 @@ class GetPaymentInfoTest {
     void getPaymentInfoExceptionTest() {
         String badQrId = TestUtils.getRandomUUID();
 
-        RequestModelId badId = new RequestModelId(badQrId);
+        ModelId badId = new ModelId(badQrId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getPaymentInfo(badId));
         assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_CODE, ex.getCode());

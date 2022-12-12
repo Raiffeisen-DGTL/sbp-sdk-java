@@ -9,7 +9,7 @@ import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.OrderInfo;
-import raiffeisen.sbp.sdk.model.out.RequestModelId;
+import raiffeisen.sbp.sdk.model.out.ModelId;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,7 +31,7 @@ public class GetOrderInfoTest {
 
     @Test
     void getOrderInfoTest() throws Exception {
-        RequestModelId id = new RequestModelId(orderId);
+        ModelId id = new ModelId(orderId);
         OrderInfo response = TestUtils.CLIENT.getOrderInfo(id);
 
         assertNotNull(response.getId());
@@ -47,7 +47,7 @@ public class GetOrderInfoTest {
     void getOrderInfoByBadQrIdNegativeTest() {
         String badQrId = TestUtils.getRandomUUID();
 
-        RequestModelId badId = new RequestModelId(badQrId);
+        ModelId badId = new ModelId(badQrId);
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getOrderInfo(badId));
         assertEquals(TestData.ORDER_NOT_FOUND_ERROR_CODE, ex.getCode());

@@ -22,7 +22,7 @@ import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.QRVariable;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.model.out.RequestModelId;
+import raiffeisen.sbp.sdk.model.out.ModelId;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -40,7 +40,7 @@ public final class TestUtils {
         return UUID.randomUUID().toString();
     }
 
-    private static void payQR(RequestModelId id) throws IOException {
+    private static void payQR(ModelId id) throws IOException {
         HttpPost httpPost = new HttpPost(TestData.PAYMENT_URL);
         InitPayment initPayment = new InitPayment(id.getId(), BigDecimal.valueOf(314L));
         StringEntity entity = new StringEntity(MAPPER.writeValueAsString(initPayment));
@@ -61,7 +61,7 @@ public final class TestUtils {
         QRStatic qrStatic = new QRStatic(orderInfo);
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
-        RequestModelId id = new RequestModelId(qr.getQrId());
+        ModelId id = new ModelId(qr.getQrId());
 
         payQR(id);
 
@@ -81,7 +81,7 @@ public final class TestUtils {
         QRDynamic qrDynamic = new QRDynamic(orderInfo, moneyAmount);
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
-        RequestModelId id = new RequestModelId(qr.getQrId());
+        ModelId id = new ModelId(qr.getQrId());
 
         payQR(id);
 
