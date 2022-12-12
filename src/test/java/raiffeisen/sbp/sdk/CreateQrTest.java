@@ -12,6 +12,7 @@ import raiffeisen.sbp.sdk.model.out.QRVariable;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CreateQrTest {
 
     @Test
-    void createQRDynamicTest() throws IOException, ContractViolationException, SbpException {
+    void createQRDynamicTest() throws IOException, ContractViolationException, SbpException, URISyntaxException, InterruptedException {
         QRDynamic qrDynamic = new QRDynamic(TestUtils.getRandomUUID(), new BigDecimal(314));
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrDynamic);
@@ -31,7 +32,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRStaticTest() throws IOException, ContractViolationException, SbpException {
+    void createQRStaticTest() throws IOException, ContractViolationException, SbpException, URISyntaxException, InterruptedException {
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
@@ -42,7 +43,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRVariableTest() throws IOException, ContractViolationException, SbpException {
+    void createQRVariableTest() throws IOException, ContractViolationException, SbpException, URISyntaxException, InterruptedException {
         QRVariable qrVariable = new QRVariable();
         QRUrl response = TestUtils.CLIENT.registerQR(qrVariable);
 
@@ -52,7 +53,7 @@ class CreateQrTest {
     }
 
     @Test
-    void createQRMaxTest() throws IOException, ContractViolationException, SbpException {
+    void createQRMaxTest() throws IOException, ContractViolationException, SbpException, URISyntaxException, InterruptedException {
         // Test without "account" parameter
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
         qrStatic.setAdditionalInfo("Доп информация");

@@ -14,6 +14,7 @@ import raiffeisen.sbp.sdk.model.out.RefundId;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,14 +27,14 @@ class RefundInfoTest {
 
     @BeforeAll
     @Timeout(15)
-    static void setup() throws SbpException, ContractViolationException, IOException {
+    static void setup() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         long transactionId = TestUtils.initStaticQR().getTransactionId();
         String id = TestUtils.refundPayment(AMOUNT, transactionId);
         refundId = new RefundId(id);
     }
 
     @Test
-    void refundInfoTest() throws SbpException, ContractViolationException, IOException {
+    void refundInfoTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         RefundStatus response = TestUtils.CLIENT.getRefundInfo(refundId);
 
         assertEquals(AMOUNT, response.getAmount());
