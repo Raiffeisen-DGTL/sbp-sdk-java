@@ -13,6 +13,7 @@ import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.out.QRId;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,7 +26,7 @@ class GetPaymentInfoTest {
 
     @BeforeAll
     @Timeout(15)
-    public static void initTest() throws SbpException, ContractViolationException, IOException {
+    public static void initTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         qrId = TestUtils.initDynamicQR().getQrId();
     }
 
@@ -38,7 +39,7 @@ class GetPaymentInfoTest {
     }
 
     @Test
-    void getPaymentInfo() throws SbpException, ContractViolationException, IOException {
+    void getPaymentInfo() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         QRId id = new QRId(qrId);
 
         PaymentInfo response = TestUtils.CLIENT.getPaymentInfo(id);

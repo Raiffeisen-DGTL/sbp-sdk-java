@@ -18,15 +18,14 @@ import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.web.ApacheClient;
-import raiffeisen.sbp.sdk.web.WebClient;
+import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
-import java.io.Closeable;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SbpClient implements Closeable {
+public class SbpClient {
     public static final String TEST_URL = PropertiesLoader.TEST_URL;
     public static final String PRODUCTION_URL = PropertiesLoader.PRODUCTION_URL;
 
@@ -46,22 +45,22 @@ public class SbpClient implements Closeable {
 
     private final String sbpMerchantId;
 
-    private final WebClient webClient;
+    private final SdkHttpClient webClient;
 
     public SbpClient(String domain, String sbpMerchantId, String secretKey) {
-        this(domain, sbpMerchantId, secretKey, new ApacheClient());
+        this(domain, sbpMerchantId, secretKey, new SdkHttpClient());
     }
 
-    public SbpClient(String domain, String sbpMerchantId, String secretKey, WebClient customWebClient) {
+    public SbpClient(String domain, String sbpMerchantId, String secretKey, SdkHttpClient sdkHttpClient) {
         this.domain = domain;
         this.sbpMerchantId = sbpMerchantId;
         this.secretKey = secretKey;
-        webClient = customWebClient;
+        webClient = sdkHttpClient;
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
     }
 
-    public QRUrl registerQR(final QR customerQr) throws SbpException, ContractViolationException, IOException {
+    public QRUrl registerQR(final QR customerQr) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         final QR qr = customerQr.newInstance();
         qr.verify();
         ObjectNode jsonNode = mapper.valueToTree(qr);
@@ -69,43 +68,43 @@ public class SbpClient implements Closeable {
         return post(domain + REGISTER_PATH, jsonNode.toString(), QRUrl.class);
     }
 
-    public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, ContractViolationException, IOException {
+    public RefundStatus refundPayment(final RefundInfo refund) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         return post(domain + REFUND_PATH, mapper.writeValueAsString(refund), secretKey, RefundStatus.class);
     }
 
-    public QRUrl getQRInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException {
+    public QRUrl getQRInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         return get(domain + QR_INFO_PATH, qrId.getQrId(), secretKey, QRUrl.class);
     }
 
-    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException {
+    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         return get(domain + PAYMENT_INFO_PATH, qrId.getQrId(), secretKey, PaymentInfo.class);
     }
 
-    public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, ContractViolationException, IOException {
+    public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         return get(domain + REFUND_INFO_PATH, refundId.getRefundId(), secretKey, RefundStatus.class);
     }
 
-    public OrderInfo createOrder(final Order order) throws SbpException, IOException, ContractViolationException {
+    public OrderInfo createOrder(final Order order) throws SbpException, IOException, ContractViolationException, URISyntaxException, InterruptedException {
         ObjectNode jsonNode = mapper.valueToTree(order);
         return post(domain + CREATE_ORDER_PATH, jsonNode.toString(), secretKey, OrderInfo.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
-            throws IOException, SbpException, ContractViolationException {
-        Response response = webClient.request(WebClient.POST_METHOD, url, getHeaders(), body);
+            throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
+        Response response = webClient.postRequest(url, getHeaders(), body);
         return convert(response, resultClass);
     }
 
     private <T> T post(String url, String body, final String secretKey, Class<T> resultClass)
-            throws IOException, SbpException, ContractViolationException {
-        Response response = webClient.request(WebClient.POST_METHOD, url, prepareHeaders(secretKey), body);
+            throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
+        Response response = webClient.postRequest(url, prepareHeaders(secretKey), body);
         return convert(response, resultClass);
     }
 
     private <T> T get(String url, final String pathParameter, final String secretKey, Class<T> resultClass)
-            throws IOException, SbpException, ContractViolationException {
+            throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
         url = url.replace("?", pathParameter);
-        Response response = webClient.request(WebClient.GET_METHOD, url, prepareHeaders(secretKey), null);
+        Response response = webClient.getRequest(url, prepareHeaders(secretKey));
         return convert(response, resultClass);
     }
 
@@ -155,10 +154,5 @@ public class SbpClient implements Closeable {
         headers.put("content-type", "application/json");
         headers.put("charset", "UTF-8");
         return headers;
-    }
-
-    @Override
-    public void close() throws IOException {
-        webClient.close();
     }
 }

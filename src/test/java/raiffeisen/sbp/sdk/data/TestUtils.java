@@ -21,6 +21,7 @@ import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -49,7 +50,7 @@ public final class TestUtils {
         assert response.getStatusLine().getStatusCode() == 200;
     }
 
-    public static PaymentInfo initStaticQR() throws SbpException, ContractViolationException, IOException {
+    public static PaymentInfo initStaticQR() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String orderInfo = getRandomUUID();
 
         QRStatic qrStatic = new QRStatic(orderInfo);
@@ -68,7 +69,7 @@ public final class TestUtils {
         return paymentInfo;
     }
 
-    public static PaymentInfo initDynamicQR() throws SbpException, ContractViolationException, IOException {
+    public static PaymentInfo initDynamicQR() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String orderInfo = getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(314);
 
@@ -89,7 +90,7 @@ public final class TestUtils {
     }
 
     public static String refundPayment(BigDecimal amount, long transactionId)
-            throws SbpException, ContractViolationException, IOException {
+            throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String refundId = getRandomUUID();
         String orderInfo = getRandomUUID();
 

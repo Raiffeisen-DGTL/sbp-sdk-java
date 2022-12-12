@@ -14,6 +14,7 @@ import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,13 +27,13 @@ class RefundPaymentTest {
 
     @BeforeEach
     @Timeout(15)
-    void setup() throws SbpException, ContractViolationException, IOException {
+    void setup() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         staticQrTransactionId = TestUtils.initStaticQR().getTransactionId();
         dynamicQrTransactionId = TestUtils.initDynamicQR().getTransactionId();
     }
 
     @Test
-    void refundPaymentStaticTest() throws SbpException, ContractViolationException, IOException {
+    void refundPaymentStaticTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String refundId = TestUtils.getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo = new RefundInfo(moneyAmount, TestUtils.getRandomUUID(), refundId);
@@ -44,7 +45,7 @@ class RefundPaymentTest {
     }
 
     @Test
-    void refundPaymentDynamicTest() throws SbpException, ContractViolationException, IOException {
+    void refundPaymentDynamicTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String refundId = TestUtils.getRandomUUID();
         BigDecimal moneyAmount = new BigDecimal(100);
         RefundInfo refundInfo = new RefundInfo(moneyAmount, TestUtils.getRandomUUID(), refundId);

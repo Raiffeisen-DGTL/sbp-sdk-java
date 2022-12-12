@@ -18,7 +18,7 @@ import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
-import raiffeisen.sbp.sdk.web.ApacheClient;
+import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -33,13 +33,13 @@ import static org.mockito.ArgumentMatchers.eq;
 class SbpClientTest {
 
     @Mock
-    private ApacheClient webclient;
+    private SdkHttpClient webclient;
 
     @Test
     void success_registerQR() throws Exception {
         ArgumentCaptor<Map> headersCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
-        Mockito.when(webclient.request(eq("POST"),
+        Mockito.when(webclient.postRequest(
                         eq(TestData.SANDBOX + TestData.REGISTER_PATH),
                         headersCaptor.capture(),
                         bodyCaptor.capture())).
@@ -64,11 +64,9 @@ class SbpClientTest {
 
     @Test
     void success_getQRInfo() throws Exception {
-        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
-        Mockito.when(webclient.request(eq("GET"),
+        Mockito.when(webclient.getRequest(
                         eq(TestData.SANDBOX + TestData.QR_INFO_PATH),
-                        any(),
-                        bodyCaptor.capture())).
+                        any())).
                 thenReturn(TestData.QR_URL);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -77,8 +75,6 @@ class SbpClientTest {
 
         QRUrl response = client.getQRInfo(qrId);
 
-        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
-
         assertEquals(TestData.QR_URL_QR_ID, response.getQrId());
         assertEquals(TestData.QR_URL_PAYLOAD, response.getPayload());
         assertEquals(TestData.QR_URL_URL, response.getQrUrl());
@@ -86,11 +82,9 @@ class SbpClientTest {
 
     @Test
     void success_getPaymentInfo() throws Exception {
-        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
-        Mockito.when(webclient.request(eq("GET"),
+        Mockito.when(webclient.getRequest(
                         eq(TestData.SANDBOX + TestData.PAYMENT_INFO_PATH),
-                        any(),
-                        bodyCaptor.capture())).
+                        any())).
                 thenReturn(TestData.PAYMENT_INFO);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -99,7 +93,6 @@ class SbpClientTest {
 
         PaymentInfo response = client.getPaymentInfo(qrId);
 
-        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
         assertEquals(TestData.PAYMENT_INFO_ADDITIONAL_INFO, response.getAdditionalInfo());
         assertEquals(TestData.PAYMENT_INFO_AMOUNT, response.getAmount().toString());
         assertEquals(TestData.PAYMENT_INFO_CREATE_DATE, response.getCreateDate().toString());
@@ -112,7 +105,7 @@ class SbpClientTest {
     @Test
     void success_refundPayment() throws Exception {
         ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
-        Mockito.when(webclient.request(eq("POST"),
+        Mockito.when(webclient.postRequest(
                         eq(TestData.SANDBOX + TestData.REFUND_PATH),
                         any(),
                         bodyCaptor.capture())).
@@ -132,11 +125,9 @@ class SbpClientTest {
 
     @Test
     void success_getRefundInfo() throws Exception {
-        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
-        Mockito.when(webclient.request(eq("GET"),
+        Mockito.when(webclient.getRequest(
                         eq(TestData.SANDBOX + TestData.REFUND_INFO_PATH),
-                        any(),
-                        bodyCaptor.capture())).
+                        any())).
                 thenReturn(TestData.REFUND_STATUS);
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
@@ -145,15 +136,13 @@ class SbpClientTest {
 
         RefundStatus refundStatus = client.getRefundInfo(refundId);
 
-        assertEquals(TestData.NULL_BODY, bodyCaptor.getValue());
         assertEquals(TestData.REFUND_STATUS_AMOUNT, refundStatus.getAmount().toString());
         assertEquals(TestData.REFUND_STATUS_STATUS, refundStatus.getRefundStatus());
     }
 
     @Test
     void fail_throwSbpException() throws Exception {
-        Mockito.when(webclient.request(any(),
-                any(),
+        Mockito.when(webclient.postRequest(any(),
                 any(),
                 any())).thenReturn(TestData.QR_DYNAMIC_CODE_WITHOUT_AMOUNT_RESPONSE);
 
@@ -169,8 +158,7 @@ class SbpClientTest {
 
     @Test
     void fail_throwContractViolationException() throws Exception {
-        Mockito.when(webclient.request(any(),
-                any(),
+        Mockito.when(webclient.postRequest(any(),
                 any(),
                 any())).thenReturn(TestData.UNSUPPORTED_RESPONSE1);
 
@@ -186,8 +174,7 @@ class SbpClientTest {
 
     @Test
     void fail_throwContractViolationExceptionWithCode() throws Exception {
-        Mockito.when(webclient.request(any(),
-                any(),
+        Mockito.when(webclient.postRequest(any(),
                 any(),
                 any())).thenReturn(TestData.UNSUPPORTED_RESPONSE2);
 
@@ -203,8 +190,7 @@ class SbpClientTest {
 
     @Test
     void fail_throwContractViolationExceptionWhenCodeIsNull() throws Exception {
-        Mockito.when(webclient.request(any(),
-                any(),
+        Mockito.when(webclient.postRequest(any(),
                 any(),
                 any())).thenReturn(TestData.UNSUPPORTED_RESPONSE3);
 
