@@ -206,12 +206,14 @@ qrDynamic.setQrExpirationDate("+1d5m"); // + 1 day 5 minutes
 
 ## Получение данных по зарегистрированному ранее QR-коду
 
-Необходимо создать String c идентификатором QR-кода, и вызвать метод `getQRInfo(String)`:
+Необходимо создать объект класса `QRId`, передав в конструкторе идентификатор QR-кода, и вызвать метод `getQRInfo(QRId)`:
 
 ~~~ java
 String qrIdString = "...";
 
-QRUrl response = client.getQRInfo(qrIdString);
+QRId id = new QRId(qrIdString);
+
+QRUrl response = client.getQRInfo(id);
 
 // place your code here
 ~~~
@@ -234,7 +236,9 @@ QRUrl response = client.getQRInfo(qrIdString);
 ~~~ java
 String qrIdString = "...";
 
-PaymentInfo response = client.getPaymentInfo(qrIdString);
+QRId id = new QRId(qrIdString);
+
+PaymentInfo response = client.getPaymentInfo(id);
 
 // place your code here
 ~~~
@@ -395,14 +399,17 @@ Order order = Order.builder().amount(new BigDecimal(314)).id("QUAaOlCRU0Bdub8J4T
 Order order = Order.builder().amount(new BigDecimal(314)).comment("Комментарий к заказу")).build();
 ~~~
 
+
 ## Получение данных по заказу
 
-Необходимо создать строку с идентификатором заказа, и вызвать метод `getOrderInfo(String)`:
+Необходимо создать объект класса `OrderId`, передав в конструкторе идентификатор заказа, и вызвать метод `getOrderInfo(OrderId)`:
 
 ~~~ java
 String orderIdString = "...";
 
-OrderInfo response = client.getOrderInfo(orderIdString);
+orderId = new OrderId(orderIdString);
+
+OrderInfo response = client.getOrderInfo(orderId);
 
 // place your code here
 ~~~

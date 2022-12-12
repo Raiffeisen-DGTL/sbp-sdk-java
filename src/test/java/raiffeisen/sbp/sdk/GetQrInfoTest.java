@@ -9,6 +9,7 @@ import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.out.QRId;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,7 +31,8 @@ class GetQrInfoTest {
 
     @Test
     void getQrInfoTest() throws Exception {
-        QRUrl response = TestUtils.CLIENT.getQRInfo(qrId);
+        QRId id = new QRId(qrId);
+        QRUrl response = TestUtils.CLIENT.getQRInfo(id);
 
         assertNotNull(response.getQrId());
         assertNotNull(response.getPayload());
@@ -41,8 +43,12 @@ class GetQrInfoTest {
     void getQrInfoByBadQrIdNegativeTest() {
         String badQrId = TestUtils.getRandomUUID();
 
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getQRInfo(badQrId));
+        QRId badId = new QRId(badQrId);
+
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getQRInfo(badId));
         assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_CODE, ex.getCode());
         assertEquals(TestData.QR_CODE_NOT_FOUND_ERROR_MESSAGE, ex.getMessage());
     }
 }
+
+

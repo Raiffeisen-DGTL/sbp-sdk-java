@@ -19,6 +19,7 @@ import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.OrderExtra;
 import raiffeisen.sbp.sdk.model.out.OrderQr;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
+import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.QRVariable;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
@@ -60,9 +61,9 @@ public final class TestUtils {
         QRStatic qrStatic = new QRStatic(orderInfo);
 
         QRUrl qr = CLIENT.registerQR(qrStatic);
-        String id = qr.getQrId();
+        QRId id = new QRId(qr.getQrId());
 
-        payQR(id);
+        payQR(id.getQrId());
 
         PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
 
@@ -80,9 +81,9 @@ public final class TestUtils {
         QRDynamic qrDynamic = new QRDynamic(orderInfo, moneyAmount);
 
         QRUrl qr = CLIENT.registerQR(qrDynamic);
-        String id = qr.getQrId();
+        QRId id = new QRId(qr.getQrId());
 
-        payQR(id);
+        payQR(id.getQrId());
 
         PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
 

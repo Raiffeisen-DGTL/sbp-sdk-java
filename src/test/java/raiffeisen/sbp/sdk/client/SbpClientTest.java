@@ -14,6 +14,7 @@ import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
+import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
@@ -70,7 +71,8 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        String id = TestData.TEST_QR_ID;
+
+        QRId id = new QRId(TestData.TEST_QR_ID);
 
         QRUrl response = client.getQRInfo(id);
 
@@ -88,7 +90,7 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        String id = TestData.TEST_QR_ID;
+        QRId id = new QRId(TestData.TEST_QR_ID);
 
         PaymentInfo response = client.getPaymentInfo(id);
 
@@ -131,9 +133,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        RefundId refundId = new RefundId(TestData.TEST_REFUND_ID);
+        RefundId id = new RefundId(TestData.TEST_QR_ID);
 
-        RefundStatus refundStatus = client.getRefundInfo(refundId);
+        RefundStatus refundStatus = client.getRefundInfo(id);
 
         assertEquals(TestData.REFUND_STATUS_AMOUNT, refundStatus.getAmount().toString());
         assertEquals(TestData.REFUND_STATUS_STATUS, refundStatus.getRefundStatus());

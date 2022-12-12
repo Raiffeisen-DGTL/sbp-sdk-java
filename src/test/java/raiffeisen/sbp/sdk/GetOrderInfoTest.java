@@ -9,6 +9,7 @@ import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.OrderInfo;
+import raiffeisen.sbp.sdk.model.out.OrderId;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Tag("integration")
 public class GetOrderInfoTest {
 
-    private static String orderId;
+    private static OrderId orderId;
 
     @BeforeAll
     @Timeout(15)
     static void initTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        orderId = TestUtils.initOrderWithQrVariable().getId();
+        orderId = new OrderId(TestUtils.initOrderWithQrVariable().getId());
     }
 
     @Test
@@ -43,10 +44,11 @@ public class GetOrderInfoTest {
 
     @Test
     void getOrderInfoByBadQrIdNegativeTest() {
-        String badQrId = TestUtils.getRandomUUID();
 
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getOrderInfo(badQrId));
+        OrderId badOrderId = new OrderId(TestUtils.getRandomUUID());
+
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getOrderInfo(badOrderId));
         assertEquals(TestData.ORDER_NOT_FOUND_ERROR_CODE, ex.getCode());
-        assertEquals(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE.replace("?", badQrId), ex.getMessage());
+        assertEquals(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE.replace("?", badOrderId.getQrId()), ex.getMessage());
     }
 }
