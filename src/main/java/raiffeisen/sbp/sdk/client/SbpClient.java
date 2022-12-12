@@ -23,6 +23,7 @@ import raiffeisen.sbp.sdk.util.StringUtil;
 import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,17 +77,23 @@ public class SbpClient {
     }
 
     public QRUrl getQRInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        StringUtil.isBlank(id.getQrId());
+        if (!StringUtil.isBlank(id.getQrId())) {
+            throw new InvalidObjectException("QRId is blank!");
+        }
         return get(domain + QR_INFO_PATH, id.getQrId(), secretKey, QRUrl.class);
     }
 
     public PaymentInfo getPaymentInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        StringUtil.isBlank(id.getQrId());
+        if (!StringUtil.isBlank(id.getQrId())) {
+            throw new InvalidObjectException("QRId is blank!");
+        }
         return get(domain + PAYMENT_INFO_PATH, id.getQrId(), secretKey, PaymentInfo.class);
     }
 
     public RefundStatus getRefundInfo(final RefundId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        StringUtil.isBlank(id.getRefundId());
+        if (!StringUtil.isBlank(id.getRefundId())) {
+            throw new InvalidObjectException("RefundId is blank!");
+        }
         return get(domain + REFUND_INFO_PATH, id.getRefundId(), secretKey, RefundStatus.class);
     }
 
@@ -96,7 +103,9 @@ public class SbpClient {
     }
 
     public OrderInfo getOrderInfo(final OrderId id) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
-        StringUtil.isBlank(id.getQrId());
+        if (!StringUtil.isBlank(id.getQrId())) {
+            throw new InvalidObjectException("OrderId is blank!");
+        }
         return get(domain + ORDER_INFO_PATH, id.getQrId(), secretKey, OrderInfo.class);
     }
 
