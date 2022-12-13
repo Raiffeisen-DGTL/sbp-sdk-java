@@ -40,7 +40,7 @@ public class SbpClient {
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
     private static final String ORDER_INFO_PATH = PropertiesLoader.ORDER_INFO_PATH;
 
-    private static final String BAD_REQUEST_MESSAGE = "Id is blank! Field is required and should not be null or empty";
+    private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
     private static final JsonMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
@@ -79,21 +79,21 @@ public class SbpClient {
 
     public QRUrl getQRInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         if (StringUtil.isBlank(id.getQrId())) {
-            throw new ContractViolationException(400, BAD_REQUEST_MESSAGE);
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
         return get(domain + QR_INFO_PATH, id.getQrId(), secretKey, QRUrl.class);
     }
 
     public PaymentInfo getPaymentInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         if (StringUtil.isBlank(id.getQrId())) {
-            throw new ContractViolationException(400, BAD_REQUEST_MESSAGE);
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
         return get(domain + PAYMENT_INFO_PATH, id.getQrId(), secretKey, PaymentInfo.class);
     }
 
     public RefundStatus getRefundInfo(final RefundId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         if (StringUtil.isBlank(id.getRefundId())) {
-            throw new ContractViolationException(400, BAD_REQUEST_MESSAGE);
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
         return get(domain + REFUND_INFO_PATH, id.getRefundId(), secretKey, RefundStatus.class);
     }
@@ -105,7 +105,7 @@ public class SbpClient {
 
     public OrderInfo getOrderInfo(final OrderId id) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
         if (StringUtil.isBlank(id.getQrId())) {
-            throw new ContractViolationException(400, BAD_REQUEST_MESSAGE);
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
         return get(domain + ORDER_INFO_PATH, id.getQrId(), secretKey, OrderInfo.class);
     }
