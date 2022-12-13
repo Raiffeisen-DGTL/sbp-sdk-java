@@ -17,6 +17,7 @@ import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.OrderExtra;
+import raiffeisen.sbp.sdk.model.out.OrderId;
 import raiffeisen.sbp.sdk.model.out.OrderQr;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRId;
@@ -125,6 +126,14 @@ public final class TestUtils {
                 .extra(new OrderExtra("apiClient", "1.0.3"))
                 .build();
 
-        return TestUtils.CLIENT.createOrder(order);
+        OrderInfo orderInfo = TestUtils.CLIENT.createOrder(order);
+        OrderId orderId = new OrderId(orderInfo.getId());
+        payQR(qr.getQrId());
+
+        orderInfo = TestUtils.CLIENT.getOrderInfo(orderId);
+        while (!orderInfo.getStatus().getValue().equals("PAID")) {
+            orderInfo = TestUtils.CLIENT.getOrderInfo(orderId);
+        }
+        return orderInfo;
     }
 }

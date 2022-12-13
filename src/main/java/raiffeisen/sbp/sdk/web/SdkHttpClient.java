@@ -44,6 +44,16 @@ public class SdkHttpClient {
         return new Response(response.statusCode(), response.body());
     }
 
+    public Response deleteRequest(String url, Map<String, String> headers) throws URISyntaxException, InterruptedException, IOException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .headers(mapHeaders(headers))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return new Response(response.statusCode(), response.body());
+    }
+
     private String[] mapHeaders(Map<String, String> headers) {
         return headers.entrySet().stream()
                 .flatMap(x -> Stream.of(x.getKey(), x.getValue()))

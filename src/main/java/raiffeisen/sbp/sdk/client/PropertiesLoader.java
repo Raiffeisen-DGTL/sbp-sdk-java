@@ -20,8 +20,7 @@ public class PropertiesLoader {
     public static final String REFUND_PATH;
     public static final String REFUND_INFO_PATH;
     public static final String CREATE_ORDER_PATH;
-
-    public static final String ORDER_INFO_PATH;
+    public static final String ORDER_PATH;
 
     static {
         Properties properties = new Properties();
@@ -42,6 +41,6 @@ public class PropertiesLoader {
         REFUND_PATH = properties.getProperty("path.refund", "/api/sbp/v1/refund");
         REFUND_INFO_PATH = properties.getProperty("path.refund.info", "/api/sbp/v1/refund/?");
         CREATE_ORDER_PATH = properties.getProperty("path.create.order", "/api/payment/v1/orders");
-        ORDER_INFO_PATH = properties.getProperty("path.order.info", "/api/payment/v1/orders/?");
+        ORDER_PATH = properties.getProperty("path.order", "/api/payment/v1/orders/?");
     }
 }

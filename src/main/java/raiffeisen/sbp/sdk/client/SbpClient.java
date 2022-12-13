@@ -38,7 +38,7 @@ public class SbpClient {
     private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
 
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
-    private static final String ORDER_INFO_PATH = PropertiesLoader.ORDER_INFO_PATH;
+    private static final String ORDER_PATH = PropertiesLoader.ORDER_PATH;
 
     private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
@@ -104,10 +104,17 @@ public class SbpClient {
     }
 
     public OrderInfo getOrderInfo(final OrderId id) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
-        if (StringUtil.isBlank(id.getQrId())) {
+        if (StringUtil.isBlank(id.getOrderId())) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
-        return get(domain + ORDER_INFO_PATH, id.getQrId(), secretKey, OrderInfo.class);
+        return get(domain + ORDER_PATH, id.getOrderId(), secretKey, OrderInfo.class);
+    }
+
+    public void orderCancellation(final OrderId orderId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
+        if (StringUtil.isBlank(orderId.getOrderId())) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        delete(domain + ORDER_PATH, orderId.getOrderId(), secretKey);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
@@ -129,12 +136,22 @@ public class SbpClient {
         return convert(response, resultClass);
     }
 
+    private void delete(String url, final String pathParameter, final String secretKey)
+            throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
+        url = url.replace("?", pathParameter);
+        Response response = webClient.deleteRequest(url, prepareHeaders(secretKey));
+        convert(response, null);
+    }
+
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
         try {
             JsonNode codeNode = mapper.readTree(response.getBody()).get("code");
             int httpCode = response.getCode();
             if (httpCode == 200) {
+                if (response.getBody().isBlank()) {
+                    return null;
+                }
                 return successHandler(response, resultClass, codeNode);
             }
             errorHandler(response, codeNode);

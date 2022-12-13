@@ -44,11 +44,10 @@ public class GetOrderInfoTest {
 
     @Test
     void getOrderInfoByBadQrIdNegativeTest() {
-
         OrderId badOrderId = new OrderId(TestUtils.getRandomUUID());
 
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getOrderInfo(badOrderId));
         assertEquals(TestData.ORDER_NOT_FOUND_ERROR_CODE, ex.getCode());
-        assertEquals(String.format(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE, badOrderId.getQrId()), ex.getMessage());
+        assertEquals(String.format(TestData.ORDER_NOT_FOUND_ERROR_MESSAGE, badOrderId.getOrderId()), ex.getMessage());
     }
 }

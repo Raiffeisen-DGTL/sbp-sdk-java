@@ -438,6 +438,44 @@ OrderInfo response = client.getOrderInfo(orderId);
 }
 ~~~
 
+## Отмена заказа
+
+Необходимо создать объект класса `OrderId`, передав в конструкторе идентификатор заказа, и вызвать метод `orderCancellation(OrderId)`:
+
+~~~ java
+String orderIdString = "...";
+
+orderId = new OrderId(orderIdString);
+
+OrderInfo response = client.orderCancellation(orderId);
+
+// place your code here
+~~~
+
+Ответ
+
+~~~
+{
+  "id": "c5b3fd07-c66b-4f11-a8a2-1cc5d319f9e3",
+  "amount": 1000.1,
+  "comment": "Шоколадный торт",
+  "extra": {
+    "apiClient": "iiko",
+    "apiClientVersion": "1.0.0"
+  },
+  "status": {
+    "value": "NEW",
+    "date": "2021-12-24T11:15:22.000Z"
+  },
+  "expirationDate": "2022-01-24T11:15:22.000Z",
+  "qr": {
+    "id": "AD100004BAL7227F9BNP6KNE007J9B3K",
+    "additionalInfo": "Доп. информация",
+    "paymentDetails": "Назначение платежа"
+  }
+}
+~~~
+
 ## Обработка уведомлений
 
 Для хранения и использования уведомлений существует класс `PaymentNotification`, экземпляр которого можно получить с помощью статического метода `SbpUtil.parseJson(String)`.

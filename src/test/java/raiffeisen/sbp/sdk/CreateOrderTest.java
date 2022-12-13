@@ -53,6 +53,5 @@ public class CreateOrderTest {
         assertNotNull(response.getId());
         assertNotNull(response.getAmount());
         assertNotNull(response.getExtra());
-
     }
 }
