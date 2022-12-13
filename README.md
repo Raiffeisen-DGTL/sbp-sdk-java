@@ -29,15 +29,15 @@
 - pom.xml __своего__ проекта поместить следующее:
 ~~~
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.4</version>
         </dependency>
     </dependencies>
 
@@ -50,9 +50,9 @@
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.2</version>
+                    <version>1.0.4</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.2.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.4.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -400,6 +400,43 @@ Order order = Order.builder().amount(new BigDecimal(314)).comment("Коммен�
 ~~~
 
 
+## Получение данных по заказу
+
+Необходимо создать объект класса `OrderId`, передав в конструкторе идентификатор заказа, и вызвать метод `getOrderInfo(OrderId)`:
+
+~~~ java
+String orderIdString = "...";
+
+orderId = new OrderId(orderIdString);
+
+OrderInfo response = client.getOrderInfo(orderId);
+
+// place your code here
+~~~
+
+Ответ
+
+~~~
+{
+  "id": "c5b3fd07-c66b-4f11-a8a2-1cc5d319f9e3",
+  "amount": 1000.1,
+  "comment": "Шоколадный торт",
+  "extra": {
+    "apiClient": "iiko",
+    "apiClientVersion": "1.0.0"
+  },
+  "status": {
+    "value": "NEW",
+    "date": "2021-12-24T11:15:22.000Z"
+  },
+  "expirationDate": "2022-01-24T11:15:22.000Z",
+  "qr": {
+    "id": "AD100004BAL7227F9BNP6KNE007J9B3K",
+    "additionalInfo": "Доп. информация",
+    "paymentDetails": "Назначение платежа"
+  }
+}
+~~~
 
 ## Обработка уведомлений
 

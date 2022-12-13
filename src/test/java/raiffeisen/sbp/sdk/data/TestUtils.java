@@ -11,12 +11,17 @@ import org.apache.http.impl.client.HttpClients;
 import raiffeisen.sbp.sdk.client.SbpClient;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
+import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.Order;
+import raiffeisen.sbp.sdk.model.out.OrderExtra;
+import raiffeisen.sbp.sdk.model.out.OrderQr;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
+import raiffeisen.sbp.sdk.model.out.QRVariable;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
 
 import java.io.IOException;
@@ -35,9 +40,9 @@ public final class TestUtils {
         return UUID.randomUUID().toString();
     }
 
-    private static void payQR(QRId id) throws IOException {
+    private static void payQR(String id) throws IOException {
         HttpPost httpPost = new HttpPost(TestData.PAYMENT_URL);
-        InitPayment initPayment = new InitPayment(id.getQrId(), BigDecimal.valueOf(314L));
+        InitPayment initPayment = new InitPayment(id, BigDecimal.valueOf(314L));
         StringEntity entity = new StringEntity(MAPPER.writeValueAsString(initPayment));
         httpPost.setEntity(entity);
         httpPost.setHeader("Accept", "application/json");
@@ -58,7 +63,7 @@ public final class TestUtils {
         QRUrl qr = CLIENT.registerQR(qrStatic);
         QRId id = new QRId(qr.getQrId());
 
-        payQR(id);
+        payQR(id.getQrId());
 
         PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
 
@@ -78,7 +83,7 @@ public final class TestUtils {
         QRUrl qr = CLIENT.registerQR(qrDynamic);
         QRId id = new QRId(qr.getQrId());
 
-        payQR(id);
+        payQR(id.getQrId());
 
         PaymentInfo paymentInfo = CLIENT.getPaymentInfo(id);
 
@@ -104,5 +109,22 @@ public final class TestUtils {
         assert (!response.getRefundStatus().isEmpty());
 
         return refundId;
+    }
+
+    public static OrderInfo initOrderWithQrVariable() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        QRVariable qrVariable = new QRVariable();
+        QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
+
+        OrderQr orderQr = new OrderQr();
+        orderQr.setId(qr.getQrId());
+
+        Order order = Order.builder()
+                .amount(new BigDecimal(314))
+                .qr(orderQr)
+                .comment("comment")
+                .extra(new OrderExtra("apiClient", "1.0.3"))
+                .build();
+
+        return TestUtils.CLIENT.createOrder(order);
     }
 }

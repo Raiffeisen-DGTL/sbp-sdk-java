@@ -14,10 +14,12 @@ import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.Order;
+import raiffeisen.sbp.sdk.model.out.OrderId;
 import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
 import raiffeisen.sbp.sdk.model.out.RefundInfo;
+import raiffeisen.sbp.sdk.util.StringUtil;
 import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
 import java.io.IOException;
@@ -36,6 +38,9 @@ public class SbpClient {
     private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
 
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
+    private static final String ORDER_INFO_PATH = PropertiesLoader.ORDER_INFO_PATH;
+
+    private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
     private static final JsonMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
@@ -72,21 +77,37 @@ public class SbpClient {
         return post(domain + REFUND_PATH, mapper.writeValueAsString(refund), secretKey, RefundStatus.class);
     }
 
-    public QRUrl getQRInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        return get(domain + QR_INFO_PATH, qrId.getQrId(), secretKey, QRUrl.class);
+    public QRUrl getQRInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        if (StringUtil.isBlank(id.getQrId())) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        return get(domain + QR_INFO_PATH, id.getQrId(), secretKey, QRUrl.class);
     }
 
-    public PaymentInfo getPaymentInfo(final QRId qrId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        return get(domain + PAYMENT_INFO_PATH, qrId.getQrId(), secretKey, PaymentInfo.class);
+    public PaymentInfo getPaymentInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        if (StringUtil.isBlank(id.getQrId())) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        return get(domain + PAYMENT_INFO_PATH, id.getQrId(), secretKey, PaymentInfo.class);
     }
 
-    public RefundStatus getRefundInfo(final RefundId refundId) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        return get(domain + REFUND_INFO_PATH, refundId.getRefundId(), secretKey, RefundStatus.class);
+    public RefundStatus getRefundInfo(final RefundId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        if (StringUtil.isBlank(id.getRefundId())) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        return get(domain + REFUND_INFO_PATH, id.getRefundId(), secretKey, RefundStatus.class);
     }
 
     public OrderInfo createOrder(final Order order) throws SbpException, IOException, ContractViolationException, URISyntaxException, InterruptedException {
         ObjectNode jsonNode = mapper.valueToTree(order);
         return post(domain + CREATE_ORDER_PATH, jsonNode.toString(), secretKey, OrderInfo.class);
+    }
+
+    public OrderInfo getOrderInfo(final OrderId id) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
+        if (StringUtil.isBlank(id.getQrId())) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        return get(domain + ORDER_INFO_PATH, id.getQrId(), secretKey, OrderInfo.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
@@ -136,7 +157,8 @@ public class SbpClient {
     }
 
     private void errorHandler(Response response, JsonNode codeNode) throws SbpException, ContractViolationException, JsonProcessingException {
-        if (codeNode != null && codeNode.textValue().contains("ERROR.")) {
+        if (codeNode != null &&
+                (codeNode.textValue().contains("ERROR.") || codeNode.textValue().contains("ORDER_"))) {
             String message = mapper.readTree(response.getBody()).get("message").textValue();
             throw new SbpException(codeNode.textValue(), message);
         }

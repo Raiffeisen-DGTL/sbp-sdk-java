@@ -103,6 +103,8 @@ public final class TestData {
     public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Не передан обязательный параметр";
     public static final String QR_CODE_NOT_FOUND_ERROR_CODE = "ERROR.NOT_FOUND";
     public static final String QR_CODE_NOT_FOUND_ERROR_MESSAGE = "QR-код не найден у данного партнера";
+    public static final String ORDER_NOT_FOUND_ERROR_CODE = "ORDER_NOT_FOUND";
+    public static final String ORDER_NOT_FOUND_ERROR_MESSAGE = "Заказ с идентификатором %s не найден у данного партнера";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
     public static final String TEST_REFUND_ID = "123";

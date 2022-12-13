@@ -6,3 +6,4 @@ import lombok.Data;
 public final class QRId {
     private final String qrId;
 }
+

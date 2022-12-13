@@ -71,9 +71,10 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        QRId qrId = new QRId(TestData.TEST_QR_ID);
 
-        QRUrl response = client.getQRInfo(qrId);
+        QRId id = new QRId(TestData.TEST_QR_ID);
+
+        QRUrl response = client.getQRInfo(id);
 
         assertEquals(TestData.QR_URL_QR_ID, response.getQrId());
         assertEquals(TestData.QR_URL_PAYLOAD, response.getPayload());
@@ -89,9 +90,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        QRId qrId = new QRId(TestData.TEST_QR_ID);
+        QRId id = new QRId(TestData.TEST_QR_ID);
 
-        PaymentInfo response = client.getPaymentInfo(qrId);
+        PaymentInfo response = client.getPaymentInfo(id);
 
         assertEquals(TestData.PAYMENT_INFO_ADDITIONAL_INFO, response.getAdditionalInfo());
         assertEquals(TestData.PAYMENT_INFO_AMOUNT, response.getAmount().toString());
@@ -132,9 +133,9 @@ class SbpClientTest {
 
         SbpClient client = new SbpClient(SbpClient.TEST_URL, TestData.TEST_SBP_MERCHANT_ID, "secretKey", webclient);
 
-        RefundId refundId = new RefundId(TestData.TEST_REFUND_ID);
+        RefundId id = new RefundId(TestData.TEST_QR_ID);
 
-        RefundStatus refundStatus = client.getRefundInfo(refundId);
+        RefundStatus refundStatus = client.getRefundInfo(id);
 
         assertEquals(TestData.REFUND_STATUS_AMOUNT, refundStatus.getAmount().toString());
         assertEquals(TestData.REFUND_STATUS_STATUS, refundStatus.getRefundStatus());
