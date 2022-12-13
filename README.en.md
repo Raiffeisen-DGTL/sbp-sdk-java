@@ -23,15 +23,15 @@ Please do the following to connect SDK:
 - Put the following into __your__ project pom.xml:
 ~~~
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.5</version>
         </dependency>
     </dependencies>
 
@@ -44,9 +44,9 @@ Please do the following to connect SDK:
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.5</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.0.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.5.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -304,6 +304,144 @@ Response:
   "amount": 150,
   "refundStatus": "IN_PROGRESS"
 }
+~~~
+
+## Create an order
+
+To create an order, you need to create an instance of the `Order` class
+
+Required parameters:
+- Amount in rubles `amount`
+
+Optional parameters can be populated using the set methods.
+
+To execute a request, you need to call the corresponding method of the `SbpClient` class, which takes an object of the `Order` class as an argument:
+
+~~~ java
+
+Order order = Order.builder().amount(BigDecimal.ZERO).build();
+OrderInfo response = TestUtils.CLIENT.createOrder(order);
+
+~~~
+
+
+It is also possible to populate the optional `qrExpirationDate` parameter with an offset relative to the creation date. To do this, in the `qrExpirationDate` field, specify a string like `"+<number1><letter1>"`.
+
+- 'M' - month
+- 'd' - day
+- 'H' - hour
+- 'm' - minute
+- 's' - second
+
+Example:
+
+~~~ java
+Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+5m").build(); // + 5 minutes
+
+Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+1d5m").build(); // + 1 day 5 minutes
+
+~~~
+
+It is also possible to fill in the optional `extra` parameter:
+To do this, you need to create an instance of the OrderExtra class with the parameters apiClient and apiClientVersion
+
+Example:
+
+~~~ java
+OrderExtra orderExtra = new OrderExtra("apiClient", "1.0.2");
+Order order = Order.builder().amount(BigDecimal.ZERO).extra(orderExtra).build();
+~~~
+
+It is also possible to fill in the optional `qr` parameter:
+To do this, you need to create an instance of the OrderQr class.
+
+OrderQr:
+- id (required, The parameter must be filled with the QR identifier that was received in response to the QR code registration request)
+- additionalInfo
+- paymentDetails
+
+
+Example:
+
+~~~ java
+QRVariable qrVariable = new QRVariable();
+QRUrl qr = TestUtils.CLIENT.registerQR(qrVariable);
+OrderQr orderQr = new OrderQr(qr.getQrId());
+
+Order order = Order.builder().amount(new BigDecimal(314)).qr(orderQr).build();
+OrderInfo response = TestUtils.CLIENT.createOrder(order);
+~~~
+
+It is also possible to fill in the optional `id` parameter:
+This is the unique identifier for the order. It is recommended to use a format that does not allow iteration, for example, UUID v4
+If the parameter is not passed, then the identifier will be assigned to the order automatically
+
+Example:
+
+~~~ java
+Order order = Order.builder().amount(new BigDecimal(314)).id("QUAaOlCRU0Bdub8J4TeEpddUacwZmCIv221208").build();
+~~~
+
+It is also possible to fill in the optional `comment` parameter:
+Comment to the order
+
+Example:
+
+~~~ java
+Order order = Order.builder().amount(new BigDecimal(314)).comment("Комментарий к заказу")).build();
+~~~
+
+
+## Receiving order info
+
+It is necessary to create an object of the `OrderId` class, passing the order identifier in the constructor, and call the `getOrderInfo(OrderId)` method:
+
+~~~ java
+String orderIdString = "...";
+
+orderId = new OrderId(orderIdString);
+
+OrderInfo response = client.getOrderInfo(orderId);
+
+// place your code here
+~~~
+
+Response:
+
+~~~
+{
+  "id": "c5b3fd07-c66b-4f11-a8a2-1cc5d319f9e3",
+  "amount": 1000.1,
+  "comment": "Chocolate cake",
+  "extra": {
+    "apiClient": "iiko",
+    "apiClientVersion": "1.0.0"
+  },
+  "status": {
+    "value": "NEW",
+    "date": "2021-12-24T11:15:22.000Z"
+  },
+  "expirationDate": "2022-01-24T11:15:22.000Z",
+  "qr": {
+    "id": "AD100004BAL7227F9BNP6KNE007J9B3K",
+    "additionalInfo": "Additional info",
+    "paymentDetails": "Payment details"
+  }
+}
+~~~
+
+## Order cancellation
+
+It is necessary to create an object of the `OrderId` class, passing the order identifier in the constructor, and call the `orderCancellation(OrderId)` method:
+
+~~~ java
+String orderIdString = "...";
+
+orderId = new OrderId(orderIdString);
+
+OrderInfo response = client.orderCancellation(orderId);
+
+// place your code here
 ~~~
 
 ## Notifications processing
