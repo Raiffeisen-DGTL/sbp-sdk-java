@@ -388,7 +388,7 @@ Comment to the order
 Example:
 
 ~~~ java
-Order order = Order.builder().amount(new BigDecimal(314)).comment("Комментарий к заказу")).build();
+Order order = Order.builder().amount(new BigDecimal(314)).comment("Comment to the order")).build();
 ~~~
 
 
