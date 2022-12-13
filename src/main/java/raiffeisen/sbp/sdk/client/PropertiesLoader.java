@@ -2,13 +2,11 @@ package raiffeisen.sbp.sdk.client;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PropertiesLoader {
     public static final String TEST_URL;
@@ -24,12 +22,12 @@ public class PropertiesLoader {
 
     static {
         Properties properties = new Properties();
-        log.info("Loading config file...");
+        System.out.println("Loading config file...");
         try (InputStream propertiesFile = PropertiesLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
             properties.load(propertiesFile);
-            log.info("Loading config file is complete.");
+            System.out.println("Loading config file is complete.");
         } catch (NullPointerException | IOException e) {
-            log.error("Cannot load configuration file. Loading default values.");
+            System.err.println("Cannot load configuration file. Loading default values.");
         }
 
         TEST_URL = properties.getProperty("domain.sandbox", "https://pay-test.raif.ru");
