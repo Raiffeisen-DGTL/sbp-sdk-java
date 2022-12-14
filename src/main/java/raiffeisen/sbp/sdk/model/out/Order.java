@@ -13,11 +13,11 @@ import java.time.format.DateTimeFormatter;
 public class Order {
 
     private static final DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+    private final OrderExtra extra = new OrderExtra();
 
     @NonNull
     private BigDecimal amount;
     private OrderQr qr;
-    private OrderExtra extra;
     private String id;
     private String comment;
     private String createDate;

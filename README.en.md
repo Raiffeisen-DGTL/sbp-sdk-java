@@ -342,16 +342,6 @@ Order order = Order.builder().amount(BigDecimal.ZERO).expirationDate("+1d5m").bu
 
 ~~~
 
-It is also possible to fill in the optional `extra` parameter:
-To do this, you need to create an instance of the OrderExtra class with the parameters apiClient and apiClientVersion
-
-Example:
-
-~~~ java
-OrderExtra orderExtra = new OrderExtra("apiClient", "1.0.2");
-Order order = Order.builder().amount(BigDecimal.ZERO).extra(orderExtra).build();
-~~~
-
 It is also possible to fill in the optional `qr` parameter:
 To do this, you need to create an instance of the OrderQr class.
 
@@ -414,8 +404,8 @@ Response:
   "amount": 1000.1,
   "comment": "Chocolate cake",
   "extra": {
-    "apiClient": "iiko",
-    "apiClientVersion": "1.0.0"
+    "apiClient": "sbp-sdk-java",
+    "apiClientVersion": "1.0.5"
   },
   "status": {
     "value": "NEW",

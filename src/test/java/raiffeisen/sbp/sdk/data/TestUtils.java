@@ -16,7 +16,6 @@ import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.Order;
-import raiffeisen.sbp.sdk.model.out.OrderExtra;
 import raiffeisen.sbp.sdk.model.out.OrderId;
 import raiffeisen.sbp.sdk.model.out.OrderQr;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
@@ -123,7 +122,6 @@ public final class TestUtils {
                 .amount(new BigDecimal(314))
                 .qr(orderQr)
                 .comment("comment")
-                .extra(new OrderExtra("apiClient", "1.0.3"))
                 .build();
 
         OrderInfo orderInfo = TestUtils.CLIENT.createOrder(order);

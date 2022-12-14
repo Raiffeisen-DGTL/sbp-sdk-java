@@ -1,13 +1,9 @@
 package raiffeisen.sbp.sdk.model.out;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderExtra {
-    private String apiClient;
-    private String apiClientVersion;
+    private final String apiClient = "sbp-sdk-java";
+    private final String apiClientVersion = "1.0.5";
 }
