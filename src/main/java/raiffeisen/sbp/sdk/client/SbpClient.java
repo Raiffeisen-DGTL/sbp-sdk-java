@@ -2,7 +2,6 @@ package raiffeisen.sbp.sdk.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -143,44 +142,29 @@ public class SbpClient {
         convert(response, null);
     }
 
-
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
-        String httpBody = response.getBody();
-        int httpCode = response.getCode();
+        var responseBody = response.getBody();
+        var httpCode = response.getCode();
         try {
-            JsonNode codeNode = mapper.readTree(httpBody).get("code");
-            if (httpCode == 200) {
-                return StringUtil.isBlank(httpBody) ? null : successHandler(response, resultClass, codeNode);
-            }
-            errorHandler(response, codeNode);
-            throw new ContractViolationException(httpCode, httpBody);
-        } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(httpCode, httpBody);
-        }
-    }
+            var mappedBody = mapper.readTree(responseBody);
+            var codeNode = mappedBody.get("code");
 
-    private <T> T successHandler(Response response, Class<T> resultClass, JsonNode codeNode) throws ContractViolationException, SbpException {
-        String body = response.getBody();
-        try {
-            T result = mapper.readValue(body, resultClass);
-            if (codeNode != null && !codeNode.textValue().contains("SUCCESS")) {
-                errorHandler(response, codeNode);
-            }
-            return result;
-        } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(response.getCode(), body);
-        }
-    }
-
-    private void errorHandler(Response response, JsonNode codeNode) throws SbpException, ContractViolationException, JsonProcessingException {
-        if (codeNode != null) {
-            String textValue = codeNode.textValue();
-            if (textValue.contains("ERROR.") || textValue.contains("ORDER_")) {
-                String message = mapper.readTree(response.getBody()).get("message").textValue();
+            if (codeNode != null &&
+                    (codeNode.textValue().contains("ERROR.") || codeNode.textValue().contains("ORDER_"))) {
+                var message = mappedBody.get("message").textValue();
                 throw new SbpException(codeNode.textValue(), message);
             }
+
+            if (httpCode == 200) {
+                if (codeNode != null && !"SUCCESS".equals(codeNode.textValue())) {
+                    throw new ContractViolationException(httpCode, responseBody);
+                }
+                return responseBody.isBlank() ? null : mapper.readValue(responseBody, resultClass);
+            }
+            throw new ContractViolationException(httpCode, responseBody);
+        } catch (JsonProcessingException exception) {
+            throw new ContractViolationException(httpCode, responseBody);
         }
-        throw new ContractViolationException(response.getCode(), response.getBody());
     }
 
     private Map<String, String> prepareHeaders(String secretKey) {
