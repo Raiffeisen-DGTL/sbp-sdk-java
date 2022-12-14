@@ -140,44 +140,49 @@ public class SbpClient {
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
         url = url.replace("?", pathParameter);
         Response response = webClient.deleteRequest(url, prepareHeaders(secretKey));
-        convert(response, null);
+        String body = response.getBody();
+        int httpCode = response.getCode();
+        if (httpCode != 200) {
+            errorHandler(response, mapper.readTree(body).get("code"));
+        }
     }
 
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
+        String body = response.getBody();
+        int httpCode = response.getCode();
         try {
-            JsonNode codeNode = mapper.readTree(response.getBody()).get("code");
-            int httpCode = response.getCode();
+            JsonNode codeNode = mapper.readTree(body).get("code");
             if (httpCode == 200) {
-                if (response.getBody().isBlank()) {
-                    return null;
-                }
                 return successHandler(response, resultClass, codeNode);
             }
             errorHandler(response, codeNode);
-            throw new ContractViolationException(response.getCode(), response.getBody());
+            throw new ContractViolationException(httpCode, body);
         } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(response.getCode(), response.getBody());
+            throw new ContractViolationException(httpCode, body);
         }
     }
 
     private <T> T successHandler(Response response, Class<T> resultClass, JsonNode codeNode) throws ContractViolationException, SbpException {
+        String body = response.getBody();
         try {
-            T result = mapper.readValue(response.getBody(), resultClass);
+            T result = mapper.readValue(body, resultClass);
             if (codeNode != null && !codeNode.textValue().contains("SUCCESS")) {
                 errorHandler(response, codeNode);
             }
             return result;
         } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(response.getCode(), response.getBody());
+            throw new ContractViolationException(response.getCode(), body);
         }
     }
 
     private void errorHandler(Response response, JsonNode codeNode) throws SbpException, ContractViolationException, JsonProcessingException {
-        if (codeNode != null &&
-                (codeNode.textValue().contains("ERROR.") || codeNode.textValue().contains("ORDER_"))) {
-            String message = mapper.readTree(response.getBody()).get("message").textValue();
-            throw new SbpException(codeNode.textValue(), message);
+        if (codeNode != null) {
+            String textValue = codeNode.textValue();
+            if (textValue.contains("ERROR.") || textValue.contains("ORDER_")) {
+                String message = mapper.readTree(response.getBody()).get("message").textValue();
+                throw new SbpException(codeNode.textValue(), message);
+            }
         }
         throw new ContractViolationException(response.getCode(), response.getBody());
     }

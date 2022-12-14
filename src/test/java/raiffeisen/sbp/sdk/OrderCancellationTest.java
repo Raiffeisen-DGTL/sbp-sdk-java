@@ -24,8 +24,12 @@ public class OrderCancellationTest {
     void OrderSuccessCancellation() throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
         Order order = Order.builder().amount(new BigDecimal(314)).build();
         OrderInfo response = TestUtils.CLIENT.createOrder(order);
+        OrderId orderId = new OrderId(response.getId());
 
         TestUtils.CLIENT.orderCancellation(new OrderId(response.getId()));
+
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.orderCancellation(orderId));
+        assertEquals(String.format(TestData.ORDER_HAS_CANCELLED_STATUS_MESSAGE, orderId.getOrderId()), ex.getMessage());
     }
 
     @Test

@@ -107,6 +107,7 @@ public final class TestData {
     public static final String ORDER_HAS_FINAL_STATUS_CODE = "ORDER_HAS_FINAL_STATUS";
     public static final String ORDER_NOT_FOUND_ERROR_MESSAGE = "Заказ с идентификатором %s не найден у данного партнера";
     public static final String ORDER_HAS_FINAL_STATUS_MESSAGE = "Заказ с идентификатором %s имеет статус PAID";
+    public static final String ORDER_HAS_CANCELLED_STATUS_MESSAGE = "Заказ с идентификатором %s имеет статус CANCELLED";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
     public static final String TEST_REFUND_ID = "123";
