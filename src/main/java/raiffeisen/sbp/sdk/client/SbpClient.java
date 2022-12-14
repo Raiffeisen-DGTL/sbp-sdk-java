@@ -140,26 +140,22 @@ public class SbpClient {
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
         url = url.replace("?", pathParameter);
         Response response = webClient.deleteRequest(url, prepareHeaders(secretKey));
-        String body = response.getBody();
-        int httpCode = response.getCode();
-        if (httpCode != 200) {
-            errorHandler(response, mapper.readTree(body).get("code"));
-        }
+        convert(response, null);
     }
 
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
-        String body = response.getBody();
+        String httpBody = response.getBody();
         int httpCode = response.getCode();
         try {
-            JsonNode codeNode = mapper.readTree(body).get("code");
+            JsonNode codeNode = mapper.readTree(httpBody).get("code");
             if (httpCode == 200) {
-                return successHandler(response, resultClass, codeNode);
+                return StringUtil.isBlank(httpBody) ? null : successHandler(response, resultClass, codeNode);
             }
             errorHandler(response, codeNode);
-            throw new ContractViolationException(httpCode, body);
+            throw new ContractViolationException(httpCode, httpBody);
         } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(httpCode, body);
+            throw new ContractViolationException(httpCode, httpBody);
         }
     }
 
