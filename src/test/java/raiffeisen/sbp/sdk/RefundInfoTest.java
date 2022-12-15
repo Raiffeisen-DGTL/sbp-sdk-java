@@ -43,9 +43,8 @@ class RefundInfoTest {
 
     @Test
     void refundInfoExceptionTest() {
-        String id = TestUtils.getRandomUUID();
-        RefundId randomRefundId = new RefundId(id);
+        RefundId randomRefundId = new RefundId(TestUtils.getRandomUUID());
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getRefundInfo(randomRefundId));
-        assertEquals(TestData.getNotFoundRefundError(id), ex.getMessage());
+        assertEquals(String.format(TestData.REFUND_NOT_FOUND_ERROR_MESSAGE, randomRefundId.getRefundId()), ex.getMessage());
     }
 }

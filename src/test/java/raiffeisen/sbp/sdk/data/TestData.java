@@ -71,7 +71,6 @@ public final class TestData {
                     "\"message\":\"No message available\"," +
                     "\"path\":\"/sbp/v1/qr/register1\"}";
     public static final Response UNSUPPORTED_RESPONSE3 = new Response(UNSUPPORTED_RESPONSE3_HTTPCODE, UNSUPPORTED_RESPONSE3_MESSAGE);
-    public static final String NULL_BODY = null;
     public static final String REFUND_PAYMENT = "{\"amount\":10," +
             "\"order\":\"123-123\"," +
             "\"refundId\":\"12345\"," +
@@ -103,6 +102,7 @@ public final class TestData {
     public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Не передан обязательный параметр";
     public static final String QR_CODE_NOT_FOUND_ERROR_CODE = "ERROR.NOT_FOUND";
     public static final String QR_CODE_NOT_FOUND_ERROR_MESSAGE = "QR-код не найден у данного партнера";
+    public static final String REFUND_NOT_FOUND_ERROR_MESSAGE = "Возврат с refundId %s не найден";
     public static final String ORDER_NOT_FOUND_ERROR_CODE = "ORDER_NOT_FOUND";
     public static final String ORDER_HAS_FINAL_STATUS_CODE = "ORDER_HAS_FINAL_STATUS";
     public static final String ORDER_NOT_FOUND_ERROR_MESSAGE = "Заказ с идентификатором %s не найден у данного партнера";
@@ -121,10 +121,4 @@ public final class TestData {
     public static final Map<String, String> MAP_HEADERS = Map.of("content-type", "application/json",
             "charset", "UTF-8");
     public static final String RESPONSE_BODY = "{\"code\",\"SUCCESS\"}";
-
-    public static String getNotFoundRefundError(String refundId) {
-        String st = "Возврат с refundId %s не найден";
-        return String.format(st, refundId);
-    }
-
 }
