@@ -2,7 +2,6 @@ package raiffeisen.sbp.sdk.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -38,7 +37,7 @@ public class SbpClient {
     private static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH;
 
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
-    private static final String ORDER_INFO_PATH = PropertiesLoader.ORDER_INFO_PATH;
+    private static final String ORDER_PATH = PropertiesLoader.ORDER_PATH;
 
     private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
@@ -104,10 +103,17 @@ public class SbpClient {
     }
 
     public OrderInfo getOrderInfo(final OrderId id) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
-        if (StringUtil.isBlank(id.getQrId())) {
+        if (StringUtil.isBlank(id.getOrderId())) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
-        return get(domain + ORDER_INFO_PATH, id.getQrId(), secretKey, OrderInfo.class);
+        return get(domain + ORDER_PATH, id.getOrderId(), secretKey, OrderInfo.class);
+    }
+
+    public void orderCancellation(final OrderId orderId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
+        if (StringUtil.isBlank(orderId.getOrderId())) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        delete(domain + ORDER_PATH, orderId.getOrderId(), secretKey);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
@@ -129,40 +135,36 @@ public class SbpClient {
         return convert(response, resultClass);
     }
 
+    private void delete(String url, final String pathParameter, final String secretKey)
+            throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
+        url = url.replace("?", pathParameter);
+        Response response = webClient.deleteRequest(url, prepareHeaders(secretKey));
+        convert(response, null);
+    }
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {
+        var responseBody = response.getBody();
+        var httpCode = response.getCode();
         try {
-            JsonNode codeNode = mapper.readTree(response.getBody()).get("code");
-            int httpCode = response.getCode();
+            var mappedBody = mapper.readTree(responseBody);
+            var codeNode = mappedBody.get("code");
+
+            if (codeNode != null &&
+                    (codeNode.textValue().contains("ERROR.") || codeNode.textValue().contains("ORDER_"))) {
+                var message = mappedBody.get("message").textValue();
+                throw new SbpException(codeNode.textValue(), message);
+            }
+
             if (httpCode == 200) {
-                return successHandler(response, resultClass, codeNode);
+                if (codeNode != null && !"SUCCESS".equals(codeNode.textValue())) {
+                    throw new ContractViolationException(httpCode, responseBody);
+                }
+                return responseBody.isBlank() ? null : mapper.readValue(responseBody, resultClass);
             }
-            errorHandler(response, codeNode);
-            throw new ContractViolationException(response.getCode(), response.getBody());
+            throw new ContractViolationException(httpCode, responseBody);
         } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(response.getCode(), response.getBody());
+            throw new ContractViolationException(httpCode, responseBody);
         }
-    }
-
-    private <T> T successHandler(Response response, Class<T> resultClass, JsonNode codeNode) throws ContractViolationException, SbpException {
-        try {
-            T result = mapper.readValue(response.getBody(), resultClass);
-            if (codeNode != null && !codeNode.textValue().contains("SUCCESS")) {
-                errorHandler(response, codeNode);
-            }
-            return result;
-        } catch (JsonProcessingException exception) {
-            throw new ContractViolationException(response.getCode(), response.getBody());
-        }
-    }
-
-    private void errorHandler(Response response, JsonNode codeNode) throws SbpException, ContractViolationException, JsonProcessingException {
-        if (codeNode != null &&
-                (codeNode.textValue().contains("ERROR.") || codeNode.textValue().contains("ORDER_"))) {
-            String message = mapper.readTree(response.getBody()).get("message").textValue();
-            throw new SbpException(codeNode.textValue(), message);
-        }
-        throw new ContractViolationException(response.getCode(), response.getBody());
     }
 
     private Map<String, String> prepareHeaders(String secretKey) {

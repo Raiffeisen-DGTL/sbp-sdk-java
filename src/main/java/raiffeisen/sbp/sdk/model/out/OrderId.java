@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class OrderId {
-    private final String qrId;
+    private final String orderId;
 }

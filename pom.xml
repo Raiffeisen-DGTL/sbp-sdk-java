@@ -6,14 +6,11 @@
 
     <groupId>raiffeisen</groupId>
     <artifactId>sbp-sdk-java</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
 
     <properties>
         <maven-surefire.version>2.22.1</maven-surefire.version>
-        <log4j.version>1.2.12</log4j.version>
-        <log4j-over-slf4j.version>1.6.2</log4j-over-slf4j.version>
-        <slf4j-log4j12.version>1.6.6</slf4j-log4j12.version>
         <httpclient.version>4.5.6</httpclient.version>
         <jackson.version>2.11.3</jackson.version>
         <jackson-databind.version>2.11.3</jackson-databind.version>
@@ -58,21 +55,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>${log4j-over-slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-log4j12.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

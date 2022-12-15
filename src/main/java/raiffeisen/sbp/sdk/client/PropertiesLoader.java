@@ -2,13 +2,11 @@ package raiffeisen.sbp.sdk.client;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PropertiesLoader {
     public static final String TEST_URL;
@@ -20,17 +18,16 @@ public class PropertiesLoader {
     public static final String REFUND_PATH;
     public static final String REFUND_INFO_PATH;
     public static final String CREATE_ORDER_PATH;
-
-    public static final String ORDER_INFO_PATH;
+    public static final String ORDER_PATH;
 
     static {
         Properties properties = new Properties();
-        log.info("Loading config file...");
+        System.out.println("Loading config file...");
         try (InputStream propertiesFile = PropertiesLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
             properties.load(propertiesFile);
-            log.info("Loading config file is complete.");
+            System.out.println("Loading config file is complete.");
         } catch (NullPointerException | IOException e) {
-            log.error("Cannot load configuration file. Loading default values.");
+            System.err.println("Cannot load configuration file. Loading default values.");
         }
 
         TEST_URL = properties.getProperty("domain.sandbox", "https://pay-test.raif.ru");
@@ -42,6 +39,6 @@ public class PropertiesLoader {
         REFUND_PATH = properties.getProperty("path.refund", "/api/sbp/v1/refund");
         REFUND_INFO_PATH = properties.getProperty("path.refund.info", "/api/sbp/v1/refund/?");
         CREATE_ORDER_PATH = properties.getProperty("path.create.order", "/api/payment/v1/orders");
-        ORDER_INFO_PATH = properties.getProperty("path.order.info", "/api/payment/v1/orders/?");
+        ORDER_PATH = properties.getProperty("path.order", "/api/payment/v1/orders/?");
     }
 }
