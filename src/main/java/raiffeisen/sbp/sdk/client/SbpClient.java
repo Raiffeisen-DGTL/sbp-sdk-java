@@ -125,8 +125,8 @@ public class SbpClient {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
         String url = String.format(domain + ORDER_REFUND_PATH, orderId, refundId);
-        ObjectNode jsonNode = mapper.valueToTree(orderRefund);
-        return post(url, jsonNode.toString(), secretKey, RefundStatus.class);
+        String body = mapper.writeValueAsString(orderRefund);
+        return post(url, body, secretKey, RefundStatus.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
