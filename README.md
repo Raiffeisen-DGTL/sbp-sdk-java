@@ -9,8 +9,12 @@
 - [Получение информации по платежу](#получение-информации-по-платежу)
 - [Оформление возврата по платежу](#оформление-возврата-по-платежу)
 - [Получение информации по возврату](#получение-информации-по-возврату)
+- [Создание заказа](#создание-заказа)
+- [Получение данных по заказу](#получение-данных-по-заказу)
+- [Оформление возврата по заказу](#оформление-возврата-по-заказу)
+- [Отмена заказа](#Отмена-заказа)
+- 
 - [Обработка уведомлений](#обработка-уведомлений)
-- [Использование альтернативного HTTP-клиента](#использование-альтернативного-http-клиента)
 - [Шпаргалка](#шпаргалка)
 
 ## Документация
@@ -450,7 +454,7 @@ OrderInfo response = client.orderCancellation(orderId);
 BigDecimal moneyAmount = new BigDecimal(150);
 String orderIdString = "...";
 String refundIdString ="...";
-OrderRefund orderRefund = new OrderRefund(orderIdString, refundIdString moneyAmount);
+OrderRefund orderRefund = new OrderRefund(orderIdString, refundIdString, moneyAmount);
 orderRefund.setPaymentDetails("payment details");
 
 RefundStatus response = client.orderRefund(orderRefund);
@@ -506,27 +510,6 @@ boolean success = SbpUtil.checkNotificationSignature(amount,
                  	transactionDate,
                  	apiSignature,
                  	secretKey);
-~~~
-
-## Использование альтернативного HTTP-клиента
-
-По умолчанию для HTTP-запросов используется Apache (класс `ApacheClient`), но можно воспользоваться любым другим, реализовав интерфейс `WebClient`:
-
-~~~ java
-public interface WebClient extends Closeable {
-    Response request(String method, 
-			String url, 
-			Map<String, String> headers, 
-			String entity) throws IOException;
-}
-
-~~~
-
-Примеры использования:
-
-~~~ java
-CustomWebClient customClient = ...;
-SbpClient client = new SbpClient(SbpClient.PRODUCTION_URL, sbpMerchantId, secretKey, customClient); 
 ~~~
 
 ## Шпаргалка

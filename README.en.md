@@ -7,8 +7,11 @@
 - [Get payment info](#get-payment-info)
 - [Create refund for payment](#create-refund-for-payment)
 - [Get refund info](#get-refund-info)
+- [Create an order](#create-an-order)
+- [Receiving order info](#receiving-order-info)
+- [Order cancellation](#order-cancellation)
+- [Making a return order](#making-a-return-order)
 - [Notifications processing](#notifications-processing)
-- [Alternative http client usage](#alternative-http-client-usage)
 - [Annex](#annex)
 
 ## Connection
@@ -499,26 +502,6 @@ boolean success = SbpUtil.checkNotificationSignature(amount,
                  	transactionDate,
                  	apiSignature,
                  	secretKey);
-~~~
-
-## Alternative http client usage
-
-Apache http client (`ApacheClient` class) is used by default. To change the client you should implement `WebClient` interface:
-~~~ java
-public interface WebClient extends Closeable {
-    Response request(String method, 
-			String url, 
-			Map<String, String> headers, 
-			String entity) throws IOException;
-}
-
-~~~
-
-Usage example:
-
-~~~ java
-CustomWebClient customClient = ...;
-SbpClient client = new SbpClient(SbpClient.PRODUCTION_URL, sbpMerchantId, secretKey, customClient); 
 ~~~
 
 ## Annex
