@@ -118,7 +118,9 @@ public class SbpClient {
         delete(domain + ORDER_PATH, orderId.getOrderId(), secretKey);
     }
 
-    public RefundStatus orderRefund(final OrderRefund orderRefund, final String orderId, final String refundId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
+    public RefundStatus orderRefund(final OrderRefund orderRefund) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
+        String orderId = orderRefund.getOrderId();
+        String refundId = orderRefund.getRefundId();
         if (StringUtil.isBlank(orderId) || StringUtil.isBlank(refundId)) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }

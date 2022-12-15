@@ -435,18 +435,17 @@ OrderInfo response = client.orderCancellation(orderId);
 ~~~
 
 ## Making a return order
-1. It is necessary to create an object of the OrderRefund class, passing the refund amount in rubles in the constructor.
+1. It is necessary to create an object of the OrderRefund class, passing the order id, refund id, refund amount in rubles in the constructor.
 2. Call the `orderCancellation(OrderRefund, OrderRefundId)` method
 
 ~~~ java
 BigDecimal moneyAmount = new BigDecimal(150);
-OrderRefund orderRefund = new OrderRefund(moneyAmount);
-orderRefund.setPaymentDetails("payment details");
-
 String orderIdString = "...";
 String refundIdString ="...";
+OrderRefund orderRefund = new OrderRefund(orderIdString, refundIdString moneyAmount);
+orderRefund.setPaymentDetails("payment details");
 
-RefundStatus response = client.orderRefund(orderRefund, orderIdString, refundIdString);
+RefundStatus response = client.orderRefund(orderRefund);
 
 // place your code here
 ~~~

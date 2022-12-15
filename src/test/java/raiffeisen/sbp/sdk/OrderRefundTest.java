@@ -34,9 +34,9 @@ public class OrderRefundTest {
     @Test
     void OrderRefundSuccessTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String refundId = TestUtils.getRandomUUID();
-        OrderRefund orderRefund = new OrderRefund(AMOUNT);
+        OrderRefund orderRefund = new OrderRefund(orderInfo.getId(), refundId, AMOUNT);
 
-        RefundStatus response = TestUtils.CLIENT.orderRefund(orderRefund, orderInfo.getId(), refundId);
+        RefundStatus response = TestUtils.CLIENT.orderRefund(orderRefund);
 
         assertEquals(AMOUNT, response.getAmount());
         assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
@@ -46,8 +46,8 @@ public class OrderRefundTest {
     void refundInfoExceptionTest() {
         String refundId = TestUtils.getRandomUUID();
         String orderId = TestUtils.getRandomUUID();
-        OrderRefund orderRefund = new OrderRefund(AMOUNT);
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.orderRefund(orderRefund, orderId, refundId));
+        OrderRefund orderRefund = new OrderRefund(orderId, refundId, AMOUNT);
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.orderRefund(orderRefund));
         assertEquals(TestData.ORDER_REFUND_WHEN_DOES_NOT_EXIST, ex.getMessage());
     }
 }
