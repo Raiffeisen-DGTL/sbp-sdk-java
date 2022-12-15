@@ -12,7 +12,6 @@ import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.OrderRefund;
-import raiffeisen.sbp.sdk.model.out.OrderRefundId;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -35,10 +34,9 @@ public class OrderRefundTest {
     @Test
     void OrderRefundSuccessTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         String refundId = TestUtils.getRandomUUID();
-        OrderRefundId orderRefundId = new OrderRefundId(orderInfo.getId(), refundId);
         OrderRefund orderRefund = new OrderRefund(AMOUNT);
 
-        RefundStatus response = TestUtils.CLIENT.orderRefund(orderRefund, orderRefundId);
+        RefundStatus response = TestUtils.CLIENT.orderRefund(orderRefund, orderInfo.getId(), refundId);
 
         assertEquals(AMOUNT, response.getAmount());
         assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
@@ -48,9 +46,8 @@ public class OrderRefundTest {
     void refundInfoExceptionTest() {
         String refundId = TestUtils.getRandomUUID();
         String orderId = TestUtils.getRandomUUID();
-        OrderRefundId orderRefundId = new OrderRefundId(orderId, refundId);
         OrderRefund orderRefund = new OrderRefund(AMOUNT);
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.orderRefund(orderRefund, orderRefundId));
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.orderRefund(orderRefund, orderId, refundId));
         assertEquals(TestData.ORDER_REFUND_WHEN_DOES_NOT_EXIST, ex.getMessage());
     }
 }

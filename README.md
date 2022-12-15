@@ -443,9 +443,8 @@ OrderInfo response = client.orderCancellation(orderId);
 ~~~
 
 ## Оформление возврата по заказу
-1. Необходимо создать объект класса `OrderRefund`, передав в конструкторе сумму возврата в рублях. 
-2. Необходимо создать объект класса `OrderRefundId`, передав в конструкторе идентификатор заказа и идентификатор запроса на возврат.
-3. Вызвать метод `orderCancellation(OrderRefund, OrderRefundId)`
+1. Необходимо создать объект класса `OrderRefund`, передав в конструкторе сумму возврата в рублях.
+2. Вызвать метод `orderCancellation(OrderRefund, OrderRefundId)`
 
 ~~~ java
 BigDecimal moneyAmount = new BigDecimal(150);
@@ -455,9 +454,7 @@ orderRefund.setPaymentDetails("payment details");
 String orderIdString = "...";
 String refundIdString ="...";
 
-OrderRefundId orderRefundId = new OrderRefundId(orderIdString refundIdString);
-
-RefundStatus response = client.orderRefund(orderRefund, orderRefundId);
+RefundStatus response = client.orderRefund(orderRefund, orderIdString, refundIdString);
 
 // place your code here
 ~~~

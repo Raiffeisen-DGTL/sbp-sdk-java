@@ -15,7 +15,6 @@ import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.OrderId;
 import raiffeisen.sbp.sdk.model.out.OrderRefund;
-import raiffeisen.sbp.sdk.model.out.OrderRefundId;
 import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
@@ -119,9 +118,7 @@ public class SbpClient {
         delete(domain + ORDER_PATH, orderId.getOrderId(), secretKey);
     }
 
-    public RefundStatus orderRefund(final OrderRefund orderRefund, final OrderRefundId orderRefundId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
-        String orderId = orderRefundId.getOrderId();
-        String refundId = orderRefundId.getRefundId();
+    public RefundStatus orderRefund(final OrderRefund orderRefund, final String orderId, final String refundId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
         if (StringUtil.isBlank(orderId) || StringUtil.isBlank(refundId)) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
