@@ -37,7 +37,7 @@
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
     </dependencies>
 
@@ -50,9 +50,9 @@
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.5</version>
+                    <version>1.0.6</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.5.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.6.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -440,6 +440,35 @@ orderId = new OrderId(orderIdString);
 OrderInfo response = client.orderCancellation(orderId);
 
 // place your code here
+~~~
+
+## Оформление возврата по заказу
+1. Необходимо создать объект класса `OrderRefund`, передав в конструкторе сумму возврата в рублях. 
+2. Необходимо создать объект класса `OrderRefundId`, передав в конструкторе идентификатор заказа и идентификатор запроса на возврат.
+3. Вызвать метод `orderCancellation(OrderRefund, OrderRefundId)`
+
+~~~ java
+BigDecimal moneyAmount = new BigDecimal(150);
+OrderRefund orderRefund = new OrderRefund(moneyAmount);
+orderRefund.setPaymentDetails("payment details");
+
+String orderIdString = "...";
+String refundIdString ="...";
+
+OrderRefundId orderRefundId = new OrderRefundId(orderIdString refundIdString);
+
+RefundStatus response = client.orderRefund(orderRefund, orderRefundId);
+
+// place your code here
+~~~
+
+Ответ:
+
+~~~
+{
+  "amount": 150,
+  "refundStatus": "IN_PROGRESS"
+}
 ~~~
 
 ## Обработка уведомлений

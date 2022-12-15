@@ -14,6 +14,8 @@ import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
 import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.OrderId;
+import raiffeisen.sbp.sdk.model.out.OrderRefund;
+import raiffeisen.sbp.sdk.model.out.OrderRefundId;
 import raiffeisen.sbp.sdk.model.out.QR;
 import raiffeisen.sbp.sdk.model.out.QRId;
 import raiffeisen.sbp.sdk.model.out.RefundId;
@@ -38,6 +40,7 @@ public class SbpClient {
 
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
     private static final String ORDER_PATH = PropertiesLoader.ORDER_PATH;
+    private static final String ORDER_REFUND_PATH = PropertiesLoader.ORDER_REFUND_PATH;
 
     private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
@@ -116,6 +119,17 @@ public class SbpClient {
         delete(domain + ORDER_PATH, orderId.getOrderId(), secretKey);
     }
 
+    public RefundStatus orderRefund(final OrderRefund orderRefund, final OrderRefundId orderRefundId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
+        String orderId = orderRefundId.getOrderId();
+        String refundId = orderRefundId.getRefundId();
+        if (StringUtil.isBlank(orderId) || StringUtil.isBlank(refundId)) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        String url = String.format(domain + ORDER_REFUND_PATH, orderId, refundId);
+        ObjectNode jsonNode = mapper.valueToTree(orderRefund);
+        return post(url, jsonNode.toString(), secretKey, RefundStatus.class);
+    }
+
     private <T> T post(String url, String body, Class<T> resultClass)
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
         Response response = webClient.postRequest(url, getHeaders(), body);
@@ -130,14 +144,14 @@ public class SbpClient {
 
     private <T> T get(String url, final String pathParameter, final String secretKey, Class<T> resultClass)
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
-        url = url.replace("?", pathParameter);
+        url = String.format(url, pathParameter);
         Response response = webClient.getRequest(url, prepareHeaders(secretKey));
         return convert(response, resultClass);
     }
 
     private void delete(String url, final String pathParameter, final String secretKey)
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
-        url = url.replace("?", pathParameter);
+        url = String.format(url, pathParameter);
         Response response = webClient.deleteRequest(url, prepareHeaders(secretKey));
         convert(response, null);
     }
