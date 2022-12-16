@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
-public class CreateNfcLinkTest {
+public class BindNfcLinkTest {
 
     @Test
     void createNfcLinkWithExceptionTest() {
         NFC nfc = new NFC(TestUtils.getRandomUUID());
 
-        String randomRefundId = TestUtils.getRandomUUID();
+        String qrId = nfc.getQrId();
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.bindNfcLink(nfc));
-        assertEquals(String.format(String.format(TestData.QR_DRAFT_DOES_NOT_REGISTERED, nfc.getQrId()), randomRefundId), ex.getMessage());
+        assertEquals(String.format(String.format(TestData.QR_DRAFT_DOES_NOT_REGISTERED, qrId), qrId), ex.getMessage());
     }
 }
