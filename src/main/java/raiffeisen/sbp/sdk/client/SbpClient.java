@@ -12,6 +12,7 @@ import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
+import raiffeisen.sbp.sdk.model.out.NFC;
 import raiffeisen.sbp.sdk.model.out.Order;
 import raiffeisen.sbp.sdk.model.out.OrderId;
 import raiffeisen.sbp.sdk.model.out.OrderRefund;
@@ -40,6 +41,7 @@ public class SbpClient {
     private static final String CREATE_ORDER_PATH = PropertiesLoader.CREATE_ORDER_PATH;
     private static final String ORDER_PATH = PropertiesLoader.ORDER_PATH;
     private static final String ORDER_REFUND_PATH = PropertiesLoader.ORDER_REFUND_PATH;
+    private static final String NFC_PATH = PropertiesLoader.NFC_PATH;
 
     private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
@@ -140,6 +142,16 @@ public class SbpClient {
         }
         String url = String.format(domain + ORDER_REFUND_PATH, orderId, refundId);
         return get(url, secretKey, RefundStatus.class);
+    }
+
+    public QRUrl createNfcLink(final NFC nfc) throws ContractViolationException, IOException, SbpException, URISyntaxException, InterruptedException {
+        String qrId = nfc.getQrId();
+        if (StringUtil.isBlank(qrId)) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        String body = mapper.writeValueAsString(nfc);
+        String url = String.format(domain + NFC_PATH, qrId);
+        return post(url, body, secretKey, QRUrl.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)

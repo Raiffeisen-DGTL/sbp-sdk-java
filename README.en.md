@@ -12,6 +12,7 @@
 - [Order cancellation](#order-cancellation)
 - [Making an order refund](#making-an-order-refund)
 - [Getting order refund status](#getting-order-refund-status)
+- [Linking an NFC tag](#linking-an-nfc-tag)
 - [Notifications processing](#notifications-processing)
 - [Annex](#annex)
 
@@ -35,7 +36,7 @@ Please do the following to connect SDK:
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.8</version>
         </dependency>
     </dependencies>
 
@@ -48,9 +49,9 @@ Please do the following to connect SDK:
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.7</version>
+                    <version>1.0.8</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.7.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.8.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -481,6 +482,40 @@ Response:
 {
   "amount": 150,
   "refundStatus": "IN_PROGRESS"
+}
+~~~
+
+## Linking an NFC tag
+It is necessary to call the `createNfcLink` method passing the NFC class `createNfcLink(NFC)` as parameters
+
+NFC:
+- qrID - required param
+- account
+- redirectUrl
+
+~~~ java
+String qrId = "...";
+
+NFC nfc = new NFC(qrId);
+
+nfc.setRedirectUrl("string");
+nfc.setAccount("string");
+
+QRUrl response = client.createNfcLink(NFC);
+
+// place your code here
+~~~
+
+Response:
+
+~~~
+{
+"qrId": "string",
+"qrStatus": "INACTIVE",
+"qrExpirationDate": "string",
+"payload": "string",
+"qrUrl": "string",
+"subscriptionId": "string"
 }
 ~~~
 
