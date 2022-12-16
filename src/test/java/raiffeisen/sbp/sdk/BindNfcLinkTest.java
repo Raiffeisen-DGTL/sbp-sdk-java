@@ -15,10 +15,10 @@ public class BindNfcLinkTest {
 
     @Test
     void createNfcLinkWithExceptionTest() {
-        NFC nfc = new NFC(TestUtils.getRandomUUID());
+        String qrId = TestUtils.getRandomUUID();
+        NFC nfc = new NFC(qrId);
 
-        String qrId = nfc.getQrId();
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.bindNfcLink(nfc));
-        assertEquals(String.format(String.format(TestData.QR_DRAFT_DOES_NOT_REGISTERED, qrId), qrId), ex.getMessage());
+        assertEquals(String.format(TestData.QR_DRAFT_DOES_NOT_REGISTERED, qrId), ex.getMessage());
     }
 }
