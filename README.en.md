@@ -501,7 +501,7 @@ NFC nfc = new NFC(qrId);
 nfc.setRedirectUrl("string");
 nfc.setAccount("string");
 
-QRUrl response = client.createNfcLink(NFC);
+NFCInfo response = client.createNfcLink(NFC);
 
 // place your code here
 ~~~

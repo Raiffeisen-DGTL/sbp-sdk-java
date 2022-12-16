@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
+import raiffeisen.sbp.sdk.model.in.NFCInfo;
 import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.in.PaymentInfo;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
@@ -144,14 +145,14 @@ public class SbpClient {
         return get(url, secretKey, RefundStatus.class);
     }
 
-    public QRUrl createNfcLink(final NFC nfc) throws ContractViolationException, IOException, SbpException, URISyntaxException, InterruptedException {
+    public NFCInfo bindNfcLink(final NFC nfc) throws ContractViolationException, IOException, SbpException, URISyntaxException, InterruptedException {
         String qrId = nfc.getQrId();
         if (StringUtil.isBlank(qrId)) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
         String body = mapper.writeValueAsString(nfc);
         String url = String.format(domain + NFC_PATH, qrId);
-        return post(url, body, secretKey, QRUrl.class);
+        return post(url, body, secretKey, NFCInfo.class);
     }
 
     private <T> T post(String url, String body, Class<T> resultClass)
