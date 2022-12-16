@@ -4,14 +4,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.data.TestUtils;
-import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
-import raiffeisen.sbp.sdk.model.in.QRUrl;
 import raiffeisen.sbp.sdk.model.out.NFC;
-import raiffeisen.sbp.sdk.model.out.QRVariable;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CreateNfcLinkTest {
 
     @Test
-    void createNfcLinkWithExceptionTest() throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
+    void createNfcLinkWithExceptionTest() {
         NFC nfc = new NFC(TestUtils.getRandomUUID());
 
         String randomRefundId = TestUtils.getRandomUUID();
