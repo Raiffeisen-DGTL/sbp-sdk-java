@@ -21,14 +21,10 @@ public class CreateNfcLinkTest {
 
     @Test
     void createNfcLinkWithExceptionTest() throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
-        QRVariable qrVariable = new QRVariable();
-        QRUrl qrUrl = TestUtils.CLIENT.registerQR(qrVariable);
-        String qrId = qrUrl.getQrId();
-
-        NFC nfc = new NFC(qrId);
+        NFC nfc = new NFC(TestUtils.getRandomUUID());
 
         String randomRefundId = TestUtils.getRandomUUID();
         SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.bindNfcLink(nfc));
-        assertEquals(String.format(String.format(TestData.QR_DRAFT_DOES_NOT_REGISTERED, qrId), randomRefundId), ex.getMessage());
+        assertEquals(String.format(String.format(TestData.QR_DRAFT_DOES_NOT_REGISTERED, nfc.getQrId()), randomRefundId), ex.getMessage());
     }
 }
