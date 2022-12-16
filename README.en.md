@@ -10,7 +10,8 @@
 - [Create an order](#create-an-order)
 - [Receiving order info](#receiving-order-info)
 - [Order cancellation](#order-cancellation)
-- [Making a return order](#making-a-return-order)
+- [Making an order refund](#making-an-order-refund)
+- [Getting order refund status](#getting-order-refund-status)
 - [Notifications processing](#notifications-processing)
 - [Annex](#annex)
 
@@ -34,7 +35,7 @@ Please do the following to connect SDK:
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
     </dependencies>
 
@@ -47,9 +48,9 @@ Please do the following to connect SDK:
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.6</version>
+                    <version>1.0.7</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.6.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.7.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -437,9 +438,9 @@ OrderInfo response = client.orderCancellation(orderId);
 // place your code here
 ~~~
 
-## Making a return order
+## Making an order refund
 1. It is necessary to create an object of the OrderRefund class, passing the order id, refund id, refund amount in rubles in the constructor.
-2. Call the `orderCancellation(OrderRefund, OrderRefundId)` method
+2. Call the `orderRefund(OrderRefund)` method
 
 ~~~ java
 BigDecimal moneyAmount = new BigDecimal(150);
@@ -449,6 +450,27 @@ OrderRefund orderRefund = new OrderRefund(orderIdString, refundIdString moneyAmo
 orderRefund.setPaymentDetails("payment details");
 
 RefundStatus response = client.orderRefund(orderRefund);
+
+// place your code here
+~~~
+
+Response:
+
+~~~
+{
+  "amount": 150,
+  "refundStatus": "IN_PROGRESS"
+}
+~~~
+
+## Getting order refund status
+It is necessary to call the `orderRefundStatus` method passing in the parameters a unique order id and a unique id of the return request`orderRefundStatus(OrderRefund, OrderRefundId)`
+
+~~~ java
+String orderIdString = "...";
+String refundIdString ="...";
+
+RefundStatus response = client.orderRefundStatus(orderIdString, refundIdString);
 
 // place your code here
 ~~~

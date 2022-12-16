@@ -82,21 +82,25 @@ public class SbpClient {
         if (StringUtil.isBlank(id.getQrId())) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
-        return get(domain + QR_INFO_PATH, id.getQrId(), secretKey, QRUrl.class);
+        String url = String.format(domain + QR_INFO_PATH, id.getQrId());
+        return get(url, secretKey, QRUrl.class);
+
     }
 
     public PaymentInfo getPaymentInfo(final QRId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         if (StringUtil.isBlank(id.getQrId())) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
-        return get(domain + PAYMENT_INFO_PATH, id.getQrId(), secretKey, PaymentInfo.class);
+        String url = String.format(domain + PAYMENT_INFO_PATH, id.getQrId());
+        return get(url, secretKey, PaymentInfo.class);
     }
 
     public RefundStatus getRefundInfo(final RefundId id) throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
         if (StringUtil.isBlank(id.getRefundId())) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
-        return get(domain + REFUND_INFO_PATH, id.getRefundId(), secretKey, RefundStatus.class);
+        String url = String.format(domain + REFUND_INFO_PATH, id.getRefundId());
+        return get(url, secretKey, RefundStatus.class);
     }
 
     public OrderInfo createOrder(final Order order) throws SbpException, IOException, ContractViolationException, URISyntaxException, InterruptedException {
@@ -108,7 +112,8 @@ public class SbpClient {
         if (StringUtil.isBlank(id.getOrderId())) {
             throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
         }
-        return get(domain + ORDER_PATH, id.getOrderId(), secretKey, OrderInfo.class);
+        String url = String.format(domain + ORDER_PATH, id.getOrderId());
+        return get(url, secretKey, OrderInfo.class);
     }
 
     public void orderCancellation(final OrderId orderId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
@@ -129,6 +134,14 @@ public class SbpClient {
         return post(url, body, secretKey, RefundStatus.class);
     }
 
+    public RefundStatus orderRefundStatus(final String orderId, final String refundId) throws ContractViolationException, SbpException, IOException, URISyntaxException, InterruptedException {
+        if (StringUtil.isBlank(orderId) || StringUtil.isBlank(refundId)) {
+            throw new ContractViolationException(400, ERROR_REQUIRED_PARAM_MISSING);
+        }
+        String url = String.format(domain + ORDER_REFUND_PATH, orderId, refundId);
+        return get(url, secretKey, RefundStatus.class);
+    }
+
     private <T> T post(String url, String body, Class<T> resultClass)
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
         Response response = webClient.postRequest(url, getHeaders(), body);
@@ -141,9 +154,8 @@ public class SbpClient {
         return convert(response, resultClass);
     }
 
-    private <T> T get(String url, final String pathParameter, final String secretKey, Class<T> resultClass)
+    private <T> T get(String url, final String secretKey, Class<T> resultClass)
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
-        url = String.format(url, pathParameter);
         Response response = webClient.getRequest(url, prepareHeaders(secretKey));
         return convert(response, resultClass);
     }

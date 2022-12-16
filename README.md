@@ -12,6 +12,7 @@
 - [Создание заказа](#создание-заказа)
 - [Получение данных по заказу](#получение-данных-по-заказу)
 - [Оформление возврата по заказу](#оформление-возврата-по-заказу)
+- [Получение статуса возврата заказа](#получение-статуса-возврата-заказа)
 - [Отмена заказа](#Отмена-заказа)
 - 
 - [Обработка уведомлений](#обработка-уведомлений)
@@ -41,7 +42,7 @@
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
     </dependencies>
 
@@ -54,9 +55,9 @@
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.6</version>
+                    <version>1.0.7</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.6.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.7.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -448,7 +449,7 @@ OrderInfo response = client.orderCancellation(orderId);
 
 ## Оформление возврата по заказу
 1. Необходимо создать объект класса `OrderRefund`, передав в конструкторе уникальный id заказа, уникальный id запроса на возврат, сумму возврата в рублях.
-2. Вызвать метод `orderCancellation(OrderRefund, OrderRefundId)`
+2. Вызвать метод `orderRefund(OrderRefund)`
 
 ~~~ java
 BigDecimal moneyAmount = new BigDecimal(150);
@@ -458,6 +459,27 @@ OrderRefund orderRefund = new OrderRefund(orderIdString, refundIdString, moneyAm
 orderRefund.setPaymentDetails("payment details");
 
 RefundStatus response = client.orderRefund(orderRefund);
+
+// place your code here
+~~~
+
+Ответ:
+
+~~~
+{
+  "amount": 150,
+  "refundStatus": "IN_PROGRESS"
+}
+~~~
+
+## Получение статуса возврата заказа
+Необходимо Вызвать метод `orderRefundStatus` передав в параметры уникальный id заказа и уникальный id запроса на возврат`orderRefundStatus(OrderRefund, OrderRefundId)`
+
+~~~ java
+String orderIdString = "...";
+String refundIdString ="...";
+
+RefundStatus response = client.orderRefundStatus(orderIdString, refundIdString);
 
 // place your code here
 ~~~
