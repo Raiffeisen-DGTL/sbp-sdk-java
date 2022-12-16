@@ -473,7 +473,7 @@ RefundStatus response = client.orderRefund(orderRefund);
 ~~~
 
 ## Получение статуса возврата заказа
-Необходимо Вызвать метод `orderRefundStatus` передав в параметры уникальный id заказа и уникальный id запроса на возврат`orderRefundStatus(OrderRefund, OrderRefundId)`
+Необходимо Вызвать метод `orderRefundStatus` передав в параметры уникальный id заказа и уникальный id запроса на возврат`orderRefundStatus(orderId, refundId)`
 
 ~~~ java
 String orderIdString = "...";

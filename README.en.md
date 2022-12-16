@@ -464,7 +464,7 @@ Response:
 ~~~
 
 ## Getting order refund status
-It is necessary to call the `orderRefundStatus` method passing in the parameters a unique order id and a unique id of the return request`orderRefundStatus(OrderRefund, OrderRefundId)`
+It is necessary to call the `orderRefundStatus` method passing in the parameters a unique order id and a unique id of the return request`orderRefundStatus(orderId, refundId)`
 
 ~~~ java
 String orderIdString = "...";
