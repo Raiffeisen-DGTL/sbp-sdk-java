@@ -71,7 +71,6 @@ public final class TestData {
                     "\"message\":\"No message available\"," +
                     "\"path\":\"/sbp/v1/qr/register1\"}";
     public static final Response UNSUPPORTED_RESPONSE3 = new Response(UNSUPPORTED_RESPONSE3_HTTPCODE, UNSUPPORTED_RESPONSE3_MESSAGE);
-    public static final String NULL_BODY = null;
     public static final String REFUND_PAYMENT = "{\"amount\":10," +
             "\"order\":\"123-123\"," +
             "\"refundId\":\"12345\"," +
@@ -103,27 +102,23 @@ public final class TestData {
     public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Не передан обязательный параметр";
     public static final String QR_CODE_NOT_FOUND_ERROR_CODE = "ERROR.NOT_FOUND";
     public static final String QR_CODE_NOT_FOUND_ERROR_MESSAGE = "QR-код не найден у данного партнера";
+    public static final String REFUND_NOT_FOUND_ERROR_MESSAGE = "Возврат с refundId %s не найден";
     public static final String ORDER_NOT_FOUND_ERROR_CODE = "ORDER_NOT_FOUND";
     public static final String ORDER_HAS_FINAL_STATUS_CODE = "ORDER_HAS_FINAL_STATUS";
     public static final String ORDER_NOT_FOUND_ERROR_MESSAGE = "Заказ с идентификатором %s не найден у данного партнера";
     public static final String ORDER_HAS_FINAL_STATUS_MESSAGE = "Заказ с идентификатором %s имеет статус PAID";
     public static final String ORDER_HAS_CANCELLED_STATUS_MESSAGE = "Заказ с идентификатором %s имеет статус CANCELLED";
+    public static final String ORDER_REFUND_WHEN_DOES_NOT_EXIST = "Счет не найден у данного партнера";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
     public static final String TEST_REFUND_ID = "123";
     public static final String TEST_QR_ID = "123";
     public static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
-    public static final String QR_INFO_PATH = PropertiesLoader.QR_INFO_PATH.replace("?", TEST_QR_ID);
-    public static final String PAYMENT_INFO_PATH = PropertiesLoader.PAYMENT_INFO_PATH.replace("?", TEST_QR_ID);
+    public static final String QR_INFO_PATH = String.format(PropertiesLoader.QR_INFO_PATH, TEST_QR_ID);
+    public static final String PAYMENT_INFO_PATH = String.format(PropertiesLoader.PAYMENT_INFO_PATH, TEST_QR_ID);
     public static final String REFUND_PATH = PropertiesLoader.REFUND_PATH;
-    public static final String REFUND_INFO_PATH = PropertiesLoader.REFUND_INFO_PATH.replace("?", TEST_REFUND_ID);
+    public static final String REFUND_INFO_PATH = String.format(PropertiesLoader.REFUND_INFO_PATH, TEST_REFUND_ID);
     public static final Map<String, String> MAP_HEADERS = Map.of("content-type", "application/json",
             "charset", "UTF-8");
     public static final String RESPONSE_BODY = "{\"code\",\"SUCCESS\"}";
-
-    public static String getNotFoundRefundError(String refundId) {
-        String st = "Возврат с refundId %s не найден";
-        return String.format(st, refundId);
-    }
-
 }

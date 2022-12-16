@@ -19,6 +19,7 @@ public class PropertiesLoader {
     public static final String REFUND_INFO_PATH;
     public static final String CREATE_ORDER_PATH;
     public static final String ORDER_PATH;
+    public static final String ORDER_REFUND_PATH;
 
     static {
         Properties properties = new Properties();
@@ -34,11 +35,12 @@ public class PropertiesLoader {
         PRODUCTION_URL = properties.getProperty("domain.production", "https://pay.raif.ru");
 
         REGISTER_PATH = properties.getProperty("path.register.qr", "/api/sbp/v2/qrs");
-        QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v2/qrs/?");
-        PAYMENT_INFO_PATH = properties.getProperty("path.payment.info", "/api/sbp/v1/qr/?/payment-info");
+        QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v2/qrs/%s");
+        PAYMENT_INFO_PATH = properties.getProperty("path.payment.info", "/api/sbp/v1/qr/%s/payment-info");
         REFUND_PATH = properties.getProperty("path.refund", "/api/sbp/v1/refund");
-        REFUND_INFO_PATH = properties.getProperty("path.refund.info", "/api/sbp/v1/refund/?");
+        REFUND_INFO_PATH = properties.getProperty("path.refund.info", "/api/sbp/v1/refund/%s");
         CREATE_ORDER_PATH = properties.getProperty("path.create.order", "/api/payment/v1/orders");
-        ORDER_PATH = properties.getProperty("path.order", "/api/payment/v1/orders/?");
+        ORDER_PATH = properties.getProperty("path.order", "/api/payment/v1/orders/%s");
+        ORDER_REFUND_PATH = properties.getProperty("path.order.refund", "/api/payments/v1/orders/%s/refunds/%s");
     }
 }

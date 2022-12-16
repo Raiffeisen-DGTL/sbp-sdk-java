@@ -9,8 +9,9 @@ import raiffeisen.sbp.sdk.data.TestData;
 import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
+import raiffeisen.sbp.sdk.model.in.OrderInfo;
 import raiffeisen.sbp.sdk.model.in.RefundStatus;
-import raiffeisen.sbp.sdk.model.out.RefundId;
+import raiffeisen.sbp.sdk.model.out.OrderRefund;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -20,22 +21,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
-class RefundInfoTest {
-
+public class OrderRefundTest {
     private static final BigDecimal AMOUNT = new BigDecimal(100);
-    private static RefundId refundId;
+    private static OrderInfo orderInfo;
 
     @BeforeAll
     @Timeout(15)
     static void setup() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        long transactionId = TestUtils.initStaticQR().getTransactionId();
-        String id = TestUtils.refundPayment(AMOUNT, transactionId);
-        refundId = new RefundId(id);
+        orderInfo = TestUtils.initOrderWithQrVariable();
     }
 
     @Test
-    void refundInfoTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
-        RefundStatus response = TestUtils.CLIENT.getRefundInfo(refundId);
+    void OrderRefundSuccessTest() throws SbpException, ContractViolationException, IOException, URISyntaxException, InterruptedException {
+        String refundId = TestUtils.getRandomUUID();
+        OrderRefund orderRefund = new OrderRefund(orderInfo.getId(), refundId, AMOUNT);
+
+        RefundStatus response = TestUtils.CLIENT.orderRefund(orderRefund);
 
         assertEquals(AMOUNT, response.getAmount());
         assertEquals(StatusCodes.IN_PROGRESS.getMessage(), response.getRefundStatus());
@@ -43,8 +44,10 @@ class RefundInfoTest {
 
     @Test
     void refundInfoExceptionTest() {
-        RefundId randomRefundId = new RefundId(TestUtils.getRandomUUID());
-        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.getRefundInfo(randomRefundId));
-        assertEquals(String.format(TestData.REFUND_NOT_FOUND_ERROR_MESSAGE, randomRefundId.getRefundId()), ex.getMessage());
+        String refundId = TestUtils.getRandomUUID();
+        String orderId = TestUtils.getRandomUUID();
+        OrderRefund orderRefund = new OrderRefund(orderId, refundId, AMOUNT);
+        SbpException ex = assertThrows(SbpException.class, () -> TestUtils.CLIENT.orderRefund(orderRefund));
+        assertEquals(TestData.ORDER_REFUND_WHEN_DOES_NOT_EXIST, ex.getMessage());
     }
 }

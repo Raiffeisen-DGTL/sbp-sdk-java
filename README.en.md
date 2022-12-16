@@ -7,8 +7,11 @@
 - [Get payment info](#get-payment-info)
 - [Create refund for payment](#create-refund-for-payment)
 - [Get refund info](#get-refund-info)
+- [Create an order](#create-an-order)
+- [Receiving order info](#receiving-order-info)
+- [Order cancellation](#order-cancellation)
+- [Making a return order](#making-a-return-order)
 - [Notifications processing](#notifications-processing)
-- [Alternative http client usage](#alternative-http-client-usage)
 - [Annex](#annex)
 
 ## Connection
@@ -31,7 +34,7 @@ Please do the following to connect SDK:
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
     </dependencies>
 
@@ -44,9 +47,9 @@ Please do the following to connect SDK:
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.5</version>
+                    <version>1.0.6</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.5.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.6.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -434,6 +437,31 @@ OrderInfo response = client.orderCancellation(orderId);
 // place your code here
 ~~~
 
+## Making a return order
+1. It is necessary to create an object of the OrderRefund class, passing the order id, refund id, refund amount in rubles in the constructor.
+2. Call the `orderCancellation(OrderRefund, OrderRefundId)` method
+
+~~~ java
+BigDecimal moneyAmount = new BigDecimal(150);
+String orderIdString = "...";
+String refundIdString ="...";
+OrderRefund orderRefund = new OrderRefund(orderIdString, refundIdString moneyAmount);
+orderRefund.setPaymentDetails("payment details");
+
+RefundStatus response = client.orderRefund(orderRefund);
+
+// place your code here
+~~~
+
+Response:
+
+~~~
+{
+  "amount": 150,
+  "refundStatus": "IN_PROGRESS"
+}
+~~~
+
 ## Notifications processing
 
 The `PaymentNotification` class is used for operating notifications. 
@@ -474,26 +502,6 @@ boolean success = SbpUtil.checkNotificationSignature(amount,
                  	transactionDate,
                  	apiSignature,
                  	secretKey);
-~~~
-
-## Alternative http client usage
-
-Apache http client (`ApacheClient` class) is used by default. To change the client you should implement `WebClient` interface:
-~~~ java
-public interface WebClient extends Closeable {
-    Response request(String method, 
-			String url, 
-			Map<String, String> headers, 
-			String entity) throws IOException;
-}
-
-~~~
-
-Usage example:
-
-~~~ java
-CustomWebClient customClient = ...;
-SbpClient client = new SbpClient(SbpClient.PRODUCTION_URL, sbpMerchantId, secretKey, customClient); 
 ~~~
 
 ## Annex
