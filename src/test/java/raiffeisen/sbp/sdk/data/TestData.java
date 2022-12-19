@@ -111,6 +111,7 @@ public final class TestData {
     public static final String ORDER_REFUND_WHEN_DOES_NOT_EXIST = "Счет не найден у данного партнера";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_CODE = "ERROR.DYNAMIC_QR_WITHOUT_AMOUNT";
     public static final String QR_DYNAMIC_CODE_WITHOUT_AMOUNT_ERROR_MESSAGE = "Не передана сумма для динамического QR-кода";
+    public static final String QR_DRAFT_DOES_NOT_REGISTERED = "QR-draft с qrId: %s не зарегистрирован";
     public static final String TEST_REFUND_ID = "123";
     public static final String TEST_QR_ID = "123";
     public static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;

@@ -13,8 +13,8 @@
 - [Получение данных по заказу](#получение-данных-по-заказу)
 - [Оформление возврата по заказу](#оформление-возврата-по-заказу)
 - [Получение статуса возврата заказа](#получение-статуса-возврата-заказа)
-- [Отмена заказа](#Отмена-заказа)
-- 
+- [Отмена заказа](#отмена-заказа)
+- [Привязка NFC-метки](#привязка-nfc-метки)
 - [Обработка уведомлений](#обработка-уведомлений)
 - [Шпаргалка](#шпаргалка)
 
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>raiffeisen</groupId>
             <artifactId>sbp-sdk-java</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.8</version>
         </dependency>
     </dependencies>
 
@@ -55,9 +55,9 @@
                 <configuration>
                     <groupId>raiffeisen</groupId>
                     <artifactId>sbp-sdk-java</artifactId>
-                    <version>1.0.7</version>
+                    <version>1.0.8</version>
                     <packaging>jar</packaging>
-                    <file>dependencies/sbp-sdk-java-1.0.7.jar</file>
+                    <file>dependencies/sbp-sdk-java-1.0.8.jar</file>
                     <generatePom>false</generatePom>
                     <pomFile>dependencies/pom.xml</pomFile>
                 </configuration>
@@ -490,6 +490,40 @@ RefundStatus response = client.orderRefundStatus(orderIdString, refundIdString);
 {
   "amount": 150,
   "refundStatus": "IN_PROGRESS"
+}
+~~~
+
+## Привязка NFC-метки
+Необходимо Вызвать метод `createNfcLink` передав в параметры класс NFC `createNfcLink(NFC)`
+
+NFC:
+- qrID - обязательный параметр
+- account 
+- redirectUrl
+
+~~~ java
+String qrId = "...";
+
+NFC nfc = new NFC(qrId);
+
+nfc.setRedirectUrl("string");
+nfc.setAccount("string");
+
+NFCInfo response = client.createNfcLink(NFC);
+
+// place your code here
+~~~
+
+Ответ:
+
+~~~
+{
+"qrId": "string",
+"qrStatus": "INACTIVE",
+"qrExpirationDate": "string",
+"payload": "string",
+"qrUrl": "string",
+"subscriptionId": "string"
 }
 ~~~
 
