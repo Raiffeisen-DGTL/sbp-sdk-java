@@ -29,6 +29,7 @@ public abstract class QR {
     protected String createDate;
     protected String paymentDetails;
     protected String qrExpirationDate;
+    protected String qrDescription;
 
     public abstract QR newInstance();
 
@@ -46,6 +47,10 @@ public abstract class QR {
 
     public void setQrExpirationDate(String time) {
         qrExpirationDate = time;
+    }
+
+    public void setQrDescription(String qrDescription) {
+        this.qrDescription = qrDescription;
     }
 
     public void verify() {

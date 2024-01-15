@@ -23,6 +23,7 @@ public final class QRStatic extends QR {
         qrStatic.setCreateDate(createDate);
         qrStatic.setPaymentDetails(paymentDetails);
         qrStatic.setQrExpirationDate(qrExpirationDate);
+        qrStatic.setQrDescription(qrDescription);
         return qrStatic;
     }
 }
