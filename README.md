@@ -115,6 +115,7 @@ public class AppExample {
             qrCode.setAdditionalInfo("Доп информация");
             qrCode.setPaymentDetails("Назначение платежа");
             qrCode.setQrExpirationDate(ZonedDateTime.now().plusDays(1));
+            qrCode.setDescription("Наименование платежа");
             QRUrl response = client.registerQR(qrCode);
             response.getQrId();
             response.getOrUrl();
@@ -157,6 +158,7 @@ qrCode.setAccount("40700000000000000000");
 qrCode.setAdditionalInfo("Доп информация");
 qrCode.setPaymentDetails("Назначение платежа");
 qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
+qrCode.setDescription("Наименование платежа");
 
 QRUrl response = client.registerQR(qrCode);
 
