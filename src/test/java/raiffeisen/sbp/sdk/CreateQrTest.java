@@ -59,7 +59,8 @@ class CreateQrTest {
         qrStatic.setAdditionalInfo("Доп информация");
         qrStatic.setAmount(new BigDecimal(1110));
         qrStatic.setPaymentDetails("Назначение платежа");
-        qrStatic.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
+        qrStatic.setQrExpirationDate("2025-07-22T09:14:38.107227+03:00");
+        qrStatic.setQrDescription("Наименование платежа");
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
         assertNotNull(response.getQrId());
