@@ -20,6 +20,7 @@ public final class QRDynamic extends QR {
         qrStatic.setCreateDate(createDate);
         qrStatic.setPaymentDetails(paymentDetails);
         qrStatic.setQrExpirationDate(qrExpirationDate);
+        qrStatic.setQrDescription(qrDescription);
         return qrStatic;
     }
 }

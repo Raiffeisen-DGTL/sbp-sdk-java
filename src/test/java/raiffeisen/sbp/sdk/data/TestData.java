@@ -99,7 +99,7 @@ public final class TestData {
             "\"sbpMerchantId\":\"MA341037\"" +
             "}";
     public static final String MISSING_REFUND_ID_ERROR_CODE = "ERROR.INVALID_REQUEST";
-    public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Не передан обязательный параметр";
+    public static final String MISSING_REFUND_ID_ERROR_MESSAGE = "Поле refundId Не передан обязательный параметр";
     public static final String QR_CODE_NOT_FOUND_ERROR_CODE = "ERROR.NOT_FOUND";
     public static final String QR_CODE_NOT_FOUND_ERROR_MESSAGE = "QR-код не найден у данного партнера";
     public static final String REFUND_NOT_FOUND_ERROR_MESSAGE = "Возврат с refundId %s не найден";
