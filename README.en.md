@@ -3,6 +3,7 @@
 - [Connection](#connection)
 - [Usage](#usage)
 - [QR code registration](#qr-code-registration)
+- [QR code registration with subscription](#subscription-for-payment)
 - [Get info for registered QR code](#get-info-for-qr-code-registered)
 - [Get payment info](#get-payment-info)
 - [Create refund for payment](#create-refund-for-payment)
@@ -111,6 +112,7 @@ public class AppExample {
             qrCode.setAdditionalInfo("Additional info");
             qrCode.setPaymentDetails("Payment details");
             qrCode.setQrExpirationDate(ZonedDateTime.now().plusDays(1));
+            qrCode.setQrDescription("QR code description");
             QRUrl response = client.registerQR(qrCode);
             response.getQrId();
             response.getOrUrl();
@@ -152,6 +154,7 @@ qrCode.setAccount("40700000000000000000");
 qrCode.setAdditionalInfo("Additional info");
 qrCode.setPaymentDetails("Payment details");
 qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
+qrCode.setQRDescription("QR code description");
 
 QRUrl response = client.registerQR(qrCode);
 
@@ -203,6 +206,72 @@ qrStatic.setQrExpirationDate("+5m"); // + 5 minutes
 QRDynamic qrDynamic = new QRDynamic(order, new BigDecimal(100));
 qrDynamic.setQrExpirationDate("+1d5m"); // + 1 day 5 minutes
 ~~~
+
+There is also an option to pass a field with a link for automatically returning the payer from the bank's application to the store's application or website.
+For this, the redirectUrl field should contain https:// for web pages or a unique scheme for the mobile application.
+
+Example:
+
+~~~ java
+String order = QRUtil.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
+QRStatic qrStatic = new QRStatic(order);
+qrStatic.redirectUrl("https://site_shop/about_payment");
+~~~
+
+There is also an option to pass a set of fields as key, value pairs by placing the values in the extra field.
+
+Example:
+
+~~~ java
+String order = QRUtil.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
+QRStatic qrStatic = new QRStatic(order);
+
+Extra extra = new Extra();
+extra.put("extraParam1", "Example of extra parameter 1");
+extra.put("extraParam2", "Example of extra parameter 2");
+qrStatic.setExtra(extra);
+~~~
+
+### Subscription for Payment
+
+There is also an option for the dynamic QR code type `QRDynamic` to pass a parameter for enabling a payment subscription by filling in the `subscription` field.
+The `subscriptionPurpose` field is mandatory and should contain a description of the subscription that the client will see in the bank's application.
+The `subscription` object includes an `extra` field that contains additional fields for free-form `key-value` pairs,
+as well as an `autoCharge` field that holds the `AutoCharge` class, whose fields are mandatory.
+If the `autoCharge` object is passed, the `extra` field of the `Subscription` class must include a key that will be returned in the callback notification body.
+This will allow you to correlate the subscription and its automatic payments.
+
+Example:
+
+~~~ java
+String order = QRUtil.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
+QRDynamic qrDynamic = new QRDynamic(order, new BigDecimal(100));
+Extra extra = new Extra();
+extra.put("extraParam1", "Example of extra parameter 1");
+extra.put("extraParam2", "Example of extra parameter 2");
+qrDynamic.setExtra(extra);
+qrDynamic.setRedirectUrl("https://cool-company.zone/paid");
+Subscription subscription = new Subscription("Service subscription");
+subscription.setId(TestUtils.getRandomUUID());
+AutoCharge autoCharge = new AutoCharge();
+autoCharge.setFrequency("MONTHLY");
+autoCharge.setAmount(new BigDecimal(100));
+autoCharge.setFirstChargeDate(LocalDate.now().plusDays(7));
+subscription.setAutoCharge(autoCharge);
+subscription.setExtra((Extra) new Extra().put("key1", "value1"));
+qrDynamic.setSubscription(subscription);
+~~~
+
+
 
 ## Get info for QR code registered
 

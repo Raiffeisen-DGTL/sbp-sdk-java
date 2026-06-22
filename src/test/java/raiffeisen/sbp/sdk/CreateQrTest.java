@@ -25,16 +25,24 @@ import raiffeisen.sbp.sdk.data.TestUtils;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.in.QRUrl;
+import raiffeisen.sbp.sdk.model.out.AutoCharge;
+import raiffeisen.sbp.sdk.model.out.Extra;
 import raiffeisen.sbp.sdk.model.out.QRDynamic;
 import raiffeisen.sbp.sdk.model.out.QRStatic;
 import raiffeisen.sbp.sdk.model.out.QRVariable;
+import raiffeisen.sbp.sdk.model.out.Subscription;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("integration")
 class CreateQrTest {
@@ -78,12 +86,41 @@ class CreateQrTest {
         qrStatic.setAdditionalInfo("Доп информация");
         qrStatic.setAmount(new BigDecimal(1110));
         qrStatic.setPaymentDetails("Назначение платежа");
-        qrStatic.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
+        qrStatic.setQrExpirationDate("2025-07-22T09:14:38.107227+03:00");
+        qrStatic.setQrDescription("Описание QR кода");
 
         QRUrl response = TestUtils.CLIENT.registerQR(qrStatic);
         assertNotNull(response.getQrId());
         assertNotNull(response.getQrUrl());
         assertNotNull(response.getPayload());
+    }
+
+    @Test
+    void createQRWithSubscription() throws IOException, ContractViolationException, SbpException, URISyntaxException, InterruptedException {
+        QRDynamic qrDynamic = new QRDynamic(TestUtils.getRandomUUID(), new BigDecimal(100));
+        qrDynamic.setAdditionalInfo("Доп информация");
+        qrDynamic.setPaymentDetails("Назначение платежа");
+        qrDynamic.setQrExpirationDate(ZonedDateTime.now().plusDays(90));
+        qrDynamic.setQrDescription("Описание QR кода");
+        Extra extra = new Extra();
+        extra.put("extraParam1", "Пример экстра параметра 1");
+        extra.put("extraParam2", "Пример экстра параметра 2");
+        qrDynamic.setExtra(extra);
+        qrDynamic.setRedirectUrl("https://cool-company.zone/paid");
+        Subscription subscription = new Subscription("Подписка на услуги");
+        subscription.setId(TestUtils.getRandomUUID());
+        AutoCharge autoCharge = new AutoCharge();
+        autoCharge.setFrequency("MONTHLY");
+        autoCharge.setAmount(new BigDecimal(100));
+        autoCharge.setFirstChargeDate(LocalDate.now().plusDays(7));
+        subscription.setAutoCharge(autoCharge);
+        subscription.setExtra((Extra) new Extra().put("key1", "value1"));
+        qrDynamic.setSubscription(subscription);
+
+        QRUrl response = TestUtils.CLIENT.registerQR(qrDynamic);
+        assertNotNull(response.getQrId());
+        assertNotNull(response.getQrUrl());
+        assertTrue(isValidDateFormat(autoCharge.getFirstChargeDate().toString()), "Дата не соответствует формату YYYY-MM-DD");
     }
 
     @Test
@@ -93,4 +130,13 @@ class CreateQrTest {
         assertThrows(SbpException.class, () -> TestUtils.CLIENT.registerQR(badQR));
     }
 
+    private boolean isValidDateFormat(String value) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            LocalDate.parse(value, dateTimeFormatter);
+            return true;
+        } catch ( DateTimeParseException e) {
+            return false;
+        }
+    }
 }

@@ -48,6 +48,10 @@ public abstract class QR {
     protected String createDate;
     protected String paymentDetails;
     protected String qrExpirationDate;
+    protected String qrDescription;
+    protected String redirectUrl;
+    protected Extra extra;
+    protected Subscription subscription;
 
     public abstract QR newInstance();
 

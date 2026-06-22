@@ -5,6 +5,7 @@
 - [Подключение](#подключение)
 - [Использование](#использование)
 - [Регистрация QR-кода](#регистрация-qr-кода)
+- [Регистрация QR-кода с подпиской](#подписка-на-оплату)
 - [Получение данных по зарегистрированному ранее QR-коду](#получение-данных-по-зарегистрированному-ранее-qr-коду)
 - [Получение информации по платежу](#получение-информации-по-платежу)
 - [Оформление возврата по платежу](#оформление-возврата-по-платежу)
@@ -115,6 +116,7 @@ public class AppExample {
             qrCode.setAdditionalInfo("Доп информация");
             qrCode.setPaymentDetails("Назначение платежа");
             qrCode.setQrExpirationDate(ZonedDateTime.now().plusDays(1));
+            qrCode.setQrDescription("Описание QR кода");
             QRUrl response = client.registerQR(qrCode);
             response.getQrId();
             response.getOrUrl();
@@ -142,6 +144,7 @@ public class AppExample {
 Обязательные параметры:
 - номер заказа в системе партнера `order(String)`
 - (*`QRDynamic`*) сумма в рублях `amount(BigDecimal)`
+- идентификатор зарегистрированного партнера в СБП `sbpMerchantId(String)`
 
 Опциональные параметры могут быть заполнены с помощью set методов.
 
@@ -157,6 +160,7 @@ qrCode.setAccount("40700000000000000000");
 qrCode.setAdditionalInfo("Доп информация");
 qrCode.setPaymentDetails("Назначение платежа");
 qrCode.setQrExpirationDate("2023-07-22T09:14:38.107227+03:00");
+qrCode.setQrDescription("Описание QR кода");
 
 QRUrl response = client.registerQR(qrCode);
 
@@ -208,6 +212,71 @@ qrStatic.setQrExpirationDate("+5m"); // + 5 minutes
 QRDynamic qrDynamic = new QRDynamic(order, new BigDecimal(100));
 qrDynamic.setQrExpirationDate("+1d5m"); // + 1 day 5 minutes
 ~~~
+
+Также существует возможность передать поле со ссылкой для автоматического возврата плательщика из приложения банка в приложение или на сайт магазина.
+Для этого в поле `redirectUrl` Ссылка должна содержать `https://` для web страниц или уникальную схему для мобильного приложения.
+
+Пример:
+
+~~~ java
+String order = QRUtil.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
+QRStatic qrStatic = new QRStatic(order);
+qrStatic.redirectUrl("https://сайт_магазина/страница_об_оплате");
+~~~
+
+Также существует возможность передать набор полей в виде значений `ключ, значение` поместив значения в поле `extra`
+
+Пример:
+
+~~~ java
+String order = QRUtil.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
+QRStatic qrStatic = new QRStatic(order);
+
+Extra extra = new Extra();
+extra.put("extraParam1", "Пример экстра параметра 1");
+extra.put("extraParam2", "Пример экстра параметра 2");
+qrStatic.setExtra(extra);
+~~~
+
+### Подписка на оплату
+
+Также существует возможность для динамического типа QR кода `QRDynamic` передать параметр для включения подписки на оплату, заполнив поле `subscription`.
+Обязательное поле к заполнению `subscriptionPurpose` описание подписки, которое клиент увидит в приложении банка.
+В объекте `subscription` есть поле `extra` которое содержит дополнительные поля для свободного заполнения по принципу key-value,
+а также есть поле `autoCharge` в котором хранится класс `AutoCharge` поля которого обязательны для заполнения.
+Если передан объект `autoCharge`, то в поле `extra` класса `Subscription` необходимо передать ключ, который вернется в теле callback-уведомления. 
+Это позволит соотнести подписку и автоматические платежи по ней
+
+Пример:
+
+~~~ java
+String order = QRUtil.generateOrderNumber(); // UUID_v4
+
+// save order in a database;
+
+QRDynamic qrDynamic = new QRDynamic(order, new BigDecimal(100));
+Extra extra = new Extra();
+extra.put("extraParam1", "Пример экстра параметра 1");
+extra.put("extraParam2", "Пример экстра параметра 2");
+qrDynamic.setExtra(extra);
+qrDynamic.setRedirectUrl("https://cool-company.zone/paid");
+Subscription subscription = new Subscription("Подписка на услуги");
+subscription.setId(TestUtils.getRandomUUID());
+AutoCharge autoCharge = new AutoCharge();
+autoCharge.setFrequency("MONTHLY");
+autoCharge.setAmount(new BigDecimal(100));
+autoCharge.setFirstChargeDate(LocalDate.now().plusDays(7));
+subscription.setAutoCharge(autoCharge);
+subscription.setExtra((Extra) new Extra().put("key1", "value1"));
+qrDynamic.setSubscription(subscription);
+~~~
+
 
 ## Получение данных по зарегистрированному ранее QR-коду
 
