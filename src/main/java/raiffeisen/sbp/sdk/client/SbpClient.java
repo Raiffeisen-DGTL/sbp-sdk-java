@@ -27,19 +27,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import raiffeisen.sbp.sdk.exception.ContractViolationException;
 import raiffeisen.sbp.sdk.exception.SbpException;
 import raiffeisen.sbp.sdk.model.Response;
-import raiffeisen.sbp.sdk.model.in.NFCInfo;
-import raiffeisen.sbp.sdk.model.in.OrderInfo;
-import raiffeisen.sbp.sdk.model.in.PaymentInfo;
-import raiffeisen.sbp.sdk.model.in.QRUrl;
-import raiffeisen.sbp.sdk.model.in.RefundStatus;
-import raiffeisen.sbp.sdk.model.out.NFC;
-import raiffeisen.sbp.sdk.model.out.Order;
-import raiffeisen.sbp.sdk.model.out.OrderId;
-import raiffeisen.sbp.sdk.model.out.OrderRefund;
-import raiffeisen.sbp.sdk.model.out.QR;
-import raiffeisen.sbp.sdk.model.out.QRId;
-import raiffeisen.sbp.sdk.model.out.RefundId;
-import raiffeisen.sbp.sdk.model.out.RefundInfo;
+import raiffeisen.sbp.sdk.model.in.*;
+import raiffeisen.sbp.sdk.model.fiscal.Receipt;
+import raiffeisen.sbp.sdk.model.fiscal.ReceiptInfo;
+import raiffeisen.sbp.sdk.model.out.*;
 import raiffeisen.sbp.sdk.util.StringUtil;
 import raiffeisen.sbp.sdk.web.SdkHttpClient;
 
@@ -51,6 +42,8 @@ import java.util.Map;
 public class SbpClient {
     public static final String TEST_URL = PropertiesLoader.TEST_URL;
     public static final String PRODUCTION_URL = PropertiesLoader.PRODUCTION_URL;
+    public static final String FISCAL_TEST_URL = PropertiesLoader.FISCAL_TEST_URL;
+    public static final String FISCAL_PRODUCTION_URL = PropertiesLoader.FISCAL_PRODUCTION_URL;
 
     private static final String REGISTER_PATH = PropertiesLoader.REGISTER_PATH;
     private static final String QR_INFO_PATH = PropertiesLoader.QR_INFO_PATH;
@@ -62,6 +55,13 @@ public class SbpClient {
     private static final String ORDER_PATH = PropertiesLoader.ORDER_PATH;
     private static final String ORDER_REFUND_PATH = PropertiesLoader.ORDER_REFUND_PATH;
     private static final String NFC_PATH = PropertiesLoader.NFC_PATH;
+
+    private static final String FISCAL_SAVE_SELL_PATH = PropertiesLoader.FISCAL_SAVE_SELL_PATH;
+    private static final String FISCAL_REGISTER_SELL_PATH = PropertiesLoader.FISCAL_REGISTER_SELL_PATH;
+    private static final String FISCAL_SELL_INFO_PATH = PropertiesLoader.FISCAL_SELL_INFO_PATH;
+    private static final String FISCAL_SAVE_REFUND_PATH = PropertiesLoader.FISCAL_SAVE_REFUND_PATH;
+    private static final String FISCAL_REGISTER_REFUND_PATH = PropertiesLoader.FISCAL_REGISTER_REFUND_PATH;
+    private static final String FISCAL_REFUND_INFO_PATH = PropertiesLoader.FISCAL_REFUND_INFO_PATH;
 
     private static final String ERROR_REQUIRED_PARAM_MISSING = "Field is required and should not be null or empty";
 
@@ -174,6 +174,41 @@ public class SbpClient {
         return post(url, body, secretKey, NFCInfo.class);
     }
 
+    public ReceiptInfo saveSellReceipt(final Receipt receipt) throws ContractViolationException, IOException, SbpException, URISyntaxException, InterruptedException {
+        receipt.verify();
+        var body = mapper.valueToTree(receipt);
+
+        String url = domain + FISCAL_SAVE_SELL_PATH;
+        return post(url, body.toString(), secretKey, ReceiptInfo.class);
+    }
+
+    public ReceiptInfo registerSellReceipt(final String receiptNumber) throws SbpException, URISyntaxException, IOException, ContractViolationException, InterruptedException {
+        String url = String.format(domain + FISCAL_REGISTER_SELL_PATH, receiptNumber);
+        return put(url, secretKey, ReceiptInfo.class);
+    }
+
+    public ReceiptInfo getSellReceiptInfo(final String receiptNumber) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
+        String url = String.format(domain + FISCAL_SELL_INFO_PATH, receiptNumber);
+        return get(url, secretKey, ReceiptInfo.class);
+    }
+
+    public ReceiptInfo saveRefundReceipt(final Receipt receipt) throws ContractViolationException, IOException, SbpException, URISyntaxException, InterruptedException {
+        receipt.verify();
+        var body = mapper.valueToTree(receipt);
+        String url = domain + FISCAL_SAVE_REFUND_PATH;
+        return post(url, body.toString(), secretKey, ReceiptInfo.class);
+    }
+
+    public ReceiptInfo registerRefundReceipt(final String receiptNumber) throws SbpException, URISyntaxException, IOException, ContractViolationException, InterruptedException {
+        String url = String.format(domain + FISCAL_REGISTER_REFUND_PATH, receiptNumber);
+        return put(url, secretKey, ReceiptInfo.class);
+    }
+
+    public ReceiptInfo getRefundReceiptInfo(final String receiptNumber) throws SbpException, IOException, URISyntaxException, ContractViolationException, InterruptedException {
+        String url = String.format(domain + FISCAL_REFUND_INFO_PATH, receiptNumber);
+        return get(url, secretKey, ReceiptInfo.class);
+    }
+
     private <T> T post(String url, String body, Class<T> resultClass)
             throws IOException, SbpException, ContractViolationException, URISyntaxException, InterruptedException {
         Response response = webClient.postRequest(url, getHeaders(), body);
@@ -197,6 +232,11 @@ public class SbpClient {
         url = String.format(url, pathParameter);
         Response response = webClient.deleteRequest(url, prepareHeaders(secretKey));
         convert(response, null);
+    }
+
+    private <T> T put(String url, final String secretKey, Class<T> resultClass) throws URISyntaxException, IOException, InterruptedException, SbpException, ContractViolationException {
+        Response response = webClient.putRequest(url, prepareHeaders(secretKey));
+        return convert(response, resultClass);
     }
 
     private <T> T convert(Response response, Class<T> resultClass) throws SbpException, ContractViolationException {

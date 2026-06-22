@@ -30,6 +30,8 @@ import java.util.Properties;
 public class PropertiesLoader {
     public static final String TEST_URL;
     public static final String PRODUCTION_URL;
+    public static final String FISCAL_TEST_URL;
+    public static final String FISCAL_PRODUCTION_URL;
 
     public static final String REGISTER_PATH;
     public static final String QR_INFO_PATH;
@@ -40,6 +42,13 @@ public class PropertiesLoader {
     public static final String ORDER_PATH;
     public static final String ORDER_REFUND_PATH;
     public static final String NFC_PATH;
+    public static final String FISCAL_SAVE_SELL_PATH;
+    public static final String FISCAL_REGISTER_SELL_PATH;
+    public static final String FISCAL_SELL_INFO_PATH;
+    public static final String FISCAL_SAVE_REFUND_PATH;
+    public static final String FISCAL_REGISTER_REFUND_PATH;
+    public static final String FISCAL_REFUND_INFO_PATH;
+
 
     static {
         Properties properties = new Properties();
@@ -53,6 +62,8 @@ public class PropertiesLoader {
 
         TEST_URL = properties.getProperty("domain.sandbox", "https://pay-test.raif.ru");
         PRODUCTION_URL = properties.getProperty("domain.production", "https://pay.raif.ru");
+        FISCAL_TEST_URL = properties.getProperty("domain.fiscal.sandbox", "https://test.ecom.raiffeisen.ru");
+        FISCAL_PRODUCTION_URL = properties.getProperty("domain.fiscal.production", "https://e-commerce.raiffeisen.ru");
 
         REGISTER_PATH = properties.getProperty("path.register.qr", "/api/sbp/v2/qrs");
         QR_INFO_PATH = properties.getProperty("path.qr.info", "/api/sbp/v2/qrs/%s");
@@ -63,5 +74,13 @@ public class PropertiesLoader {
         ORDER_PATH = properties.getProperty("path.order", "/api/payment/v1/orders/%s");
         ORDER_REFUND_PATH = properties.getProperty("path.order.refund", "/api/payments/v1/orders/%s/refunds/%s");
         NFC_PATH = properties.getProperty("path.nfc", "/api/sbp/v1/qr-drafts/%s");
+
+
+        FISCAL_SAVE_SELL_PATH = properties.getProperty("path.fiscal.save.sell", "/api/fiscal/v1/receipts/sell");
+        FISCAL_REGISTER_SELL_PATH = properties.getProperty("path.fiscal.register.sell", "/api/fiscal/v1/receipts/sell/%s");
+        FISCAL_SELL_INFO_PATH = properties.getProperty("path.fiscal.sell.info", "/api/fiscal/v1/receipts/sell/%s");
+        FISCAL_SAVE_REFUND_PATH = properties.getProperty("path.fiscal.save.refund", "/api/fiscal/v1/receipts/refund");
+        FISCAL_REGISTER_REFUND_PATH = properties.getProperty("path.fiscal.register.refund", "/api/fiscal/v1/receipts/refund/%s");
+        FISCAL_REFUND_INFO_PATH = properties.getProperty("path.fiscal.refund.info", "/api/fiscal/v1/receipts/refund/%s");
     }
 }

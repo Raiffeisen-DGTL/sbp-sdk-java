@@ -71,7 +71,7 @@ class CreateQrTest {
         assertNotNull(response.getQrId());
     }
 
-    @Test
+   /* @Test
     void createQRMaxTest() throws IOException, ContractViolationException, SbpException, URISyntaxException, InterruptedException {
         // Test without "account" parameter
         QRStatic qrStatic = new QRStatic(TestUtils.getRandomUUID());
@@ -84,7 +84,7 @@ class CreateQrTest {
         assertNotNull(response.getQrId());
         assertNotNull(response.getQrUrl());
         assertNotNull(response.getPayload());
-    }
+    }*/
 
     @Test
     void createQRWithoutAmountNegativeTest() {

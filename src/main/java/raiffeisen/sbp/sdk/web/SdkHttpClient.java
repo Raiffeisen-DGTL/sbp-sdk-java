@@ -73,6 +73,16 @@ public class SdkHttpClient {
         return new Response(response.statusCode(), response.body());
     }
 
+    public Response putRequest(String url, Map<String, String> headers) throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .headers(mapHeaders(headers))
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return new Response(response.statusCode(), response.body());
+    }
+
     private String[] mapHeaders(Map<String, String> headers) {
         return headers.entrySet().stream()
                 .flatMap(x -> Stream.of(x.getKey(), x.getValue()))
